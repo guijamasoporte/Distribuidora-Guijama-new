@@ -1,7 +1,7 @@
-// import { formatError } from "../utils/formatError.js";
+import { formatError } from "../utils/formatError.js";
 // import { User } from "../models/user.js";
-// import { generateRefreshToken, generateToken } from "../utils/tokenManager.js";
-// import { Admin } from "../models/admin.js";
+import { generateRefreshToken, generateToken } from "../utils/tokenManager.js";
+import { Admin } from "../models/admin.js";
 
 
 
@@ -34,37 +34,37 @@
 //   }
 // };
 
-// export const login = async (req, res) => {
-//   const { email, password } = req.body;
-//   let user;
+export const login = async (req, res) => {
+  const { email, password } = req.body;
+  let user;
 
-//   try {
-//     user = await User.findOne({ email });
-//     if (!user) {
-//       user = await Admin.findOne({ email });
-//     }
-//     if (!user) {
-//       return res.status(403).json({ error: "No existe este usuario" });
-//     }
-//     // compara que las contraseñas coincidan
-//     const respuestaPassword = await user.comparePassword(password);
-//     if (!respuestaPassword) {
-//       return res.status(403).json({ error: "Contraseña incorrecta" });
-//     }
+  try {
+    // user = await User.findOne({ email });
+    if (!user) {
+      user = await Admin.findOne({ email });
+    }
+    if (!user) {
+      return res.status(403).json({ error: "No existe este usuario" });
+    }
+    // compara que las contraseñas coincidan
+    const respuestaPassword = await user.comparePassword(password);
+    if (!respuestaPassword) {
+      return res.status(403).json({ error: "Contraseña incorrecta" });
+    }
 
-//     // Generar el token JWT
-//     if (user.verify === false) {
-//       // return res.status(403).json({ error: "Email no verificado" });
-//       throw new Error("Email no verificado");
-//     }
+    // // Generar el token JWT
+    // if (user.verify === false) {
+    //   // return res.status(403).json({ error: "Email no verificado" });
+    //   throw new Error("Email no verificado");
+    // }
 
-//     const { token, expiresIn } = generateToken(user.id);
-//     generateRefreshToken(user.id, res);
+    const { token, expiresIn } = generateToken(user.id);
+    generateRefreshToken(user.id, res);
 
-//     return res
-//       .status(200)
-//       .json({ token, expiresIn, verify: user.verify, rol: user.Rol });
-//   } catch (error) {
-//     res.status(400).json(formatError(error.message));
-//   }
-// };
+    return res
+      .status(200)
+      .json({ token, expiresIn, rol: user.Rol });
+  } catch (error) {
+    res.status(400).json(formatError(error.message));
+  }
+};

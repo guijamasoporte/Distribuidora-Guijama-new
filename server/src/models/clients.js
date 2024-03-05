@@ -22,6 +22,10 @@ const clientsSchema = new mongoose.Schema({
     default: "",
   },
   invoices: { type: Array, default: [] },
+  state: {
+    type: Boolean,
+    default: true,
+  },
 });
 
-export const Clients = mongoose.model("Clients", clientsSchema);
+export const Client = mongoose.model("Client", clientsSchema);

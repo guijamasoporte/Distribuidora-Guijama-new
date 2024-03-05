@@ -8,9 +8,11 @@ const productSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
+    default: "",
   },
   stock: {
     type: Number,
+    default: null,
   },
   description: {
     type: String,
@@ -30,11 +32,16 @@ const productSchema = new mongoose.Schema({
   brand: {
     type: String,
   },
-  amount: { type: String },
-
+  amount: {
+    type: String,
+  },
   image: {
     type: Array,
     default: [],
+  },
+  sales: {
+    type: Object,
+    // default:{} ,
   },
 });
 

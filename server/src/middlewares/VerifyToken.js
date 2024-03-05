@@ -23,10 +23,10 @@ export const verifyToken = async (req, res, next) => {
     if (!user) {
       return res.redirect(303, `${process.env.DEPLOY_CLIENT_URL}/login`);
     }
-    if (!user.verify) {
-      // sendConfirmationEmail(token);
-      throw new Error("Confirma tu email");
-    }
+    // if (!user.verify) {
+    //   // sendConfirmationEmail(token);
+    //   throw new Error("Confirma tu email");
+    // }
     next();
   } catch (error) {
     return res.status(401).json(formatError(error.message));

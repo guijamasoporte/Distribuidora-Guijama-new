@@ -15,6 +15,7 @@ const InvoiceSchema = new mongoose.Schema({
   },
   pdf: {
     type: String,
+    default:""
   },
 });
 

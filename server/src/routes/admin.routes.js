@@ -6,17 +6,14 @@ import {
   getAllAdmin,
   updateAdminById,
 } from "../controllers/admin.controller.js";
-import { verifyToken } from "../middlewares/VerifyToken.js";
-
-// import { isAdmin, verifyToken } from "../middlewares/VerifyToken.js";
+import { isAdmin, verifyToken } from "../middlewares/VerifyToken.js";
 
 const router = express.Router();
 
-//AGREGAR MIDDLEWARE ↓
-router.post("/create", createAdmin);
+router.post("/create", [verifyToken, isAdmin], createAdmin);
 router.get("/", getAllAdmin);
-router.get("/:id",[verifyToken], getAdminById);
-router.put("/:id", updateAdminById);
-router.delete("/:id", deleteAdminById);
+router.get("/:id", getAdminById);
+router.put("/:id", [verifyToken, isAdmin], updateAdminById);
+router.delete("/:id", [verifyToken, isAdmin], deleteAdminById);
 
 export default router;
