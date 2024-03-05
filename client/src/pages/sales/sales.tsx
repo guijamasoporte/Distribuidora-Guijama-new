@@ -55,7 +55,7 @@ const SalesPage: React.FC<SalesProps> = () => {
 
   return (
     <div className={styles.tableContainer}>
-      <h1>Ventas</h1>
+      <h1 className={styles.title}>Listado de ventas</h1>
       <div className={styles.filters}>
         <Autocomplete
           disablePortal

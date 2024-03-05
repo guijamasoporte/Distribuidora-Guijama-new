@@ -13,15 +13,18 @@ const App: React.FC = () => {
   return (
     <div className="App">
       <Header />
-      {/* <NavBar /> */}
+      <NavBar />
 
       <Routes>
-        <Route path="/" Component={Home}/>
-        <Route path="/login" Component={LoginPage}/>
+        <Route path="/" Component={Home} />
+        <Route path="/login" Component={LoginPage} />
 
-        <Route path="/admin/products" element={<ProductsPage products={[]}/>} />
-        <Route path="/admin/clients" element={<ClientsPage clients={[]}/>} />
-        <Route path="/admin/sales" element={<SalesPage sales={[]}/>} />
+        <Route
+          path="/admin/products"
+          element={<ProductsPage products={[]} />}
+        />
+        <Route path="/admin/clients" element={<ClientsPage clients={[]} />} />
+        <Route path="/admin/sales" element={<SalesPage sales={[]} />} />
       </Routes>
     </div>
   );

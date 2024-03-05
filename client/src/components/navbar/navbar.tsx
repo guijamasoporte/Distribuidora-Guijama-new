@@ -1,33 +1,46 @@
-import React, { useEffect, useState } from "react";
-import ProductsPage from "../../pages/products/products";
-import ClientsPage from "../../pages/clients/clients";
-import SalesPage from "../../pages/sales/sales";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import styles from "./navbar.module.css";
 
-interface GuijamaPageProps {}
+const NavBar: React.FC = () => {
+  const [selectedButton, setSelectedButton] = useState("");
 
-const NavBar: React.FC<GuijamaPageProps> = () => {
-
-  const [currentPage, setCurrentPage] = useState<
-    "products" | "clients" | "sales"
-  >("products");
-
-  useEffect(() => {
-
-  }, [currentPage]);
-
-  const handleButtonClick = (page: "products" | "clients" | "sales") => {
-    setCurrentPage(page);
+  const handleButtonClick = (buttonName: string) => {
+    setSelectedButton(buttonName);
   };
+
   return (
-    <div>
-      <h1>Guijama</h1>
-    
-      <button onClick={() => handleButtonClick("products")}>Productos</button>
-      <button onClick={() => handleButtonClick("clients")}>Clientes</button>
-      <button onClick={() => handleButtonClick("sales")}>Ventas</button>
-      {/* {currentPage === "products" && <ProductsPage products={[]} />}
-      {currentPage === "clients" && <ClientsPage clients={[]} />}
-      {currentPage === "sales" && <SalesPage sales={[]} />} */}
+    <div className={styles.navBar}>
+      <Link to="/admin/products">
+        <button
+          className={`${styles.button} ${
+            selectedButton === "products" ? styles.selectedButton : ""
+          }`}
+          onClick={() => handleButtonClick("products")}
+        >
+          Productos
+        </button>
+      </Link>
+      <Link to="/admin/clients">
+        <button
+          className={`${styles.button} ${
+            selectedButton === "clients" ? styles.selectedButton : ""
+          }`}
+          onClick={() => handleButtonClick("clients")}
+        >
+          Clientes
+        </button>
+      </Link>
+      <Link to="/admin/sales">
+        <button
+          className={`${styles.button} ${
+            selectedButton === "sales" ? styles.selectedButton : ""
+          }`}
+          onClick={() => handleButtonClick("sales")}
+        >
+          Ventas
+        </button>
+      </Link>
     </div>
   );
 };

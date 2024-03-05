@@ -73,7 +73,7 @@ const ClientsPage: React.FC<ClientsProps> = ({ clients }) => {
 
   return (
     <div className={styles.tableContainer}>
-      <h1>Clientes</h1>
+      <h1 className={styles.title}>Listado de clientes</h1>
       <div className={styles.filters}>
         <button className={styles.clearButton} onClick={handleClearFilters}>
           Limpiar filtros

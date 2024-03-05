@@ -1,9 +1,17 @@
+.title {
+  background-color: #9EC5CA;
+  color: white;
+  padding: 0.5rem 2rem;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "questrial";
+}
+
 .tableContainer {
   margin-top: 20px;
   padding-inline: 2rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
 .filters {
@@ -15,8 +23,9 @@
 }
 
 .table {
-  border-collapse: collapse;
+  border-radius: 10px;
   width: 100%;
+  border-collapse: collapse;
 }
 
 .table th,

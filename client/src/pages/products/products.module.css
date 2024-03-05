@@ -1,6 +1,17 @@
+.title {
+  background-color: #9EC5CA;
+  color: white;
+  padding: 0.5rem 2rem;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "questrial";
+}
+
 .tableContainer {
-    margin-top: 20px;
-    padding-inline: 2rem;
+  margin-top: 20px;
+  padding-inline: 2rem;
 }
 
 .filters {
@@ -12,39 +23,76 @@
 }
 
 .table {
-    border-radius: 10px;
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .table th,
-  .table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-  }
-  
-  .table th {
-    background-color: #f2f2f2;
-  }
-  
-  .table tr:nth-child(even) {
-    background-color: #f2f2f2;
-  }
-  
-  .table tr:hover {
-    background-color: #ddd;
-  }
-  
-  .button {
-    padding: 5px 10px;
-    border: none;
-    background-color: #a70b9a;
-    color: #fff;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .button:hover {
-    background-color: #0056b3;
-  }
-  
+  border-radius: 10px;
+  width: 100%;
+  border-collapse: collapse;
+  font-family: "noto sans";
+}
+
+.table th,
+.table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.table th {
+  background-color: #b69b84;
+  color: white;
+}
+
+.table tr:hover {
+  background-color: #9ec5ca67;
+}
+
+.buttonEdit,
+.buttonDelete {
+  border: none;
+  background-color: transparent;
+  transition: transform 0.3s ease;
+}
+
+.buttonEdit {
+  color: #000000;
+}
+
+.buttonDelete {
+  color: #d60303;
+}
+
+.buttonEdit:hover,
+.buttonDelete:hover {
+  cursor: pointer;
+  transform: scale(1.4);
+}
+
+.buttonsFooter {
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+  padding-top: 2rem;
+  padding-bottom: 3rem;
+}
+
+.buttonAdd,
+.buttonModify {
+  background-color: #b69b84;
+  color: white;
+  padding: 0.5rem 2rem;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "questrial";
+  font-size: 24px;
+  border: none;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+}
+
+.buttonAdd:hover,
+.buttonModify:hover {
+  background-color: #603e20;
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
+    rgba(0, 0, 0, 0.22) 0px 10px 10px;
+}

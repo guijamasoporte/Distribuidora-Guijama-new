@@ -1,4 +1,5 @@
 import React, { useState, ChangeEvent } from "react";
+import styles from "./searchBar.module.css";
 
 interface CustomSearchBarProps {
   onSearch: (searchTerm: string) => void;
@@ -14,20 +15,13 @@ const SearchBar: React.FC<CustomSearchBarProps> = ({ onSearch }) => {
   };
 
   return (
-    <div style={{ position: "relative" }}>
+    <div className={styles.searchBarContainer}>
       <input
         type="text"
         placeholder="Buscar..."
         value={searchTerm}
         onChange={handleSearch}
-        style={{
-          padding: "8px 12px",
-          borderRadius: "4px",
-          border: "1px solid #ccc",
-          width: "100%",
-          height: "55px",
-          boxSizing: "border-box",
-        }}
+        className={styles.searchInput}
       />
     </div>
   );

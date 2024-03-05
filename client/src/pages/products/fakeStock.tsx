@@ -352,8 +352,8 @@ const fakeProducts: Product[] = [
     precioVenta: 2500,
   },
   {
-    codigo: "004",
-    titulo: "Producto 4",
+    codigo: "8494",
+    titulo: "Tabaco Menta",
     rubro: "Rubro 4",
     marca: "Marca 4",
     stock: 890,
@@ -361,8 +361,8 @@ const fakeProducts: Product[] = [
     precioVenta: 1600,
   },
   {
-    codigo: "005",
-    titulo: "Producto 5",
+    codigo: "51848",
+    titulo: "cigarrillos",
     rubro: "Rubro 5",
     marca: "Marca 5",
     stock: 15,

@@ -1,14 +1,11 @@
 import React, { useState } from "react";
-import {
-  Autocomplete,
-  TextField,
-  MenuItem,
-  SelectChangeEvent,
-} from "@mui/material";
-import OutlinedInput from "@mui/material/OutlinedInput";
+import { Autocomplete, TextField } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import styles from "./products.module.css";
 import fakeProducts from "./fakeStock";
 import SearchBar from "../../components/searchBar/searchBar";
+import Pagination from "../../components/pagination/pagination";
 
 interface Product {
   codigo: string;
@@ -37,6 +34,8 @@ const ProductsPage: React.FC<ProductsProps> = () => {
 
   const [filters, setFilters] = useState(initialFilters);
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 15;
 
   const handleChange = (
     event: React.SyntheticEvent<Element, Event>,
@@ -51,15 +50,6 @@ const ProductsPage: React.FC<ProductsProps> = () => {
 
   const handleSearch = (searchTerm: string) => {
     setSearchTerm(searchTerm);
-  };
-
-  const handleClearFilters = () => {
-    setFilters({
-      ...initialFilters,
-      codigo: "",
-    });
-    setSearchTerm("");
-    
   };
 
   const filteredProducts = fakeProducts.filter((product) => {
@@ -84,9 +74,18 @@ const ProductsPage: React.FC<ProductsProps> = () => {
     );
   });
 
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = filteredProducts.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct
+  );
+
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
   return (
     <div className={styles.tableContainer}>
-      <h1>Productos</h1>
+      <h1 className={styles.title}>Listado de productos</h1>
       <div className={styles.filters}>
         <Autocomplete
           disablePortal
@@ -129,9 +128,6 @@ const ProductsPage: React.FC<ProductsProps> = () => {
           onChange={(event, value) => handleChange(event, value, "marca")}
         />
         <SearchBar onSearch={handleSearch} />
-        <button className={styles.clearButton} onClick={handleClearFilters}>
-          Limpiar filtros
-        </button>
       </div>
       <table className={styles.table}>
         <thead>
@@ -148,7 +144,7 @@ const ProductsPage: React.FC<ProductsProps> = () => {
           </tr>
         </thead>
         <tbody>
-          {filteredProducts.map((product, index) => (
+          {currentProducts.map((product, index) => (
             <tr key={index}>
               <td>{product.codigo}</td>
               <td>{product.titulo}</td>
@@ -158,15 +154,31 @@ const ProductsPage: React.FC<ProductsProps> = () => {
               <td>{product.precioCosto}</td>
               <td>{product.precioVenta}</td>
               <td>
-                <button className={styles.button}>Editar</button>
+                <button className={styles.buttonEdit}>
+                  <EditIcon />
+                </button>
               </td>
               <td>
-                <button className={styles.button}>Borrar</button>
+                <button className={styles.buttonDelete}>
+                  <DeleteIcon />
+                </button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+      <Pagination
+        totalItems={filteredProducts.length}
+        itemsPerPage={productsPerPage}
+        currentPage={currentPage}
+        paginate={paginate}
+      />
+      <div className={styles.buttonsFooter}>
+        <button className={styles.buttonAdd}>Agregar nuevo producto</button>
+        <button className={styles.buttonModify}>
+          Modificar precios x Rubro
+        </button>
+      </div>
     </div>
   );
 };
