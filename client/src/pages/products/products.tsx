@@ -1,8 +1,14 @@
 import React, { useState } from "react";
-import { Select, MenuItem, SelectChangeEvent } from "@mui/material";
+import {
+  Autocomplete,
+  TextField,
+  MenuItem,
+  SelectChangeEvent,
+} from "@mui/material";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import styles from "./products.module.css";
 import fakeProducts from "./fakeStock";
+import SearchBar from "../../components/searchBar/searchBar";
 
 interface Product {
   codigo: string;
@@ -19,137 +25,113 @@ interface ProductsProps {
 }
 
 const ProductsPage: React.FC<ProductsProps> = () => {
-  const [filters, setFilters] = useState<{ [key: string]: string | undefined }>(
-    {
-      codigo: undefined,
-      titulo: "",
-      rubro: "",
-      marca: "",
-      stock: "",
-      precioCosto: "",
-      precioVenta: "",
-      
-    }
-  );
+  const initialFilters = {
+    codigo: "",
+    titulo: "",
+    rubro: "",
+    marca: "",
+    stock: "",
+    precioCosto: "",
+    precioVenta: "",
+  };
+
+  const [filters, setFilters] = useState(initialFilters);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleChange = (
-    event: SelectChangeEvent<string | number>,
+    event: React.SyntheticEvent<Element, Event>,
+    value: string | null,
     field: keyof Product
   ) => {
     setFilters({
       ...filters,
-      [field]: String(event.target.value),
+      [field]: value || "",
     });
   };
 
-  const filteredProducts = fakeProducts.filter((product) => {
-    return Object.keys(filters).every((key) => {
-      const filterValue = filters[key as keyof Product];
-      if (typeof filterValue === "string") {
-        return (
-          filterValue.toLowerCase() === "" ||
-          String(product[key as keyof Product])
-            .toLowerCase()
-            .includes(filterValue.toLowerCase())
-        );
-      } else {
-        return true;
-      }
+  const handleSearch = (searchTerm: string) => {
+    setSearchTerm(searchTerm);
+  };
+
+  const handleClearFilters = () => {
+    setFilters({
+      ...initialFilters,
+      codigo: "",
     });
+    setSearchTerm("");
+    
+  };
+
+  const filteredProducts = fakeProducts.filter((product) => {
+    return (
+      Object.keys(filters).every((key) => {
+        const filterValue = filters[key as keyof Product];
+        if (typeof filterValue === "string") {
+          return (
+            filterValue.toLowerCase() === "" ||
+            String(product[key as keyof Product])
+              .toLowerCase()
+              .includes(filterValue.toLowerCase())
+          );
+        } else {
+          return true;
+        }
+      }) &&
+      (searchTerm === "" ||
+        Object.values(product).some((value) =>
+          String(value).toLowerCase().includes(searchTerm.toLowerCase())
+        ))
+    );
   });
 
   return (
     <div className={styles.tableContainer}>
       <h1>Productos</h1>
       <div className={styles.filters}>
-        <Select
-          displayEmpty
-          value={filters.codigo}
-          onChange={(e) => handleChange(e, "codigo")}
-          input={<OutlinedInput />}
-          renderValue={(selected) => {
-            if (!selected) {
-              return <em>Código</em>;
-            }
-            return selected;
-          }}
-          inputProps={{ "aria-label": "Without label" }}
-        >
-          <MenuItem value="">Todos</MenuItem>
-          {Array.from(
+        <Autocomplete
+          disablePortal
+          id="combo-box-codigo"
+          options={Array.from(
             new Set(fakeProducts.map((product) => product.codigo))
-          ).map((codigo) => (
-            <MenuItem key={codigo} value={codigo}>
-              {codigo}
-            </MenuItem>
-          ))}
-        </Select>
-        <Select
-          displayEmpty
-          value={filters.titulo}
-          onChange={(e) => handleChange(e, "titulo")}
-          input={<OutlinedInput />}
-          renderValue={(selected) => {
-            if (selected === "") {
-              return <em>Título</em>;
-            }
-            return selected;
-          }}
-          inputProps={{ "aria-label": "Without label" }}
-        >
-          <MenuItem value="">Todos</MenuItem>
-          {Array.from(
+          )}
+          sx={{ width: 200 }}
+          renderInput={(params) => <TextField {...params} label="Código" />}
+          onChange={(event, value) => handleChange(event, value, "codigo")}
+        />
+        <Autocomplete
+          disablePortal
+          id="combo-box-titulo"
+          options={Array.from(
             new Set(fakeProducts.map((product) => product.titulo))
-          ).map((titulo) => (
-            <MenuItem key={titulo} value={titulo}>
-              {titulo}
-            </MenuItem>
-          ))}
-        </Select>
-        <Select
-          displayEmpty
-          value={filters.rubro}
-          onChange={(e) => handleChange(e, "rubro")}
-          input={<OutlinedInput />}
-          renderValue={(selected) => {
-            if (selected === "") {
-              return <em>Rubro</em>;
-            }
-            return selected;
-          }}
-          inputProps={{ "aria-label": "Without label" }}
-        >
-          <MenuItem value="">Todos</MenuItem>
-          {Array.from(
+          )}
+          sx={{ width: 200 }}
+          renderInput={(params) => <TextField {...params} label="Título" />}
+          onChange={(event, value) => handleChange(event, value, "titulo")}
+        />
+        <Autocomplete
+          disablePortal
+          id="combo-box-rubro"
+          options={Array.from(
             new Set(fakeProducts.map((product) => product.rubro))
-          ).map((rubro) => (
-            <MenuItem key={rubro} value={rubro}>
-              {rubro}
-            </MenuItem>
-          ))}
-        </Select>
-        <Select
-          displayEmpty
-          value={filters.marca}
-          onChange={(e) => handleChange(e, "marca")}
-          input={<OutlinedInput />}
-          renderValue={(selected) => {
-            if (selected === "") {
-              return <em>Marca</em>;
-            }
-            return selected;
-          }}
-          inputProps={{ "aria-label": "Without label" }}
-        >
-          <MenuItem value="">Todas</MenuItem>
-          {Array.from(
+          )}
+          sx={{ width: 200 }}
+          renderInput={(params) => <TextField {...params} label="Rubro" />}
+          onChange={(event, value) => handleChange(event, value, "rubro")}
+        />
+        <Autocomplete
+          disablePortal
+          id="combo-box-marca"
+          options={Array.from(
             new Set(fakeProducts.map((product) => product.marca))
-          ).map((marca) => (
-            <MenuItem key={marca} value={marca}>
-              {marca}
-            </MenuItem>
-          ))}
-        </Select>
+          )}
+          sx={{ width: 200 }}
+          renderInput={(params) => <TextField {...params} label="Marca" />}
+          onChange={(event, value) => handleChange(event, value, "marca")}
+        />
+        <SearchBar onSearch={handleSearch} />
+        <button className={styles.clearButton} onClick={handleClearFilters}>
+          Limpiar filtros
+        </button>
       </div>
       <table className={styles.table}>
         <thead>

@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { Select, MenuItem, SelectChangeEvent } from "@mui/material";
-import OutlinedInput from "@mui/material/OutlinedInput";
+import { TextField } from "@mui/material";
+import Autocomplete from "@mui/material/Autocomplete";
 import styles from "./sales.module.css";
 import fakeSales from "./fakeSales";
+import SearchBar from "../../components/searchBar/searchBar";
 
 interface Sale {
   id: number;
@@ -18,32 +19,37 @@ interface SalesProps {
   sales: Sale[];
 }
 
-const SalesPage: React.FC<SalesProps> = ({ sales }) => {
-  const [filters, setFilters] = useState<{ [key: string]: string }>({
-    id: "",
-    nombre: "",
-    apellido: "",
-    fecha: "",
-    total: "",
-  });
+const SalesPage: React.FC<SalesProps> = () => {
+  const [filters, setFilters] = useState<Partial<Sale>>({});
 
-  const handleChange = (
-    event: SelectChangeEvent<string>,
-    field: keyof Sale
-  ) => {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleChange = (value: string | null, field: keyof Sale) => {
     setFilters({
       ...filters,
-      [field]: event.target.value,
+      [field]: value !== null ? String(value) : "", // Convertir a string
     });
   };
 
+  const handleSearch = (searchTerm: string) => {
+    setSearchTerm(searchTerm);
+  };
+
   const filteredSales = fakeSales.filter((sale) => {
-    return Object.keys(filters).every((key) =>
-      filters[key as keyof Sale]
-        ? String(sale[key as keyof Sale])
-            .toLowerCase()
-            .includes(filters[key as keyof Sale].toLowerCase())
-        : true
+    return (
+      Object.keys(filters).every((key) =>
+        filters[key as keyof Sale]
+          ? String(sale[key as keyof Sale])
+              .toLowerCase()
+              .includes(
+                (filters[key as keyof Sale] || "").toString().toLowerCase()
+              )
+          : true
+      ) &&
+      (searchTerm === "" ||
+        Object.values(sale).some((value) =>
+          String(value).toLowerCase().includes(searchTerm.toLowerCase())
+        ))
     );
   });
 
@@ -51,119 +57,51 @@ const SalesPage: React.FC<SalesProps> = ({ sales }) => {
     <div className={styles.tableContainer}>
       <h1>Ventas</h1>
       <div className={styles.filters}>
-        <Select
-          displayEmpty
-          value={filters.id}
-          onChange={(e) => handleChange(e, "id")}
-          input={<OutlinedInput />}
-          renderValue={(selected) => {
-            if (selected.length === 0) {
-              return <em>Id</em>;
-            }
-
-            return selected;
-          }}
-          inputProps={{ "aria-label": "Without label" }}
-        >
-          <MenuItem value="">Todos</MenuItem>
-          {Array.from(new Set(fakeSales.map((sale) => sale.id))).map((id) => (
-            <MenuItem key={id} value={String(id)}>
-              {id}
-            </MenuItem>
-          ))}
-        </Select>
-        <Select
-          displayEmpty
-          value={filters.nombre}
-          onChange={(e) => handleChange(e, "nombre")}
-          input={<OutlinedInput />}
-          renderValue={(selected) => {
-            if (selected.length === 0) {
-              return <em>Nombre</em>;
-            }
-
-            return selected;
-          }}
-          inputProps={{ "aria-label": "Without label" }}
-        >
-          <MenuItem value="">Todos</MenuItem>
-          {Array.from(new Set(fakeSales.map((sale) => sale.nombre))).map(
-            (nombre) => (
-              <MenuItem key={nombre} value={nombre}>
-                {nombre}
-              </MenuItem>
-            )
+        <Autocomplete
+          disablePortal
+          id="combo-box-id"
+          options={Array.from(
+            new Set(fakeSales.map((sale) => sale.id.toString()))
           )}
-        </Select>
-        <Select
-          displayEmpty
-          value={filters.apellido}
-          onChange={(e) => handleChange(e, "apellido")}
-          input={<OutlinedInput />}
-          renderValue={(selected) => {
-            if (selected.length === 0) {
-              return <em>Apellido</em>;
-            }
-
-            return selected;
-          }}
-          inputProps={{ "aria-label": "Without label" }}
-        >
-          <MenuItem value="">Todos</MenuItem>
-          {Array.from(new Set(fakeSales.map((sale) => sale.apellido))).map(
-            (apellido) => (
-              <MenuItem key={apellido} value={apellido}>
-                {apellido}
-              </MenuItem>
-            )
-          )}
-        </Select>
-        <Select
-          displayEmpty
-          value={filters.fecha}
-          onChange={(e) => handleChange(e, "fecha")}
-          input={<OutlinedInput />}
-          renderValue={(selected) => {
-            if (selected.length === 0) {
-              return <em>Fecha</em>;
-            }
-
-            return selected;
-          }}
-          inputProps={{ "aria-label": "Without label" }}
-        >
-          <MenuItem value="">Todos</MenuItem>
-          {Array.from(new Set(fakeSales.map((sale) => sale.fecha))).map(
-            (fecha) => (
-              <MenuItem key={fecha} value={fecha}>
-                {fecha}
-              </MenuItem>
-            )
-          )}
-        </Select>
-        <Select
-          displayEmpty
-          value={filters.total}
-          onChange={(e) => handleChange(e, "total")}
-          input={<OutlinedInput />}
-          renderValue={(selected) => {
-            if (selected.length === 0) {
-              return <em>Total</em>;
-            }
-
-            return selected;
-          }}
-          inputProps={{ "aria-label": "Without label" }}
-        >
-          <MenuItem value="">Todos</MenuItem>
-          {Array.from(new Set(fakeSales.map((sale) => sale.total))).map(
-            (total) => (
-              <MenuItem key={total} value={String(total)}>
-                {total}
-              </MenuItem>
-            )
-          )}
-        </Select>
+          sx={{ width: 200 }}
+          renderInput={(params) => <TextField {...params} label="ID" />}
+          onChange={(event, value) => handleChange(value, "id")}
+        />
+        <Autocomplete
+          disablePortal
+          id="combo-box-nombre"
+          options={Array.from(new Set(fakeSales.map((sale) => sale.nombre)))}
+          sx={{ width: 200 }}
+          renderInput={(params) => <TextField {...params} label="Nombre" />}
+          onChange={(event, value) => handleChange(value, "nombre")}
+        />
+        <Autocomplete
+          disablePortal
+          id="combo-box-apellido"
+          options={Array.from(new Set(fakeSales.map((sale) => sale.apellido)))}
+          sx={{ width: 200 }}
+          renderInput={(params) => <TextField {...params} label="Apellido" />}
+          onChange={(event, value) => handleChange(value, "apellido")}
+        />
+        <Autocomplete
+          disablePortal
+          id="combo-box-fecha"
+          options={Array.from(new Set(fakeSales.map((sale) => sale.fecha)))}
+          sx={{ width: 200 }}
+          renderInput={(params) => <TextField {...params} label="Fecha" />}
+          onChange={(event, value) => handleChange(value, "fecha")}
+        />
+        <Autocomplete
+          disablePortal
+          id="combo-box-total"
+          options={Array.from(
+            new Set(fakeSales.map((sale) => sale.total.toString()))
+          )} 
+          sx={{ width: 200 }}
+          renderInput={(params) => <TextField {...params} label="Total" />}
+          onChange={(event, value) => handleChange(value, "total")}
+        />
+        <SearchBar onSearch={handleSearch} />
       </div>
       <table className={styles.table}>
         <thead>
