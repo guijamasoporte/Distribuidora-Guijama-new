@@ -3,6 +3,7 @@ import { Select, MenuItem, SelectChangeEvent } from "@mui/material";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import styles from "./products.module.css";
 import fakeProducts from "./fakeStock";
+import SearchBar from "../../components/searchBar/searchBar";
 
 interface Product {
   codigo: string;
@@ -19,18 +20,17 @@ interface ProductsProps {
 }
 
 const ProductsPage: React.FC<ProductsProps> = () => {
-  const [filters, setFilters] = useState<{ [key: string]: string | undefined }>(
-    {
-      codigo: undefined,
-      titulo: "",
-      rubro: "",
-      marca: "",
-      stock: "",
-      precioCosto: "",
-      precioVenta: "",
-      
-    }
-  );
+  const [filters, setFilters] = useState<{ [key: string]: string | undefined }>({
+    codigo: undefined,
+    titulo: "",
+    rubro: "",
+    marca: "",
+    stock: "",
+    precioCosto: "",
+    precioVenta: "",
+  });
+
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleChange = (
     event: SelectChangeEvent<string | number>,
@@ -40,6 +40,10 @@ const ProductsPage: React.FC<ProductsProps> = () => {
       ...filters,
       [field]: String(event.target.value),
     });
+  };
+
+  const handleSearch = (searchTerm: string) => {
+    setSearchTerm(searchTerm);
   };
 
   const filteredProducts = fakeProducts.filter((product) => {
@@ -55,7 +59,12 @@ const ProductsPage: React.FC<ProductsProps> = () => {
       } else {
         return true;
       }
-    });
+    }) && (
+      searchTerm === "" ||
+      Object.values(product).some(value =>
+        String(value).toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
   });
 
   return (
@@ -150,6 +159,7 @@ const ProductsPage: React.FC<ProductsProps> = () => {
             </MenuItem>
           ))}
         </Select>
+        <SearchBar onSearch={handleSearch} />
       </div>
       <table className={styles.table}>
         <thead>

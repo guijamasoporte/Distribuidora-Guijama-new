@@ -3,6 +3,7 @@ import { Select, MenuItem, SelectChangeEvent } from "@mui/material";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import styles from "./sales.module.css";
 import fakeSales from "./fakeSales";
+import SearchBar from "../../components/searchBar/searchBar";
 
 interface Sale {
   id: number;
@@ -18,7 +19,7 @@ interface SalesProps {
   sales: Sale[];
 }
 
-const SalesPage: React.FC<SalesProps> = ({ sales }) => {
+const SalesPage: React.FC<SalesProps> = () => {
   const [filters, setFilters] = useState<{ [key: string]: string }>({
     id: "",
     nombre: "",
@@ -26,6 +27,8 @@ const SalesPage: React.FC<SalesProps> = ({ sales }) => {
     fecha: "",
     total: "",
   });
+
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleChange = (
     event: SelectChangeEvent<string>,
@@ -37,6 +40,10 @@ const SalesPage: React.FC<SalesProps> = ({ sales }) => {
     });
   };
 
+  const handleSearch = (searchTerm: string) => {
+    setSearchTerm(searchTerm);
+  };
+
   const filteredSales = fakeSales.filter((sale) => {
     return Object.keys(filters).every((key) =>
       filters[key as keyof Sale]
@@ -44,6 +51,11 @@ const SalesPage: React.FC<SalesProps> = ({ sales }) => {
             .toLowerCase()
             .includes(filters[key as keyof Sale].toLowerCase())
         : true
+    ) && (
+      searchTerm === "" ||
+      Object.values(sale).some(value =>
+        String(value).toLowerCase().includes(searchTerm.toLowerCase())
+      )
     );
   });
 
@@ -164,6 +176,7 @@ const SalesPage: React.FC<SalesProps> = ({ sales }) => {
             )
           )}
         </Select>
+        <SearchBar onSearch={handleSearch} />
       </div>
       <table className={styles.table}>
         <thead>
