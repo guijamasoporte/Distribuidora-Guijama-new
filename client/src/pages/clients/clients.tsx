@@ -1,8 +1,9 @@
 // ClientsPage.tsx
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from './clients.module.css';
 import fakeClients from './fakeClientes'; 
+import InstanceOfAxios from '../../utils/intanceAxios';
 
 
 interface Client {
@@ -20,10 +21,14 @@ interface ClientsProps {
 }
 
 const ClientsPage: React.FC<ClientsProps> = () => {
+
+useEffect(()=>{
+},[])
+
   return (
     <div className={styles.tableContainer}>
       <h1>Clientes</h1>
-      <table className={styles.table}>
+      {/* <table className={styles.table}>
         <thead>
           <tr>
             <th>ID</th>
@@ -56,7 +61,7 @@ const ClientsPage: React.FC<ClientsProps> = () => {
             </tr>
           ))}
         </tbody>
-      </table>
+      </table> */}
     </div>
   );
 }

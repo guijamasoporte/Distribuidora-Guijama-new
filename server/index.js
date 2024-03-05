@@ -12,7 +12,7 @@ import invoiceRoute from "./src/routes/invoice.routes.js";
 
 const app = express();
 
-const whiteList = [process.env.DEPLOY_CLIENT_URL, "http://localhost:3000"];
+// const whiteList = [process.env.DEPLOY_CLIENT_URL, "http://localhost:3000","http://localhost:3000/undefined"];
 
 // app.use(
 //   cors({
@@ -39,7 +39,7 @@ app.use("/invoice",invoiceRoute)
 
 
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 app.listen(port, () => {
   console.log("server listen on port", port);
 });
