@@ -28,6 +28,7 @@ const ProductsPage: React.FC<ProductsProps> = () => {
       stock: "",
       precioCosto: "",
       precioVenta: "",
+      
     }
   );
 
