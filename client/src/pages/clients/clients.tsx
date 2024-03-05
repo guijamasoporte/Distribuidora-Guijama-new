@@ -20,7 +20,7 @@ interface ClientsProps {
 }
 
 const ClientsPage: React.FC<ClientsProps> = ({ clients }) => {
-  const [filters, setFilters] = useState<{ [key: string]: string }>({
+  const initialFilters = {
     id: "",
     nombre: "",
     apellido: "",
@@ -28,7 +28,11 @@ const ClientsPage: React.FC<ClientsProps> = ({ clients }) => {
     email: "",
     direccion: "",
     compras: "",
-  });
+  };
+
+  const [filters, setFilters] = useState<{ [key: string]: string }>(
+    initialFilters
+  );
 
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -46,18 +50,24 @@ const ClientsPage: React.FC<ClientsProps> = ({ clients }) => {
     setSearchTerm(searchTerm);
   };
 
+  const handleClearFilters = () => {
+    setFilters(initialFilters);
+    setSearchTerm("");
+  };
+
   const filteredClients = fakeClients.filter((client) => {
-    return Object.keys(filters).every((key) =>
-      filters[key as keyof Client]
-        ? String(client[key as keyof Client])
-            .toLowerCase()
-            .includes(filters[key as keyof Client].toLowerCase())
-        : true
-    ) && (
-      searchTerm === "" ||
-      Object.values(client).some(value =>
-        String(value).toLowerCase().includes(searchTerm.toLowerCase())
-      )
+    return (
+      Object.keys(filters).every((key) =>
+        filters[key as keyof Client]
+          ? String(client[key as keyof Client])
+              .toLowerCase()
+              .includes(filters[key as keyof Client].toLowerCase())
+          : true
+      ) &&
+      (searchTerm === "" ||
+        Object.values(client).some((value) =>
+          String(value).toLowerCase().includes(searchTerm.toLowerCase())
+        ))
     );
   });
 
@@ -65,6 +75,9 @@ const ClientsPage: React.FC<ClientsProps> = ({ clients }) => {
     <div className={styles.tableContainer}>
       <h1>Clientes</h1>
       <div className={styles.filters}>
+        <button className={styles.clearButton} onClick={handleClearFilters}>
+          Limpiar filtros
+        </button>
         <Select
           displayEmpty
           value={filters.id}
@@ -121,7 +134,9 @@ const ClientsPage: React.FC<ClientsProps> = ({ clients }) => {
           inputProps={{ "aria-label": "Without label" }}
         >
           <MenuItem value="">Todos</MenuItem>
-          {Array.from(new Set(fakeClients.map((apellido) => apellido.apellido))).map((apellido) => (
+          {Array.from(
+            new Set(fakeClients.map((apellido) => apellido.apellido))
+          ).map((apellido) => (
             <MenuItem key={apellido} value={String(apellido)}>
               {apellido}
             </MenuItem>
