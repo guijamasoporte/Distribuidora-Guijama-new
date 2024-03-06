@@ -7,6 +7,7 @@ import SearchBar from "../../components/searchBar/searchBar";
 import Pagination from "../../components/pagination/pagination";
 import InstanceOfAxios from "../../utils/intanceAxios";
 import Swal from "sweetalert2";
+import AddProductModal from "../../components/modals/modalProduct/modalAddProduct";
 
 interface Product {
   code: string;
@@ -24,6 +25,7 @@ interface ProductsProps {
 }
 
 const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
+  const [showModal, setShowModal] = useState(false);
   const initialFilters: Record<keyof Product, string> = {
     code: "",
     title: "",
@@ -215,11 +217,17 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
         paginate={paginate}
       />
       <div className={styles.buttonsFooter}>
-        <button className={styles.buttonAdd}>Agregar nuevo producto</button>
+        <button className={styles.buttonAdd} onClick={() => setShowModal(true)}>
+          Agregar nuevo producto
+        </button>
         <button className={styles.buttonModify}>
           Modificar precios x Rubro
         </button>
       </div>
+      <AddProductModal
+        open={showModal}
+        handleClose={() => setShowModal(false)}
+      />
     </div>
   );
 };

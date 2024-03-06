@@ -1,0 +1,38 @@
+.titleForm {
+  font-family: "questrial";
+  font-size: 21px;
+  display: flex;
+  justify-content: center;
+}
+
+.formInputs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 30rem;
+  padding: 1rem;
+}
+
+.form {
+  width: 30rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.buttonAdd {
+  height: 3rem;
+  margin: 10px;
+  border-radius: 5px;
+  border: none;
+  font-family: "questrial";
+  font-size: 16px;
+  color: white;
+  background-color: #b69b84;
+}
+
+.buttonAdd:hover {
+  background-color: #603e20;
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
+    rgba(0, 0, 0, 0.22) 0px 10px 10px;
+}
