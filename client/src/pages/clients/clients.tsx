@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./clients.module.css";
 import { Select, MenuItem, SelectChangeEvent } from "@mui/material";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import fakeClients from "./fakeClientes";
 import SearchBar from "../../components/searchBar/searchBar";
+import InstanceOfAxios from "../../utils/intanceAxios";
 
 interface Client {
   id: number;
@@ -35,6 +36,25 @@ const ClientsPage: React.FC<ClientsProps> = ({ clients }) => {
   );
 
   const [searchTerm, setSearchTerm] = useState("");
+
+  const [dataSale, setDataSale] = useState<Array<Client>>([]);
+
+
+
+  // useEffect(() => {
+  //   const fetchClient = async () => {
+  //     try {
+  //       const response =  InstanceOfAxios("/clients", "GET")
+  //       setDataSale(response);
+  //     } catch (error) {
+  //       console.error('Error fetching data:', error);
+  //       // You can add additional error handling or display an error message to the user
+  //     }
+  //   };
+
+  //   fetchClient();
+  // }, []);
+
 
   const handleSelectChange = (
     event: SelectChangeEvent<string>,

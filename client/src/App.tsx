@@ -21,7 +21,7 @@ const App: React.FC = () => {
 
         <Route
           path="/admin/products"
-          element={<ProductsPage products={[]} />}
+          element={<ProductsPage data={[]} />}
         />
         <Route path="/admin/clients" element={<ClientsPage clients={[]} />} />
         <Route path="/admin/sales" element={<SalesPage sales={[]} />} />

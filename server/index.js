@@ -8,7 +8,7 @@ import authRouter from "./src/routes/auth.routes.js";
 import AdminRoute from "./src/routes/admin.routes.js"
 import productRoute from "./src/routes/product.routes.js";
 import clientRoute from "./src/routes/clients.routes.js";
-import invoiceRoute from "./src/routes/invoice.routes.js";
+import salesRoute from "./src/routes/sales.routes.js";
 
 const app = express();
 
@@ -35,7 +35,7 @@ app.use("/", authRouter);
 app.use("/admin",AdminRoute);
 app.use("/products", productRoute);
 app.use("/clients",clientRoute)
-app.use("/invoice",invoiceRoute)
+app.use("/sales",salesRoute)
 
 
 

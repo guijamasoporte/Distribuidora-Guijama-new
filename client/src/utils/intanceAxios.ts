@@ -23,7 +23,7 @@ async function InstanceOfAxios<T>(
   datos?: any,
   token?: string // Token opcional como parámetro
   ): Promise<T | ApiError> {
-    console.log(axiosInstance);
+  
     
   
   try {

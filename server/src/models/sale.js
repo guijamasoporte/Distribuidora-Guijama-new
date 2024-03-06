@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const InvoiceSchema = new mongoose.Schema({
+const SaleSchema = new mongoose.Schema({
   date: {
     type: Date,
   },
@@ -19,4 +19,4 @@ const InvoiceSchema = new mongoose.Schema({
   },
 });
 
-export const Invoice = mongoose.model("Invoice", InvoiceSchema);
+export const Sale = mongoose.model("Sale", SaleSchema);

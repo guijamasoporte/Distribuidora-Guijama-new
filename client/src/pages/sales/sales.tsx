@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TextField } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 import styles from "./sales.module.css";
 import fakeSales from "./fakeSales";
 import SearchBar from "../../components/searchBar/searchBar";
+import InstanceOfAxios from "../../utils/intanceAxios";
 
 interface Sale {
   id: number;
@@ -23,6 +24,12 @@ const SalesPage: React.FC<SalesProps> = () => {
   const [filters, setFilters] = useState<Partial<Sale>>({});
 
   const [searchTerm, setSearchTerm] = useState("");
+
+  useEffect(() => {
+    InstanceOfAxios("/clients", "GET").then((data) => {
+      console.log(data);
+    });
+  }, []);
 
   const handleChange = (value: string | null, field: keyof Sale) => {
     setFilters({
