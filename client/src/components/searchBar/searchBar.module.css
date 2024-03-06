@@ -17,3 +17,20 @@
   outline: none;
   border: 2px solid #1970b8;
 }
+.searchInputContainer {
+  position: relative;
+}
+
+.searchInput {
+  padding-right: 30px;
+}
+
+.clearButton {
+  position: absolute;
+  top: 50%;
+  right: 5px;
+  transform: translateY(-50%);
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}

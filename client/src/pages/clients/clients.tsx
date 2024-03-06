@@ -1,19 +1,22 @@
 import React, { useEffect, useState } from "react";
 import styles from "./clients.module.css";
-import { Select, MenuItem, SelectChangeEvent } from "@mui/material";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import fakeClients from "./fakeClientes";
+import { Autocomplete, TextField } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import SearchIcon from "@mui/icons-material/Search";
 import SearchBar from "../../components/searchBar/searchBar";
 import InstanceOfAxios from "../../utils/intanceAxios";
+import Pagination from "../../components/pagination/pagination";
+import Swal from "sweetalert2";
 
 interface Client {
-  id: number;
-  nombre: string;
-  apellido: string;
-  telefono: string;
+  idClient: number;
+  name: string;
+  lastName: string;
+  phone: string;
   email: string;
-  direccion: string;
-  compras: number;
+  adress: string;
+  buys: number;
 }
 
 interface ClientsProps {
@@ -22,13 +25,13 @@ interface ClientsProps {
 
 const ClientsPage: React.FC<ClientsProps> = ({ clients }) => {
   const initialFilters = {
-    id: "",
-    nombre: "",
-    apellido: "",
-    telefono: "",
+    idClient: "",
+    name: "",
+    lastName: "",
+    phone: "",
     email: "",
-    direccion: "",
-    compras: "",
+    adress: "",
+    buys: "",
   };
 
   const [filters, setFilters] = useState<{ [key: string]: string }>(
@@ -36,33 +39,39 @@ const ClientsPage: React.FC<ClientsProps> = ({ clients }) => {
   );
 
   const [searchTerm, setSearchTerm] = useState("");
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const clientsPerPage = 15;
   const [dataSale, setDataSale] = useState<Array<Client>>([]);
+  const [filteredClients, setFilteredClients] = useState<Client[]>([]);
 
+  useEffect(() => {
+    const fetchClient = async () => {
+      try {
+        const response: any = await InstanceOfAxios("/clients", "GET");
+        if (Array.isArray(response.clients)) {
+          setDataSale(response.clients);
+        } else {
+          console.error(
+            "La respuesta no contiene un array de clientes:",
+            response
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
 
+    fetchClient();
+  }, []);
 
-  // useEffect(() => {
-  //   const fetchClient = async () => {
-  //     try {
-  //       const response =  InstanceOfAxios("/clients", "GET")
-  //       setDataSale(response);
-  //     } catch (error) {
-  //       console.error('Error fetching data:', error);
-  //       // You can add additional error handling or display an error message to the user
-  //     }
-  //   };
-
-  //   fetchClient();
-  // }, []);
-
-
-  const handleSelectChange = (
-    event: SelectChangeEvent<string>,
+  const handleFilterChange = (
+    event: React.SyntheticEvent<Element, Event>,
+    value: string | null,
     field: keyof Client
   ) => {
     setFilters({
       ...filters,
-      [field]: event.target.value,
+      [field]: value || "",
     });
   };
 
@@ -70,98 +79,107 @@ const ClientsPage: React.FC<ClientsProps> = ({ clients }) => {
     setSearchTerm(searchTerm);
   };
 
-  const handleClearFilters = () => {
-    setFilters(initialFilters);
-    setSearchTerm("");
+  const handleEdit = (id: string) => {
+    console.log(`Edit product with id ${id}`);
   };
 
-  const filteredClients = fakeClients.filter((client) => {
-    return (
-      Object.keys(filters).every((key) =>
-        filters[key as keyof Client]
-          ? String(client[key as keyof Client])
-              .toLowerCase()
-              .includes(filters[key as keyof Client].toLowerCase())
-          : true
-      ) &&
-      (searchTerm === "" ||
-        Object.values(client).some((value) =>
-          String(value).toLowerCase().includes(searchTerm.toLowerCase())
-        ))
-    );
-  });
+  const handleDelete = (id: string) => {
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: "¡No podrás revertir esto!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "¡Sí, eliminarlo!",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        console.log(`Eliminar cliente con ID ${id}`);
+        Swal.fire("¡Eliminado!", "El cliente ha sido eliminado.", "success");
+      }
+    });
+  };
+
+  useEffect(() => {
+    const filteredData = dataSale.filter((client) => {
+      return (
+        Object.keys(filters).every((key) =>
+          filters[key as keyof Client]
+            ? String(client[key as keyof Client])
+                .toLowerCase()
+                .includes(filters[key as keyof Client].toLowerCase())
+            : true
+        ) &&
+        (searchTerm === "" ||
+          Object.values(client).some((value) =>
+            String(value).toLowerCase().includes(searchTerm.toLowerCase())
+          ))
+      );
+    });
+    setFilteredClients(filteredData);
+  }, [dataSale, filters, searchTerm]);
+
+  const indexOfLastClient = currentPage * clientsPerPage;
+  const indexOfFirstClient = indexOfLastClient - clientsPerPage;
+  const currentClients = filteredClients.slice(
+    indexOfFirstClient,
+    indexOfLastClient
+  );
+
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   return (
     <div className={styles.tableContainer}>
       <h1 className={styles.title}>Listado de clientes</h1>
       <div className={styles.filters}>
-        <button className={styles.clearButton} onClick={handleClearFilters}>
-          Limpiar filtros
-        </button>
-        <Select
-          displayEmpty
-          value={filters.id}
-          onChange={(e) => handleSelectChange(e, "id")}
-          input={<OutlinedInput />}
-          renderValue={(selected) => {
-            if (selected.length === 0) {
-              return <em>Id</em>;
-            }
-            return selected;
-          }}
-          inputProps={{ "aria-label": "Without label" }}
-        >
-          <MenuItem value="">Todos</MenuItem>
-          {Array.from(new Set(fakeClients.map((sale) => sale.id))).map((id) => (
-            <MenuItem key={id} value={String(id)}>
-              {id}
-            </MenuItem>
-          ))}
-        </Select>
-        <Select
-          displayEmpty
-          value={filters.nombre}
-          onChange={(e) => handleSelectChange(e, "nombre")}
-          input={<OutlinedInput />}
-          renderValue={(selected) => {
-            if (selected.length === 0) {
-              return <em>Nombre</em>;
-            }
-            return selected;
-          }}
-          inputProps={{ "aria-label": "Without label" }}
-        >
-          <MenuItem value="">Todos</MenuItem>
-          {Array.from(new Set(fakeClients.map((nombre) => nombre.nombre))).map(
-            (nombre) => (
-              <MenuItem key={nombre} value={String(nombre)}>
-                {nombre}
-              </MenuItem>
-            )
+        <Autocomplete
+          disablePortal
+          id="combo-box-id"
+          options={Array.from(
+            new Set(currentClients.map((client, index) => client.idClient))
           )}
-        </Select>
-        <Select
-          displayEmpty
-          value={filters.apellido}
-          onChange={(e) => handleSelectChange(e, "apellido")}
-          input={<OutlinedInput />}
-          renderValue={(selected) => {
-            if (selected.length === 0) {
-              return <em>Apellido</em>;
-            }
-            return selected;
-          }}
-          inputProps={{ "aria-label": "Without label" }}
-        >
-          <MenuItem value="">Todos</MenuItem>
-          {Array.from(
-            new Set(fakeClients.map((apellido) => apellido.apellido))
-          ).map((apellido) => (
-            <MenuItem key={apellido} value={String(apellido)}>
-              {apellido}
-            </MenuItem>
-          ))}
-        </Select>
+          sx={{ width: 200 }}
+          renderInput={(params) => <TextField {...params} label="Id" />}
+          onChange={(event, value) =>
+            handleFilterChange(
+              event,
+              value ? value.toString() : null,
+              "idClient"
+            )
+          }
+        />
+
+        <Autocomplete
+          disablePortal
+          id="combo-box-nombre"
+          options={Array.from(
+            new Set(currentClients.map((client, index) => client.name))
+          )}
+          sx={{ width: 200 }}
+          renderInput={(params) => <TextField {...params} label="Nombre" />}
+          onChange={(event, value) =>
+            handleFilterChange(event, value ? value.toString() : null, "name")
+          }
+        />
+
+        <Autocomplete
+          disablePortal
+          id="combo-box-apellido"
+          options={Array.from(
+            new Set(currentClients.map((client, index) => client.lastName))
+          )}
+          sx={{ width: 200 }}
+          renderInput={(params) => <TextField {...params} label="Apellido" />}
+          onChange={(event, value) =>
+            handleFilterChange(
+              event,
+              value ? value.toString() : null,
+              "lastName"
+            )
+          }
+        />
+
         <SearchBar onSearch={handleSearch} />
       </div>
       <table className={styles.table}>
@@ -179,25 +197,51 @@ const ClientsPage: React.FC<ClientsProps> = ({ clients }) => {
           </tr>
         </thead>
         <tbody>
-          {filteredClients.map((client, index) => (
+          {currentClients.map((client, index) => (
             <tr key={index}>
-              <td>{client.id}</td>
-              <td>{client.nombre}</td>
-              <td>{client.apellido}</td>
-              <td>{client.telefono}</td>
+              <td>{client.idClient}</td>
+              <td>{client.name}</td>
+              <td>{client.lastName}</td>
+              <td>{client.phone}</td>
               <td>{client.email}</td>
-              <td>{client.direccion}</td>
-              <td>{client.compras}</td>
+              <td>{client.adress}</td>
               <td>
-                <button className={styles.button}>Editar</button>
+                <button
+                  className={styles.buttonSee}
+                  onClick={() => handleEdit(`${client.buys}`)}
+                >
+                  <SearchIcon />
+                </button>
               </td>
               <td>
-                <button className={styles.button}>Borrar</button>
+                <button
+                  className={styles.buttonEdit}
+                  onClick={() => handleEdit(`${client.idClient}`)}
+                >
+                  <EditIcon />
+                </button>
+              </td>
+              <td>
+                <button
+                  className={styles.buttonDelete}
+                  onClick={() => handleDelete(`${client.idClient}`)}
+                >
+                  <DeleteIcon />
+                </button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+      <Pagination
+        totalItems={filteredClients.length}
+        itemsPerPage={clientsPerPage}
+        currentPage={currentPage}
+        paginate={paginate}
+      />
+      <div className={styles.buttonsFooter}>
+        <button className={styles.buttonAdd}>Agregar nuevo cliente</button>
+      </div>
     </div>
   );
 };

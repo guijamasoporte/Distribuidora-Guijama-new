@@ -6,6 +6,7 @@ import styles from "./products.module.css";
 import SearchBar from "../../components/searchBar/searchBar";
 import Pagination from "../../components/pagination/pagination";
 import InstanceOfAxios from "../../utils/intanceAxios";
+import Swal from "sweetalert2";
 
 interface Product {
   code: string;
@@ -56,7 +57,9 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
   const applyFilters = (product: Product) => {
     return Object.entries(filters).every(([key, value]) => {
       const productValue = String(product[key as keyof Product]).toLowerCase();
-      return value.toLowerCase() === "" || productValue.includes(value.toLowerCase());
+      return (
+        value.toLowerCase() === "" || productValue.includes(value.toLowerCase())
+      );
     });
   };
 
@@ -80,7 +83,21 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
   };
 
   const handleDelete = (code: string) => {
-    console.log(`Delete product with code ${code}`);
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: "¡No podrás revertir esto!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "¡Sí, eliminarlo!",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        console.log(`Eliminar cliente con ID ${code}`);
+        Swal.fire("¡Eliminado!", "El cliente ha sido eliminado.", "success");
+      }
+    });
   };
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
@@ -90,11 +107,12 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   const slicedProducts = currentProducts
     .filter(applyFilters)
-    .filter(product =>
-      searchTerm === "" ||
-      Object.values(product).some(value =>
-        String(value).toLowerCase().includes(searchTerm.toLowerCase())
-      )
+    .filter(
+      (product) =>
+        searchTerm === "" ||
+        Object.values(product).some((value) =>
+          String(value).toLowerCase().includes(searchTerm.toLowerCase())
+        )
     )
     .slice(indexOfFirstProduct, indexOfLastProduct);
 
@@ -105,7 +123,9 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
         <Autocomplete
           disablePortal
           id="combo-box-codigo"
-          options={Array.from(new Set(currentProducts.map((product) => product.code)))}
+          options={Array.from(
+            new Set(currentProducts.map((product) => product.code))
+          )}
           sx={{ width: 200 }}
           renderInput={(params) => <TextField {...params} label="Código" />}
           onChange={(event, value) => handleFilterChange(event, value, "code")}
@@ -113,7 +133,9 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
         <Autocomplete
           disablePortal
           id="combo-box-titulo"
-          options={Array.from(new Set(currentProducts.map((product) => product.title)))}
+          options={Array.from(
+            new Set(currentProducts.map((product) => product.title))
+          )}
           sx={{ width: 200 }}
           renderInput={(params) => <TextField {...params} label="Título" />}
           onChange={(event, value) => handleFilterChange(event, value, "title")}
@@ -121,15 +143,21 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
         <Autocomplete
           disablePortal
           id="combo-box-rubro"
-          options={Array.from(new Set(currentProducts.map((product) => product.category)))}
+          options={Array.from(
+            new Set(currentProducts.map((product) => product.category))
+          )}
           sx={{ width: 200 }}
           renderInput={(params) => <TextField {...params} label="Rubro" />}
-          onChange={(event, value) => handleFilterChange(event, value, "category")}
+          onChange={(event, value) =>
+            handleFilterChange(event, value, "category")
+          }
         />
         <Autocomplete
           disablePortal
           id="combo-box-marca"
-          options={Array.from(new Set(currentProducts.map((product) => product.brand)))}
+          options={Array.from(
+            new Set(currentProducts.map((product) => product.brand))
+          )}
           sx={{ width: 200 }}
           renderInput={(params) => <TextField {...params} label="Marca" />}
           onChange={(event, value) => handleFilterChange(event, value, "brand")}
@@ -144,8 +172,8 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
             <th>Rubro</th>
             <th>Marca</th>
             <th>Stock</th>
-            <th>Precio Costo</th>
-            <th>Precio Venta</th>
+            <th>Costo</th>
+            <th>Venta</th>
             <th>Editar</th>
             <th>Borrar</th>
           </tr>
@@ -158,8 +186,8 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
               <td>{product.category}</td>
               <td>{product.brand}</td>
               <td>{product.stock}</td>
-              <td>{product.priceCost}</td>
-              <td>{product.priceList}</td>
+              <td>${product.priceCost}</td>
+              <td>${product.priceList}</td>
               <td>
                 <button
                   className={styles.buttonEdit}
