@@ -14,34 +14,45 @@ const App: React.FC = () => {
   return (
     <div className="App">
       <Header />
-      <NavBar />
 
       <Routes>
-        <Route path="/" Component={Home} />
-        <Route path="/login" Component={LoginPage} />
+        {/* Rutas sin NavBar */}
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<LoginPage />} />
 
+        {/* Rutas con NavBar */}
         <Route
-          path="/admin/products"
+          path="/admin/*"
           element={
-            <ProtectedRoute>
-              <ProductsPage data={[]} />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/clients"
-          element={
-            <ProtectedRoute>
-              <ClientsPage clients={[]} />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/sales"
-          element={
-            <ProtectedRoute>
-              <SalesPage sales={[]} />
-            </ProtectedRoute>
+            <>
+              <NavBar />
+              <Routes>
+                <Route
+                  path="products"
+                  element={
+                    <ProtectedRoute>
+                      <ProductsPage data={[]} />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="clients"
+                  element={
+                    <ProtectedRoute>
+                      <ClientsPage clients={[]} />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="sales"
+                  element={
+                    <ProtectedRoute>
+                      <SalesPage sales={[]} />
+                    </ProtectedRoute>
+                  }
+                />
+              </Routes>
+            </>
           }
         />
       </Routes>

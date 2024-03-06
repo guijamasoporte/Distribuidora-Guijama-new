@@ -4,6 +4,7 @@ import Logo from "../../assets/guijama.svg";
 import { GetDecodedCookie } from "../../utils/DecodedCookie";
 import Swal from "sweetalert2";
 import Cookies from "js-cookie";
+import { NavLink } from "react-router-dom";
 
 export default function Header() {
   const [login, setLogin] = useState(false);
@@ -30,7 +31,7 @@ export default function Header() {
     }).then((result) => {
       if (result.isConfirmed) {
         Cookies.remove("cookieToken");
-        window.location.href = "/login";
+        window.location.href = "/";
       }
     });
   };
@@ -43,9 +44,9 @@ export default function Header() {
           Cerrar sesión
         </button>
       ) : (
-        <button className={styles["logout-btn"]} onClick={handleLogout}>
-          Iniciar sesion
-        </button>
+        <NavLink to="/login">
+          <button className={styles["logout-btn"]}>Iniciar sesion</button>
+        </NavLink>
       )}
     </header>
   );
