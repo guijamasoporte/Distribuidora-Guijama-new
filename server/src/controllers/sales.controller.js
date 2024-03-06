@@ -3,7 +3,7 @@ import Sale from "../models/sale.js";
 import { formatError } from "../utils/formatError.js";
 
 export const createSale = async (req, res) => {
-  const { products, priceTotal, client,dues, invoice } = req.body;
+  const { products, priceTotal, client, dues, invoice } = req.body;
   try {
     let currentDate = new Date();
     const timeZoneOffset = -3; // La diferencia de la zona horaria en horas
@@ -13,9 +13,9 @@ export const createSale = async (req, res) => {
       date: currentDate,
       products: products,
       priceTotal: priceTotal,
-      dues:dues,
-      client:client,
-      invoice:invoice
+      dues: dues,
+      client: client,
+      invoice: invoice,
     });
 
     // for (const el of List) {
@@ -59,16 +59,19 @@ export const GetSaletById = async (req, res) => {
 export const UpdateSaletById = async (req, res) => {
   const { id } = req.params;
 
-  const { products, priceTotal, client, pdf  } = req.body;
+  const { products, priceTotal, client, dues, invoice, state } = req.body;
 
   try {
     let sale = await Sale.findByIdAndUpdate(
       id,
       {
-        product:products,
-        priceTotal,
-        client,
-        pdf
+        date: currentDate,
+        products: products,
+        priceTotal: priceTotal,
+        dues: dues,
+        client: client,
+        invoice: invoice,
+        state:state,
       },
       { new: true }
     );

@@ -8,6 +8,7 @@ import ClientsPage from "./pages/clients/clients";
 import SalesPage from "./pages/sales/sales";
 import Home from "./pages/Home/home";
 import LoginPage from "./pages/login/login";
+import { ProtectedRoute } from "./pages/ProtectedRoutes/ProtectedRoute";
 
 const App: React.FC = () => {
   return (
@@ -21,10 +22,28 @@ const App: React.FC = () => {
 
         <Route
           path="/admin/products"
-          element={<ProductsPage data={[]} />}
+          element={
+            <ProtectedRoute>
+              <ProductsPage data={[]} />
+            </ProtectedRoute>
+          }
         />
-        <Route path="/admin/clients" element={<ClientsPage clients={[]} />} />
-        <Route path="/admin/sales" element={<SalesPage sales={[]} />} />
+        <Route
+          path="/admin/clients"
+          element={
+            <ProtectedRoute>
+              <ClientsPage clients={[]} />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/sales"
+          element={
+            <ProtectedRoute>
+              <SalesPage sales={[]} />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </div>
   );

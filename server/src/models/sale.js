@@ -28,6 +28,10 @@ const SaleSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
+  state:{
+    type:Boolean,
+    default:false //sale open
+  }
 });
 
 SaleSchema.pre("save", async function (next) {
