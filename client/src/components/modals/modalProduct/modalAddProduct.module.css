@@ -1,8 +1,9 @@
 .titleForm {
   font-family: "questrial";
-  font-size: 21px;
+  font-size: 24px;
   display: flex;
   justify-content: center;
+  color: #603e20;
 }
 
 .formInputs {
