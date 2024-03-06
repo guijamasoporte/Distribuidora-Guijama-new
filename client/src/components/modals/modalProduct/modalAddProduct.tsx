@@ -35,7 +35,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
     title: "",
     category: "",
     brand: "",
-    stock: 0,
+    stock:0,
     priceCost: 0,
     priceList: 0,
     image: [],

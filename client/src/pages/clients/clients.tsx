@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./clients.module.css";
-import { Autocomplete, TextField } from "@mui/material";
+import { Autocomplete, Button, TextField } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import SearchIcon from "@mui/icons-material/Search";
@@ -8,6 +8,7 @@ import SearchBar from "../../components/searchBar/searchBar";
 import InstanceOfAxios from "../../utils/intanceAxios";
 import Pagination from "../../components/pagination/pagination";
 import Swal from "sweetalert2";
+import CreateClientModal from "../../components/modals/modalClient/modalAddClient/modalAddClient";
 
 interface Client {
   idClient: number;
@@ -24,6 +25,7 @@ interface ClientsProps {
 }
 
 const ClientsPage: React.FC<ClientsProps> = ({ clients }) => {
+  const [openModal, setOpenModal] = useState(false);
   const initialFilters = {
     idClient: "",
     name: "",
@@ -64,6 +66,18 @@ const ClientsPage: React.FC<ClientsProps> = ({ clients }) => {
     fetchClient();
   }, []);
 
+  const handleCreateClient = async (newClient: Client) => {
+    try {
+      await InstanceOfAxios("/clients", "POST", newClient);
+      setDataSale([...dataSale, newClient]);
+      Swal.fire("¡Éxito!", "Cliente creado correctamente.", "success");
+    } catch (error) {
+      console.error("Error creating client:", error);
+      Swal.fire("¡Error!", "Error al crear el cliente.", "error");
+    }
+  };
+
+  
   const handleFilterChange = (
     event: React.SyntheticEvent<Element, Event>,
     value: string | null,
@@ -240,8 +254,15 @@ const ClientsPage: React.FC<ClientsProps> = ({ clients }) => {
         paginate={paginate}
       />
       <div className={styles.buttonsFooter}>
-        <button className={styles.buttonAdd}>Agregar nuevo cliente</button>
+        <button className={styles.buttonAdd} onClick={() => setOpenModal(true)}>
+          Agregar nuevo cliente
+        </button>
       </div>
+      <CreateClientModal
+        open={openModal}
+        onClose={() => setOpenModal(false)}
+        onCreate={handleCreateClient}
+      />
     </div>
   );
 };
