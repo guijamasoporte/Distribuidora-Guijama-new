@@ -21,26 +21,20 @@ const Login: React.FC = () => {
     setDataLogin({ ...dataLogin, [property]: value });
   };
 
-  const handleSubmitLogin = async(e: FormEvent<HTMLFormElement>) => {
+  const handleSubmitLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     Cookies.remove("cookieToken");
 
     await InstanceOfAxios("/login", "POST", dataLogin).then((data: any) => {
-        console.log(data);
-    
+      console.log(data);
+
       document.cookie =
         encodeURIComponent("cookieToken") +
         "=" +
         encodeURIComponent(data.token);
-    //   window.location.href = "/";
+      window.location.href = "/admin/products";
     });
-};
-
-//   await axios
-//     .post("/login", {
-//       dataLogin,
-//     })
-//     .then((data) => console.log(data));
+  };
 
 
   return (

@@ -8,23 +8,53 @@ import ClientsPage from "./pages/clients/clients";
 import SalesPage from "./pages/sales/sales";
 import Home from "./pages/Home/home";
 import LoginPage from "./pages/login/login";
+import { ProtectedRoute } from "./pages/ProtectedRoutes/ProtectedRoute";
 
 const App: React.FC = () => {
   return (
     <div className="App">
       <Header />
-      <NavBar />
 
       <Routes>
-        <Route path="/" Component={Home} />
-        <Route path="/login" Component={LoginPage} />
+        {/* Rutas sin NavBar */}
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<LoginPage />} />
 
+        {/* Rutas con NavBar */}
         <Route
-          path="/admin/products"
-          element={<ProductsPage data={[]} />}
+          path="/admin/*"
+          element={
+            <>
+              <NavBar />
+              <Routes>
+                <Route
+                  path="products"
+                  element={
+                    <ProtectedRoute>
+                      <ProductsPage data={[]} />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="clients"
+                  element={
+                    <ProtectedRoute>
+                      <ClientsPage clients={[]} />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="sales"
+                  element={
+                    <ProtectedRoute>
+                      <SalesPage sales={[]} />
+                    </ProtectedRoute>
+                  }
+                />
+              </Routes>
+            </>
+          }
         />
-        <Route path="/admin/clients" element={<ClientsPage clients={[]} />} />
-        <Route path="/admin/sales" element={<SalesPage sales={[]} />} />
       </Routes>
     </div>
   );
