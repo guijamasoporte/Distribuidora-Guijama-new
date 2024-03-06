@@ -1,5 +1,5 @@
 .title {
-  background-color:#9EC5CA;
+  background-color: #9ec5ca;
   color: white;
   padding: 0.5rem 2rem;
   border-radius: 5px;
@@ -26,6 +26,7 @@
   border-radius: 10px;
   width: 100%;
   border-collapse: collapse;
+  font-family: "noto sans";
 }
 
 .table th,
@@ -35,26 +36,63 @@
 }
 
 .table th {
-  background-color: #f2f2f2;
-}
-
-.table tr:nth-child(even) {
-  background-color: #f2f2f2;
+  background-color: #b69b84;
+  color: white;
 }
 
 .table tr:hover {
-  background-color: #ddd;
+  background-color: #9ec5ca67;
 }
 
-.button {
-  padding: 5px 10px;
+.buttonEdit,
+.buttonDelete,
+.buttonSee {
   border: none;
-  background-color: #007bff;
-  color: #fff;
-  cursor: pointer;
-  transition: background-color 0.3s;
+  background-color: transparent;
+  transition: transform 0.3s ease;
 }
 
-.button:hover {
-  background-color: #0056b3;
+.buttonEdit,
+.buttonSee {
+  color: #603e20;
+}
+
+.buttonDelete {
+  color: #d60303;
+}
+
+.buttonEdit:hover,
+.buttonDelete:hover,
+.buttonSee:hover {
+  cursor: pointer;
+  transform: scale(1.4);
+}
+
+.buttonsFooter {
+  display: flex;
+  width: 100%;
+  padding-top: 2rem;
+  padding-bottom: 3rem;
+}
+
+.buttonAdd {
+  background-color: #b69b84;
+  color: white;
+  padding: 0.5rem 2rem;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "questrial";
+  font-size: 24px;
+  border: none;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+}
+
+.buttonAdd:hover {
+  background-color: #603e20;
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
+    rgba(0, 0, 0, 0.22) 0px 10px 10px;
 }

@@ -1,5 +1,6 @@
 import React, { useState, ChangeEvent } from "react";
 import styles from "./searchBar.module.css";
+import ClearIcon from "@mui/icons-material/Clear"; 
 
 interface CustomSearchBarProps {
   onSearch: (searchTerm: string) => void;
@@ -14,6 +15,11 @@ const SearchBar: React.FC<CustomSearchBarProps> = ({ onSearch }) => {
     onSearch(value);
   };
 
+  const handleClearSearch = () => {
+    setSearchTerm("");
+    onSearch(""); 
+  };
+
   return (
     <div className={styles.searchBarContainer}>
       <input
@@ -23,6 +29,11 @@ const SearchBar: React.FC<CustomSearchBarProps> = ({ onSearch }) => {
         onChange={handleSearch}
         className={styles.searchInput}
       />
+      {searchTerm && (
+        <button onClick={handleClearSearch} className={styles.clearButton}>
+          <ClearIcon />
+        </button>
+      )}
     </div>
   );
 };
