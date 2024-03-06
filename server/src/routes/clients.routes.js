@@ -11,7 +11,7 @@ import { verifyToken, isAdmin } from "../middlewares/VerifyToken.js";
 const router = express.Router();
 
 //AGREGAR MIDDLEWARE ↓
-router.post("/create", [verifyToken, isAdmin], createClient);
+router.post("/", createClient);
 router.get("/", getAllClient);
 router.get("/:id", getClientById);
 router.put("/:id", [verifyToken, isAdmin], updateClientnById);

@@ -2,15 +2,16 @@ import { formatError } from "../utils/formatError.js";
 import { Client } from "../models/clients.js";
 
 export const createClient = async (req, res) => {
-  const { name, lastName, phone, email, adress, invoices } = req.body;
+  const { name, lastName, phone, email, adress, buys } = req.body;
   try {
     let client = new Client({
+      
       name: name[0].toUpperCase() + name.slice(1),
       lastName: lastName[0].toUpperCase() + lastName.slice(1),
       phone,
       email,
       adress,
-      invoices,
+      buys,
     });
    await client.save();
     return res.status(200).json({ msg: "client creado" });

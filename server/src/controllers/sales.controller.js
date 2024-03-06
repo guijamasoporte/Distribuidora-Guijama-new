@@ -1,9 +1,9 @@
-import { Sale } from "../models/sale.js";
 import { Product } from "../models/products.js";
+import Sale from "../models/sale.js";
 import { formatError } from "../utils/formatError.js";
 
 export const createSale = async (req, res) => {
-  const { products, priceTotal, client, pdf } = req.body;
+  const { products, priceTotal, client,dues, invoice } = req.body;
   try {
     let currentDate = new Date();
     const timeZoneOffset = -3; // La diferencia de la zona horaria en horas
@@ -13,8 +13,9 @@ export const createSale = async (req, res) => {
       date: currentDate,
       products: products,
       priceTotal: priceTotal,
+      dues:dues,
       client:client,
-      pdf:pdf
+      invoice:invoice
     });
 
     // for (const el of List) {

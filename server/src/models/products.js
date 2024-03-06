@@ -14,9 +14,6 @@ const productSchema = new mongoose.Schema({
     type: Number,
     default: null,
   },
-  description: {
-    type: String,
-  },
   priceList: {
     type: Number,
     required: true,
@@ -31,10 +28,6 @@ const productSchema = new mongoose.Schema({
   },
   brand: {
     type: String,
-  },
-  amount: {
-    type: String,
-    default:""
   },
   image: {
     type: Array,

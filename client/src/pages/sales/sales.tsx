@@ -2,18 +2,27 @@ import React, { useEffect, useState } from "react";
 import { TextField } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 import styles from "./sales.module.css";
-import fakeSales from "./fakeSales";
 import SearchBar from "../../components/searchBar/searchBar";
 import InstanceOfAxios from "../../utils/intanceAxios";
 
+interface Client {
+  name: string;
+  lastName: string;
+}
+
+interface Dues {
+  payd: number;
+  cant: number;
+}
+
 interface Sale {
-  id: number;
-  nombre: string;
-  apellido: string;
-  fecha: string;
-  total: number;
-  cuotas: number;
-  remito: string;
+  idSale: number;
+  client: Client;
+  product: object; // Asumí que "product" es un objeto
+  date: string;
+  priceTotal: number;
+  dues: Dues;
+  invoice: string;
 }
 
 interface SalesProps {
@@ -22,19 +31,26 @@ interface SalesProps {
 
 const SalesPage: React.FC<SalesProps> = () => {
   const [filters, setFilters] = useState<Partial<Sale>>({});
-
   const [searchTerm, setSearchTerm] = useState("");
+  const [dataSales, setDataSales] = useState<Sale[]>([]);
 
   useEffect(() => {
-    InstanceOfAxios("/clients", "GET").then((data) => {
-      console.log(data);
-    });
+    const fetchData = async () => {
+      try {
+        const response: any = await InstanceOfAxios("/sales", "GET");
+        setDataSales(response);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
   }, []);
 
   const handleChange = (value: string | null, field: keyof Sale) => {
     setFilters({
       ...filters,
-      [field]: value !== null ? String(value) : "", // Convertir a string
+      [field]: value !== null ? value : "",
     });
   };
 
@@ -42,24 +58,53 @@ const SalesPage: React.FC<SalesProps> = () => {
     setSearchTerm(searchTerm);
   };
 
-  const filteredSales = fakeSales.filter((sale) => {
-    return (
-      Object.keys(filters).every((key) =>
-        filters[key as keyof Sale]
-          ? String(sale[key as keyof Sale])
-              .toLowerCase()
-              .includes(
-                (filters[key as keyof Sale] || "").toString().toLowerCase()
-              )
-          : true
-      ) &&
-      (searchTerm === "" ||
-        Object.values(sale).some((value) =>
-          String(value).toLowerCase().includes(searchTerm.toLowerCase())
-        ))
-    );
-  });
+  const filteredSales = Array.isArray(dataSales)
+    ? dataSales.filter((sale) => {
+        return (
+          Object.keys(filters).every((key) =>
+            filters[key as keyof Sale]
+              ? key === "client"
+                ? String(sale.client.name)
+                    .toLowerCase()
+                    .includes(
+                      (filters[key as keyof Sale] || "")
+                        .toString()
+                        .toLowerCase()
+                    )
+                : String(sale[key as keyof Sale])
+                    .toLowerCase()
+                    .includes(
+                      (filters[key as keyof Sale] || "")
+                        .toString()
+                        .toLowerCase()
+                    )
+              : true
+          ) &&
+          (searchTerm === "" ||
+            Object.values(sale).some((value) =>
+              String(value).toLowerCase().includes(searchTerm.toLowerCase())
+            ))
+        );
+      })
+    : [];
 
+  const formatDateModal = (isoDate: string): string => {
+    const date = new Date(isoDate);
+    const options: Intl.DateTimeFormatOptions = {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZone: "UTC",
+    };
+
+    const formattedDate: string = new Intl.DateTimeFormat(
+      "es-AR",
+      options
+    ).format(date);
+    return formattedDate;
+  };
   return (
     <div className={styles.tableContainer}>
       <h1 className={styles.title}>Listado de ventas</h1>
@@ -68,46 +113,24 @@ const SalesPage: React.FC<SalesProps> = () => {
           disablePortal
           id="combo-box-id"
           options={Array.from(
-            new Set(fakeSales.map((sale) => sale.id.toString()))
+            new Set(dataSales.map((sale) => sale.idSale?.toString() || ""))
           )}
           sx={{ width: 200 }}
           renderInput={(params) => <TextField {...params} label="ID" />}
-          onChange={(event, value) => handleChange(value, "id")}
+          onChange={(event, value) => handleChange(value, "idSale")}
         />
         <Autocomplete
           disablePortal
           id="combo-box-nombre"
-          options={Array.from(new Set(fakeSales.map((sale) => sale.nombre)))}
+          options={Array.from(
+            new Set(dataSales.map((sale) => sale.client.name))
+          )}
           sx={{ width: 200 }}
           renderInput={(params) => <TextField {...params} label="Nombre" />}
-          onChange={(event, value) => handleChange(value, "nombre")}
+          onChange={(event, value) => handleChange(value, "client")}
         />
-        <Autocomplete
-          disablePortal
-          id="combo-box-apellido"
-          options={Array.from(new Set(fakeSales.map((sale) => sale.apellido)))}
-          sx={{ width: 200 }}
-          renderInput={(params) => <TextField {...params} label="Apellido" />}
-          onChange={(event, value) => handleChange(value, "apellido")}
-        />
-        <Autocomplete
-          disablePortal
-          id="combo-box-fecha"
-          options={Array.from(new Set(fakeSales.map((sale) => sale.fecha)))}
-          sx={{ width: 200 }}
-          renderInput={(params) => <TextField {...params} label="Fecha" />}
-          onChange={(event, value) => handleChange(value, "fecha")}
-        />
-        <Autocomplete
-          disablePortal
-          id="combo-box-total"
-          options={Array.from(
-            new Set(fakeSales.map((sale) => sale.total.toString()))
-          )} 
-          sx={{ width: 200 }}
-          renderInput={(params) => <TextField {...params} label="Total" />}
-          onChange={(event, value) => handleChange(value, "total")}
-        />
+
+        {/* Repeat the Autocomplete block for other fields */}
         <SearchBar onSearch={handleSearch} />
       </div>
       <table className={styles.table}>
@@ -127,13 +150,16 @@ const SalesPage: React.FC<SalesProps> = () => {
         <tbody>
           {filteredSales.map((sale, index) => (
             <tr key={index}>
-              <td>{sale.id}</td>
-              <td>{sale.nombre}</td>
-              <td>{sale.apellido}</td>
-              <td>{sale.fecha}</td>
-              <td>{sale.total}</td>
-              <td>{sale.cuotas}</td>
-              <td>{sale.remito}</td>
+              <td>{sale.idSale}</td>
+              <td>{sale.client.name}</td>
+              <td>{sale.client.lastName}</td>
+              <td>{formatDateModal(sale.date)}</td>
+              <td>{sale.priceTotal}</td>
+              <td>
+                {sale.dues.payd}/{sale.dues.cant}
+              </td>{" "}
+              {/* Updated from 'cuotas' */}
+              <td>{sale.invoice}</td>
               <td>
                 <button className={styles.button}>Editar</button>
               </td>
