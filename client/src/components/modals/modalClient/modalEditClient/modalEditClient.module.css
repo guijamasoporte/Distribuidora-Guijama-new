@@ -22,10 +22,15 @@
 
 .formInputs {
   border: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
 }
 
 .form {
   width: 35rem;
+  gap: 1rem;
   display: flex;
   flex-direction: column;
   justify-content: center;

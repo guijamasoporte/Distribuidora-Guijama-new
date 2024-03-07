@@ -18,7 +18,6 @@ const EditClientModal: React.FC<CreateClientModalProps> = ({
   client,
 }) => {
   const [newClient, setNewClient] = useState({
-    idClient: client.idClient,
     name: client.name,
     lastName: client.lastName,
     phone: client.phone,
@@ -50,18 +49,11 @@ const EditClientModal: React.FC<CreateClientModalProps> = ({
           <form className={styles.form} onSubmit={handleSubmit}>
             <TextField
               className={styles.formField}
-              name="idClient"
-              label="Id Cliente"
-              value={newClient.idClient}
-              fullWidth
-              onChange={(e) => handleChange("idClient", e.target.value)}
-            />
-            <TextField
-              className={styles.formField}
               name="name"
               label="Nombre"
               value={newClient.name}
               fullWidth
+              inputProps={{ maxLength: 20 }}
               onChange={(e) => handleChange("name", e.target.value)}
             />
             <TextField
@@ -70,6 +62,7 @@ const EditClientModal: React.FC<CreateClientModalProps> = ({
               label="Apellido"
               value={newClient.lastName}
               fullWidth
+              inputProps={{ maxLength: 20 }}
               onChange={(e) => handleChange("lastName", e.target.value)}
             />
             <TextField
@@ -78,6 +71,7 @@ const EditClientModal: React.FC<CreateClientModalProps> = ({
               label="Teléfono"
               value={newClient.phone}
               fullWidth
+              inputProps={{ maxLength: 20 }}
               onChange={(e) => handleChange("phone", e.target.value)}
             />
             <TextField
@@ -86,6 +80,7 @@ const EditClientModal: React.FC<CreateClientModalProps> = ({
               label="Email"
               value={newClient.email}
               fullWidth
+              inputProps={{ maxLength: 20 }}
               onChange={(e) => handleChange("email", e.target.value)}
             />
             <TextField
@@ -94,6 +89,7 @@ const EditClientModal: React.FC<CreateClientModalProps> = ({
               label="Dirección"
               value={newClient.adress}
               fullWidth
+              inputProps={{ maxLength: 20 }}
               onChange={(e) => handleChange("adress", e.target.value)}
             />
 

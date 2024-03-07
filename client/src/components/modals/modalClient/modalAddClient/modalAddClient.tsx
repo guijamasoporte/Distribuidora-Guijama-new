@@ -15,7 +15,6 @@ const CreateClientModal: React.FC<CreateClientModalProps> = ({
   onCreate,
 }) => {
   const [newClient, setNewClient] = useState({
-    idClient: "",
     name: "",
     lastName: "",
     phone: "",
@@ -23,27 +22,10 @@ const CreateClientModal: React.FC<CreateClientModalProps> = ({
     adress: "",
     buys: "",
   });
-  const [categories, setCategories] = useState([]);
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response: any = await InstanceOfAxios(
-          "/products/categories",
-          "GET"
-        );
-        console.log(response);
-
-        setCategories(response.categories);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchCategories();
-  }, []);
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = event.target;
     setNewClient({
       ...newClient,
@@ -65,17 +47,12 @@ const CreateClientModal: React.FC<CreateClientModalProps> = ({
           <form className={styles.form} onSubmit={handleSubmit}>
             <TextField
               className={styles.formField}
-              name="idClient"
-              label="Id Cliente"
-              value={newClient.idClient}
-              fullWidth
-            />
-            <TextField
-              className={styles.formField}
               name="name"
               label="Nombre"
               value={newClient.name}
               fullWidth
+              onChange={(e) => handleChange(e)}
+              inputProps={{ maxLength: 20 }}
             />
             <TextField
               className={styles.formField}
@@ -83,6 +60,8 @@ const CreateClientModal: React.FC<CreateClientModalProps> = ({
               label="Apellido"
               value={newClient.lastName}
               fullWidth
+              onChange={(e) => handleChange(e)}
+              inputProps={{ maxLength: 20 }}
             />
             <TextField
               className={styles.formField}
@@ -90,6 +69,8 @@ const CreateClientModal: React.FC<CreateClientModalProps> = ({
               label="Teléfono"
               value={newClient.phone}
               fullWidth
+              onChange={(e) => handleChange(e)}
+              inputProps={{ maxLength: 20 }}
             />
             <TextField
               className={styles.formField}
@@ -97,6 +78,8 @@ const CreateClientModal: React.FC<CreateClientModalProps> = ({
               label="Email"
               value={newClient.email}
               fullWidth
+              onChange={(e) => handleChange(e)}
+              inputProps={{ maxLength: 20 }}
             />
             <TextField
               className={styles.formField}
@@ -104,6 +87,8 @@ const CreateClientModal: React.FC<CreateClientModalProps> = ({
               label="Dirección"
               value={newClient.adress}
               fullWidth
+              onChange={(e) => handleChange(e)}
+              inputProps={{ maxLength: 20 }}
             />
 
             <button className={styles.buttonAdd} type="submit">
