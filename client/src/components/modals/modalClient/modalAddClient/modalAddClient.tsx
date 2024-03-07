@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Modal, TextField, Button, Dialog } from "@mui/material";
 import styles from "./modalAddClient.module.css";
 import InstanceOfAxios from "../../../../utils/intanceAxios";
+import Swal from "sweetalert2";
 
 interface CreateClientModalProps {
   open: boolean;
@@ -15,7 +16,6 @@ const CreateClientModal: React.FC<CreateClientModalProps> = ({
   onCreate,
 }) => {
   const [newClient, setNewClient] = useState({
-    idClient: "",
     name: "",
     lastName: "",
     phone: "",
@@ -24,11 +24,10 @@ const CreateClientModal: React.FC<CreateClientModalProps> = ({
     buys: "",
   });
 
-
-    
- 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = event.target;
+  const handleChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = event.target;
     setNewClient({
       ...newClient,
       [name]: value,
@@ -38,8 +37,10 @@ const CreateClientModal: React.FC<CreateClientModalProps> = ({
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     onCreate(newClient);
+    Swal.fire("¡Cliente creado!", "El cliente se ha creado exitosamente.", "success");
     onClose();
   };
+  
 
   return (
     <Dialog className={styles.containerForm} open={open} onClose={onClose}>
@@ -49,17 +50,12 @@ const CreateClientModal: React.FC<CreateClientModalProps> = ({
           <form className={styles.form} onSubmit={handleSubmit}>
             <TextField
               className={styles.formField}
-              name="idClient"
-              label="Id Cliente"
-              value={newClient.idClient}
-              fullWidth
-            />
-            <TextField
-              className={styles.formField}
               name="name"
               label="Nombre"
               value={newClient.name}
               fullWidth
+              onChange={(e) => handleChange(e)}
+              inputProps={{ maxLength: 20 }}
             />
             <TextField
               className={styles.formField}
@@ -67,6 +63,8 @@ const CreateClientModal: React.FC<CreateClientModalProps> = ({
               label="Apellido"
               value={newClient.lastName}
               fullWidth
+              onChange={(e) => handleChange(e)}
+              inputProps={{ maxLength: 20 }}
             />
             <TextField
               className={styles.formField}
@@ -74,6 +72,8 @@ const CreateClientModal: React.FC<CreateClientModalProps> = ({
               label="Teléfono"
               value={newClient.phone}
               fullWidth
+              onChange={(e) => handleChange(e)}
+              inputProps={{ maxLength: 20 }}
             />
             <TextField
               className={styles.formField}
@@ -81,6 +81,8 @@ const CreateClientModal: React.FC<CreateClientModalProps> = ({
               label="Email"
               value={newClient.email}
               fullWidth
+              onChange={(e) => handleChange(e)}
+              inputProps={{ maxLength: 20 }}
             />
             <TextField
               className={styles.formField}
@@ -88,6 +90,8 @@ const CreateClientModal: React.FC<CreateClientModalProps> = ({
               label="Dirección"
               value={newClient.adress}
               fullWidth
+              onChange={(e) => handleChange(e)}
+              inputProps={{ maxLength: 20 }}
             />
 
             <button className={styles.buttonAdd} type="submit">

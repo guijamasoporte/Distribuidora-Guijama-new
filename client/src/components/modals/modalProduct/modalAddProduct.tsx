@@ -140,3 +140,4 @@ export default AddProductModal;
 function fetchData() {
   throw new Error("Function not implemented.");
 }
+

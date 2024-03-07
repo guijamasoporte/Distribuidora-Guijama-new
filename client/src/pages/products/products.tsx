@@ -7,10 +7,12 @@ import SearchBar from "../../components/searchBar/searchBar";
 import Pagination from "../../components/pagination/pagination";
 import InstanceOfAxios from "../../utils/intanceAxios";
 import Swal from "sweetalert2";
-import AddProductModal from "../../components/modals/modalProduct/modalAddProduct";
-import EditProductModal from "../../components/modals/modalEditProduct/modalEditProduct";
+import AddProductModal from "../../components/modals/modalProduct/modalAddProduct/modalAddProduct";
+import EditProductModal from "../../components/modals/modalProduct/modalEditProduct/modalEditProduct";
+import ModifyPriceModal from "../../components/modals/modalProduct/modalEditPriceCategory/modalEditPriceCategory";
 import { GetDecodedCookie } from "../../utils/DecodedCookie";
-import { AxiosResponse } from 'axios';
+import { AxiosResponse } from "axios";
+import { log } from "console";
 
 interface Product {
   _id: string;
@@ -22,7 +24,7 @@ interface Product {
   stock: number;
   priceList: number;
   priceCost: number;
-  image: [];
+  image: string;
   sales: {};
 }
 
@@ -33,6 +35,7 @@ interface ProductsProps {
 const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
   const [showModal, setShowModal] = useState(false);
   const [showModalEdit, setShowModalEdit] = useState(false);
+  const [showModifyPriceModal, setShowModifyPriceModal] = useState(false);
   const initialFilters: Record<keyof Product, string> = {
     code: "",
     title: "",
@@ -59,7 +62,7 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response:any = await InstanceOfAxios("/products", "GET");
+        const response: any = await InstanceOfAxios("/products", "GET");
         setCurrentProducts(response);
 
         const resCategory: any = await InstanceOfAxios(
@@ -67,9 +70,9 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
           "GET"
         );
         setCategories(resCategory.categories);
-        
-        const resBrands:any = await InstanceOfAxios("/products/brands", "GET");
-        setBrands(resBrands);
+
+        const resBrands: any = await InstanceOfAxios("/products/brands", "GET");
+        setBrands(resBrands.brands);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -124,7 +127,6 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
-  // Slice the products for the current page
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   const slicedProducts = currentProducts
@@ -243,7 +245,10 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
         <button className={styles.buttonAdd} onClick={() => setShowModal(true)}>
           Agregar nuevo producto
         </button>
-        <button className={styles.buttonModify}>
+        <button
+          className={styles.buttonModify}
+          onClick={() => setShowModifyPriceModal(true)}
+        >
           Modificar precios x Rubro
         </button>
       </div>
@@ -260,6 +265,12 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
           handleClose={() => setShowModalEdit(false)}
         />
       )}
+      <ModifyPriceModal
+        open={showModifyPriceModal}
+        handleClose={() => setShowModifyPriceModal(false)}
+        categories={categories}
+        brands={brands}
+      />
     </div>
   );
 };
