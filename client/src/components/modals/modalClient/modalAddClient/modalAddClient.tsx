@@ -23,26 +23,10 @@ const CreateClientModal: React.FC<CreateClientModalProps> = ({
     adress: "",
     buys: "",
   });
-  const [categories, setCategories] = useState([]);
-  
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response: any = await InstanceOfAxios(
-          "/products/categories",
-          "GET"
-          );
-          console.log(response);
-          
-          setCategories(response.categories);
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        }
-      };
-      
-      fetchCategories();
-    }, []);
+
+
     
+ 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = event.target;
     setNewClient({

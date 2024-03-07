@@ -10,6 +10,7 @@ import Swal from "sweetalert2";
 import AddProductModal from "../../components/modals/modalProduct/modalAddProduct";
 import EditProductModal from "../../components/modals/modalEditProduct/modalEditProduct";
 import { GetDecodedCookie } from "../../utils/DecodedCookie";
+import { AxiosResponse } from 'axios';
 
 interface Product {
   _id: string;
@@ -52,12 +53,21 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
   const productsPerPage = 15;
   const [currentProducts, setCurrentProducts] = useState<Product[]>([]);
   const [productSelect, setProductSelect] = useState<Product | null>(null);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [brands, setBrands] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response: any = await InstanceOfAxios("/products", "GET");
+        const response:any = await InstanceOfAxios("/products", "GET");
         setCurrentProducts(response);
+        const categories: any = await InstanceOfAxios(
+          "/products/categories",
+          "GET"
+        );
+        setCategories(categories);
+        const brands:any = await InstanceOfAxios("/products/brands", "GET");
+        setBrands(brands);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -237,6 +247,8 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
       <AddProductModal
         open={showModal}
         handleClose={() => setShowModal(false)}
+        categories={categories}
+        brands={brands}
       />
       {productSelect && (
         <EditProductModal

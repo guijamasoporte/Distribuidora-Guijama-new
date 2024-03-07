@@ -25,19 +25,22 @@ interface Product {
 interface AddProductModalProps {
   open: boolean;
   handleClose: () => void;
+  categories: any;
+  brands: any;
 }
 
 const AddProductModal: React.FC<AddProductModalProps> = ({
   open,
   handleClose,
-
+  categories,
+  brands,
 }) => {
   const initialProduct: Product = {
     code: "",
     title: "",
     category: "",
     brand: "",
-    stock:0,
+    stock: 0,
     priceCost: 0,
     priceList: 0,
     image: [],
@@ -56,9 +59,9 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
   const handleAddProduct = async () => {
     try {
       const token = GetDecodedCookie("cookieToken");
-      await InstanceOfAxios("/products", "POST", product,token);
+      await InstanceOfAxios("/products", "POST", product, token);
       handleClose();
-      setProducts(initialProduct)
+      setProducts(initialProduct);
     } catch (error) {
       console.error("Error al agregar los productos:", error);
     }
@@ -136,4 +139,3 @@ export default AddProductModal;
 function fetchData() {
   throw new Error("Function not implemented.");
 }
-
