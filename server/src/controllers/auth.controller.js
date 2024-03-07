@@ -44,23 +44,16 @@ export const login = async (req, res) => {
       user = await Admin.findOne({ email });
     }
     if (!user) {
-      return res.status(403).json({ error: "No existe este usuario" });
+      return res.status(404).json({ error: "No existe este usuario" });
     }
     // compara que las contraseñas coincidan
     const respuestaPassword = await user.comparePassword(password);
     if (!respuestaPassword) {
-      return res.status(403).json({ error: "Contraseña incorrecta" });
+      return res.status(401).json({ error: "Contraseña incorrecta" });
     }
-
-    // // Generar el token JWT
-    // if (user.verify === false) {
-    //   // return res.status(403).json({ error: "Email no verificado" });
-    //   throw new Error("Email no verificado");
-    // }
 
     const { token, expiresIn } = generateToken(user.id);
     generateRefreshToken(user.id, res);
-
     return res
       .status(200)
       .json({ token, expiresIn, rol: user.Rol });

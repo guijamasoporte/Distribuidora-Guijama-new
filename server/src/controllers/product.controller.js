@@ -1,3 +1,4 @@
+import { Error } from "mongoose";
 import { Product } from "../models/products.js";
 import { formatError } from "../utils/formatError.js";
 
@@ -19,6 +20,7 @@ export const GetAllProduct = async (req, res) => {
   try {
     let products = await Product.find();
     return res.status(200).json(products.reverse());
+
   } catch (error) {
     res.status(400).json(formatError(error.message));
   }

@@ -1,5 +1,5 @@
-// -------------decodificador de token-------------------------------------//
-export function DecodedToken(token:string) {
+export function DecodedToken(token: string) {
+  try {
     const base64Url = token.split(".")[1];
     const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
     const jsonPayload = decodeURIComponent(
@@ -11,6 +11,10 @@ export function DecodedToken(token:string) {
         })
         .join("")
     );
-    return JSON.parse(jsonPayload);
+    const decodedToken = JSON.parse(jsonPayload);
+
+    return { success: true, id: decodedToken.value };
+  } catch (error) {
+    return { success: false, error };
   }
-  // -------------decodificador de token-------------------------------------//
+}

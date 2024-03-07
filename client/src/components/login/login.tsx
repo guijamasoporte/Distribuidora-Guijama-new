@@ -2,7 +2,6 @@ import React, { FormEvent, useState } from "react";
 import InstanceOfAxios from "../../utils/intanceAxios";
 import style from "./login.module.css";
 import Cookies from "js-cookie";
-import axios from "axios";
 
 interface DataLogin {
   email: string;
@@ -23,11 +22,9 @@ const Login: React.FC = () => {
 
   const handleSubmitLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    Cookies.remove("cookieToken");
 
     await InstanceOfAxios("/login", "POST", dataLogin).then((data: any) => {
-      console.log(data);
-
+      Cookies.remove("cookieToken");
       document.cookie =
         encodeURIComponent("cookieToken") +
         "=" +
@@ -35,7 +32,6 @@ const Login: React.FC = () => {
       window.location.href = "/admin/products";
     });
   };
-
 
   return (
     <div className={style.containForms}>

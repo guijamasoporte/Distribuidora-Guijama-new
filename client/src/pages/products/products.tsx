@@ -61,21 +61,24 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
       try {
         const response:any = await InstanceOfAxios("/products", "GET");
         setCurrentProducts(response);
-        const categories: any = await InstanceOfAxios(
+
+        const resCategory: any = await InstanceOfAxios(
           "/products/categories",
           "GET"
         );
-        setCategories(categories);
-        const brands:any = await InstanceOfAxios("/products/brands", "GET");
-        setBrands(brands);
+        setCategories(resCategory.categories);
+        
+        const resBrands:any = await InstanceOfAxios("/products/brands", "GET");
+        setBrands(resBrands);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-
+    
     fetchData();
   }, []);
-
+  console.log(categories);
+  
   const applyFilters = (product: Product) => {
     return Object.entries(filters).every(([key, value]) => {
       const productValue = String(product[key as keyof Product]).toLowerCase();

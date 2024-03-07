@@ -46,6 +46,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
     image: [],
     sales: {},
   };
+console.log(categories);
 
   const [product, setProducts] = useState<Product>(initialProduct);
 
