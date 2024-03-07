@@ -5,6 +5,8 @@ import Autocomplete from "@mui/material/Autocomplete";
 import styles from "./modalAddProduct.module.css";
 import { GetDecodedCookie } from "../../../../utils/DecodedCookie";
 import InstanceOfAxios from "../../../../utils/intanceAxios";
+import Swal from "sweetalert2";
+
 
 interface Product {
   code: string;
@@ -89,6 +91,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
         brand: newBrand || product.brand,
       };
       await InstanceOfAxios("/products", "POST", updatedProduct, token);
+      Swal.fire("¡Producto guardado!", "El producto se ha guardado exitosamente.", "success");
       handleClose();
       setProduct(initialProduct);
       setNewCategory("");
@@ -97,6 +100,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
       console.error("Error al agregar los productos:", error);
     }
   };
+  
 
   return (
     <Dialog className={styles.containerForm} open={open} onClose={handleClose}>

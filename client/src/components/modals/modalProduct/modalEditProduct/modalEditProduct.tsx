@@ -4,6 +4,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import InstanceOfAxios from "../../../../utils/intanceAxios";
 import styles from "./modalEditProduct.module.css";
 import { GetDecodedCookie } from "../../../../utils/DecodedCookie";
+import Swal from "sweetalert2";
 
 interface Product {
   _id: string;
@@ -116,14 +117,16 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
       formData.append("stock", String(product.stock));
       formData.append("priceCost", String(product.priceCost));
       formData.append("priceList", String(product.priceList));
-
+  
       await InstanceOfAxios(`/products/${productSelect._id}`, "PUT", formData);
-
+  
+      Swal.fire("¡Producto editado!", "El producto se ha editado exitosamente.", "success");
       handleClose();
     } catch (error) {
-      console.error("Error al agregar los productos:", error);
+      console.error("Error al editar el producto:", error);
     }
   };
+  
 
   return (
     <Dialog className={styles.containerForm} open={open} onClose={handleClose}>

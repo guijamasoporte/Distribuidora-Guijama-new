@@ -4,6 +4,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import styles from "./modalEditPriceCategory.module.css";
 import { GetDecodedCookie } from "../../../../utils/DecodedCookie";
 import InstanceOfAxios from "../../../../utils/intanceAxios";
+import Swal from "sweetalert2";
 
 interface Product {
   code: string;
@@ -60,10 +61,12 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
       ...product,
       priceList: newPriceList,
     });
+    Swal.fire("¡Precio actualizado!", "El precio del rubro se ha actualizado.", "success");
     console.log("Producto con precios actualizados:", product);
     handleClose();
     setProduct(initialProduct);
   };
+  
 
   const handleCategoryChange = (value: string | null) => {
     if (value !== null) {

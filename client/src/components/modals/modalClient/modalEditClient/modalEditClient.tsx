@@ -3,6 +3,7 @@ import { Modal, TextField, Button, Dialog } from "@mui/material";
 import styles from "./modalEditClient.module.css";
 import { GetDecodedCookie } from "../../../../utils/DecodedCookie";
 import InstanceOfAxios from "../../../../utils/intanceAxios";
+import Swal from "sweetalert2";
 
 interface CreateClientModalProps {
   open: boolean;
@@ -35,10 +36,19 @@ const EditClientModal: React.FC<CreateClientModalProps> = ({
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // onCreate(newClient);
-    const token = GetDecodedCookie("cookieToken");
-    await InstanceOfAxios(`/clients/${client._id}`, "PUT", newClient, token);
-    onClose();
+    try {
+      // onCreate(newClient);
+      const token = GetDecodedCookie("cookieToken");
+      await InstanceOfAxios(`/clients/${client._id}`, "PUT", newClient, token);
+      Swal.fire(
+        "¡Cliente actualizado!",
+        "Los cambios se han guardado exitosamente.",
+        "success"
+      );
+      onClose();
+    } catch (error) {
+      console.error("Error al actualizar el cliente:", error);
+    }
   };
 
   return (
