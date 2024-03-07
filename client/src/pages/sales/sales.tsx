@@ -6,6 +6,7 @@ import styles from "./sales.module.css";
 import SearchBar from "../../components/searchBar/searchBar";
 import InstanceOfAxios from "../../utils/intanceAxios";
 import Pagination from "../../components/pagination/pagination";
+import ModalComponent from "../../components/modals/modalSale/modelAddSale/modalAddSale";
 
 interface Client {
   name: string;
@@ -22,14 +23,21 @@ interface Sale {
   client: Client;
   product: object;
   date: string;
-  priceTotal: number;
+  code: string;
+  name: string;
+  quantity: number;
+  price: number;
+  title: string;
+  priceList: number;
+  priceCost: number;
   dues: Dues;
   invoice: string;
   state: boolean;
+  priceTotal: number;
 }
 
-
 const SalesPage: React.FC = () => {
+  const [modalOpen, setModalOpen] = useState(false);
   const [filters, setFilters] = useState<Partial<Sale>>({});
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -122,6 +130,14 @@ const SalesPage: React.FC = () => {
     return formattedDate;
   };
 
+  const openModal = () => {
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+  };
+
   return (
     <div className={styles.tableContainer}>
       <h1 className={styles.title}>Listado de ventas</h1>
@@ -200,7 +216,24 @@ const SalesPage: React.FC = () => {
         paginate={handlePaginate}
       />
       <div className={styles.buttonsFooter}>
-        <button className={styles.buttonAdd}>Cargar nueva venta</button>
+        <button className={styles.buttonAdd} onClick={openModal}>
+          Cargar nueva venta
+        </button>
+        <ModalComponent
+          open={modalOpen}
+          onClose={closeModal}
+          onAddProduct={function (productData: {
+            code: string;
+            name: string;
+            quantity: number;
+            price: number;
+            title: string;
+            priceList: number;
+            priceCost: number;
+          }): void {
+            throw new Error("Function not implemented.");
+          }}
+        />
       </div>
     </div>
   );
