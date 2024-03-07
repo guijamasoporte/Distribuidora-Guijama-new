@@ -8,8 +8,11 @@ import Pagination from "../../components/pagination/pagination";
 import InstanceOfAxios from "../../utils/intanceAxios";
 import Swal from "sweetalert2";
 import AddProductModal from "../../components/modals/modalProduct/modalAddProduct";
+import EditProductModal from "../../components/modals/modalEditProduct/modalEditProduct";
+import { GetDecodedCookie } from "../../utils/DecodedCookie";
 
 interface Product {
+  _id: string;
   code: string;
   title: string;
   category: string;
@@ -18,6 +21,8 @@ interface Product {
   stock: number;
   priceList: number;
   priceCost: number;
+  image: [];
+  sales: {};
 }
 
 interface ProductsProps {
@@ -26,6 +31,7 @@ interface ProductsProps {
 
 const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
   const [showModal, setShowModal] = useState(false);
+  const [showModalEdit, setShowModalEdit] = useState(false);
   const initialFilters: Record<keyof Product, string> = {
     code: "",
     title: "",
@@ -35,6 +41,9 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
     description: "",
     priceCost: "",
     priceList: "",
+    image: "",
+    sales: "",
+    _id: "",
   };
 
   const [filters, setFilters] = useState(initialFilters);
@@ -42,6 +51,7 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 15;
   const [currentProducts, setCurrentProducts] = useState<Product[]>([]);
+  const [productSelect, setProductSelect] = useState<Product | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -80,11 +90,7 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
     setSearchTerm(searchTerm);
   };
 
-  const handleEdit = (code: string) => {
-    console.log(`Edit product with code ${code}`);
-  };
-
-  const handleDelete = (code: string) => {
+  const handleDelete = (id: string) => {
     Swal.fire({
       title: "¿Estás seguro?",
       text: "¡No podrás revertir esto!",
@@ -96,7 +102,8 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
       cancelButtonText: "Cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
-        console.log(`Eliminar cliente con ID ${code}`);
+        const token = GetDecodedCookie("cookieToken");
+        InstanceOfAxios(`/products/${id}`, "DELETE", undefined, token);
         Swal.fire("¡Eliminado!", "El cliente ha sido eliminado.", "success");
       }
     });
@@ -193,7 +200,10 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
               <td>
                 <button
                   className={styles.buttonEdit}
-                  onClick={() => handleEdit(product.code)}
+                  onClick={() => {
+                    setShowModalEdit(true);
+                    setProductSelect(product);
+                  }}
                 >
                   <EditIcon />
                 </button>
@@ -201,7 +211,7 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
               <td>
                 <button
                   className={styles.buttonDelete}
-                  onClick={() => handleDelete(product.code)}
+                  onClick={() => handleDelete(product._id)}
                 >
                   <DeleteIcon />
                 </button>
@@ -228,6 +238,13 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
         open={showModal}
         handleClose={() => setShowModal(false)}
       />
+      {productSelect && (
+        <EditProductModal
+          open={showModalEdit}
+          productSelect={productSelect}
+          handleClose={() => setShowModalEdit(false)}
+        />
+      )}
     </div>
   );
 };

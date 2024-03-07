@@ -9,8 +9,11 @@ import InstanceOfAxios from "../../utils/intanceAxios";
 import Pagination from "../../components/pagination/pagination";
 import Swal from "sweetalert2";
 import CreateClientModal from "../../components/modals/modalClient/modalAddClient/modalAddClient";
+import EditClientModal from "../../components/modals/modalClient/modalEditClient/modalEditClient";
+import { GetDecodedCookie } from "../../utils/DecodedCookie";
 
 interface Client {
+  [x: string]: any;
   idClient: number;
   name: string;
   lastName: string;
@@ -20,12 +23,9 @@ interface Client {
   buys: number;
 }
 
-interface ClientsProps {
-  clients: Client[];
-}
-
-const ClientsPage: React.FC<ClientsProps> = ({ clients }) => {
+const ClientsPage: React.FC = () => {
   const [openModal, setOpenModal] = useState(false);
+  const [openModalEdit, setOpenModalEdit] = useState(false);
   const initialFilters = {
     idClient: "",
     name: "",
@@ -45,6 +45,7 @@ const ClientsPage: React.FC<ClientsProps> = ({ clients }) => {
   const clientsPerPage = 15;
   const [dataSale, setDataSale] = useState<Array<Client>>([]);
   const [filteredClients, setFilteredClients] = useState<Client[]>([]);
+  const [clientSelect, setClientSelect] = useState<Client | null>(null);
 
   useEffect(() => {
     const fetchClient = async () => {
@@ -77,7 +78,6 @@ const ClientsPage: React.FC<ClientsProps> = ({ clients }) => {
     }
   };
 
-  
   const handleFilterChange = (
     event: React.SyntheticEvent<Element, Event>,
     value: string | null,
@@ -109,7 +109,8 @@ const ClientsPage: React.FC<ClientsProps> = ({ clients }) => {
       cancelButtonText: "Cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
-        console.log(`Eliminar cliente con ID ${id}`);
+        const token = GetDecodedCookie("cookieToken");
+        InstanceOfAxios(`/clients/${id}`, "DELETE", undefined, token);
         Swal.fire("¡Eliminado!", "El cliente ha sido eliminado.", "success");
       }
     });
@@ -230,7 +231,10 @@ const ClientsPage: React.FC<ClientsProps> = ({ clients }) => {
               <td>
                 <button
                   className={styles.buttonEdit}
-                  onClick={() => handleEdit(`${client.idClient}`)}
+                  onClick={() => {
+                    setOpenModalEdit(true);
+                    setClientSelect(client);
+                  }}
                 >
                   <EditIcon />
                 </button>
@@ -238,7 +242,7 @@ const ClientsPage: React.FC<ClientsProps> = ({ clients }) => {
               <td>
                 <button
                   className={styles.buttonDelete}
-                  onClick={() => handleDelete(`${client.idClient}`)}
+                  onClick={() => handleDelete(`${client._id}`)}
                 >
                   <DeleteIcon />
                 </button>
@@ -263,6 +267,14 @@ const ClientsPage: React.FC<ClientsProps> = ({ clients }) => {
         onClose={() => setOpenModal(false)}
         onCreate={handleCreateClient}
       />
+      {clientSelect && (
+        <EditClientModal
+          open={openModalEdit}
+          onClose={() => setOpenModalEdit(false)}
+          onCreate={setOpenModalEdit}
+          client={clientSelect}
+        />
+      )}
     </div>
   );
 };

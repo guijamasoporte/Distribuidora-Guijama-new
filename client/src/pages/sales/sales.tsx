@@ -28,11 +28,8 @@ interface Sale {
   state: boolean;
 }
 
-interface SalesProps {
-  sales: Sale[];
-}
 
-const SalesPage: React.FC<SalesProps> = ({ sales }) => {
+const SalesPage: React.FC = () => {
   const [filters, setFilters] = useState<Partial<Sale>>({});
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);

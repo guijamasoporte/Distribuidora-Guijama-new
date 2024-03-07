@@ -7,10 +7,11 @@ import {
   Button,
 } from "@mui/material";
 import InstanceOfAxios from "../../../utils/intanceAxios";
-import styles from "./modalAddProduct.module.css";
+import styles from "./modalEditProduct.module.css";
 import { GetDecodedCookie } from "../../../utils/DecodedCookie";
 
 interface Product {
+  _id:string;
   code: string;
   title: string;
   category: string;
@@ -22,26 +23,28 @@ interface Product {
   sales: {};
 }
 
-interface AddProductModalProps {
+interface EditProductModalProps {
   open: boolean;
   handleClose: () => void;
+  productSelect:Product
 }
 
-const AddProductModal: React.FC<AddProductModalProps> = ({
+const EditProductModal: React.FC<EditProductModalProps> = ({
   open,
   handleClose,
-
+  productSelect
 }) => {
   const initialProduct: Product = {
-    code: "",
-    title: "",
-    category: "",
-    brand: "",
-    stock:0,
-    priceCost: 0,
-    priceList: 0,
+    code: productSelect.code,
+    title: productSelect.title,
+    category: productSelect.category,
+    brand: productSelect.brand,
+    stock: productSelect.stock,
+    priceCost: productSelect.priceCost,
+    priceList: productSelect.priceList,
     image: [],
     sales: {},
+    _id:productSelect._id
   };
 
   const [product, setProducts] = useState<Product>(initialProduct);
@@ -53,12 +56,12 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
     });
   };
 
-  const handleAddProduct = async () => {
+  const handleEditProduct = async () => {
     try {
       const token = GetDecodedCookie("cookieToken");
-      await InstanceOfAxios("/products", "POST", product,token);
+      await InstanceOfAxios(`/products/${productSelect._id}`, "PUT", product,token);
+
       handleClose();
-      setProducts(initialProduct)
     } catch (error) {
       console.error("Error al agregar los productos:", error);
     }
@@ -66,7 +69,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
 
   return (
     <Dialog className={styles.containerForm} open={open} onClose={handleClose}>
-      <p className={styles.titleForm}>Agregar nuevo producto</p>
+      <p className={styles.titleForm}>Editar producto</p>
       <div className={styles.formInputs}>
         <TextField
           className={styles.formField}
@@ -125,15 +128,11 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
           fullWidth
         />
       </div>
-      <button className={styles.buttonAdd} onClick={handleAddProduct}>
-        Agregar
+      <button className={styles.buttonAdd} onClick={handleEditProduct}>
+       Editar
       </button>
     </Dialog>
   );
 };
 
-export default AddProductModal;
-function fetchData() {
-  throw new Error("Function not implemented.");
-}
-
+export default EditProductModal;

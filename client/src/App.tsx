@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 import NavBar from "./components/navbar/navbar";
-import Header from "./components/Header/header";
+import Header from "./components/header/header";
 import { Route, Routes } from "react-router-dom";
 import ProductsPage from "./pages/products/products";
 import ClientsPage from "./pages/clients/clients";
@@ -25,33 +25,36 @@ const App: React.FC = () => {
           path="/admin/*"
           element={
             <>
-              <NavBar />
-              <Routes>
-                <Route
-                  path="products"
-                  element={
-                    <ProtectedRoute>
-                      <ProductsPage data={[]} />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="clients"
-                  element={
-                    <ProtectedRoute>
-                      <ClientsPage clients={[]} />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="sales"
-                  element={
-                    <ProtectedRoute>
-                      <SalesPage sales={[]} />
-                    </ProtectedRoute>
-                  }
-                />
-              </Routes>
+              {" "}
+              <ProtectedRoute>
+                <NavBar />
+                <Routes>
+                  <Route
+                    path="products"
+                    element={
+                      <ProtectedRoute>
+                        <ProductsPage data={[]} />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="clients"
+                    element={
+                      <ProtectedRoute>
+                        <ClientsPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="sales"
+                    element={
+                      <ProtectedRoute>
+                        <SalesPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                </Routes>
+              </ProtectedRoute>
             </>
           }
         />

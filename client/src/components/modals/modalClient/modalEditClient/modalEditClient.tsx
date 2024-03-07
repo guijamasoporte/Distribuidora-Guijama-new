@@ -1,66 +1,51 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Modal, TextField, Button, Dialog } from "@mui/material";
-import styles from "./modalAddClient.module.css";
+import styles from "./modalEditClient.module.css";
+import { GetDecodedCookie } from "../../../../utils/DecodedCookie";
 import InstanceOfAxios from "../../../../utils/intanceAxios";
 
 interface CreateClientModalProps {
   open: boolean;
   onClose: () => void;
   onCreate: (newClient: any) => void;
+  client: any;
 }
 
-const CreateClientModal: React.FC<CreateClientModalProps> = ({
+const EditClientModal: React.FC<CreateClientModalProps> = ({
   open,
   onClose,
   onCreate,
+  client,
 }) => {
   const [newClient, setNewClient] = useState({
-    idClient: "",
-    name: "",
-    lastName: "",
-    phone: "",
-    email: "",
-    adress: "",
-    buys: "",
+    idClient: client.idClient,
+    name: client.name,
+    lastName: client.lastName,
+    phone: client.phone,
+    email: client.email,
+    adress: client.adress,
+    buys: client.buys,
   });
-  const [categories, setCategories] = useState([]);
-  
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response: any = await InstanceOfAxios(
-          "/products/categories",
-          "GET"
-          );
-          console.log(response);
-          
-          setCategories(response.categories);
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        }
-      };
-      
-      fetchCategories();
-    }, []);
-    
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = event.target;
+
+  const handleChange = (prop: string, value: string) => {
     setNewClient({
       ...newClient,
-      [name]: value,
+      [prop]: value,
     });
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    onCreate(newClient);
+    // onCreate(newClient);
+    const token = GetDecodedCookie("cookieToken");
+    await InstanceOfAxios(`/clients/${client._id}`, "PUT", newClient, token);
     onClose();
   };
 
   return (
     <Dialog className={styles.containerForm} open={open} onClose={onClose}>
       <div className={styles.modal}>
-        <p className={styles.titleForm}>Agregar nuevo cliente</p>
+        <p className={styles.titleForm}>Editar cliente</p>
         <div className={styles.formInputs}>
           <form className={styles.form} onSubmit={handleSubmit}>
             <TextField
@@ -69,6 +54,7 @@ const CreateClientModal: React.FC<CreateClientModalProps> = ({
               label="Id Cliente"
               value={newClient.idClient}
               fullWidth
+              onChange={(e) => handleChange("idClient", e.target.value)}
             />
             <TextField
               className={styles.formField}
@@ -76,6 +62,7 @@ const CreateClientModal: React.FC<CreateClientModalProps> = ({
               label="Nombre"
               value={newClient.name}
               fullWidth
+              onChange={(e) => handleChange("name", e.target.value)}
             />
             <TextField
               className={styles.formField}
@@ -83,6 +70,7 @@ const CreateClientModal: React.FC<CreateClientModalProps> = ({
               label="Apellido"
               value={newClient.lastName}
               fullWidth
+              onChange={(e) => handleChange("lastName", e.target.value)}
             />
             <TextField
               className={styles.formField}
@@ -90,6 +78,7 @@ const CreateClientModal: React.FC<CreateClientModalProps> = ({
               label="Teléfono"
               value={newClient.phone}
               fullWidth
+              onChange={(e) => handleChange("phone", e.target.value)}
             />
             <TextField
               className={styles.formField}
@@ -97,6 +86,7 @@ const CreateClientModal: React.FC<CreateClientModalProps> = ({
               label="Email"
               value={newClient.email}
               fullWidth
+              onChange={(e) => handleChange("email", e.target.value)}
             />
             <TextField
               className={styles.formField}
@@ -104,10 +94,11 @@ const CreateClientModal: React.FC<CreateClientModalProps> = ({
               label="Dirección"
               value={newClient.adress}
               fullWidth
+              onChange={(e) => handleChange("adress", e.target.value)}
             />
 
             <button className={styles.buttonAdd} type="submit">
-              Agregar Cliente
+              Editar Cliente
             </button>
           </form>
         </div>
@@ -116,4 +107,4 @@ const CreateClientModal: React.FC<CreateClientModalProps> = ({
   );
 };
 
-export default CreateClientModal;
+export default EditClientModal;
