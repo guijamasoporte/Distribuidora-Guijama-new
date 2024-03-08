@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 import NavBar from "./components/navbar/navbar";
-import Header from "./components/header/header";
+
 import { Route, Routes } from "react-router-dom";
 import ProductsPage from "./pages/products/products";
 import ClientsPage from "./pages/clients/clients";
@@ -9,6 +9,7 @@ import SalesPage from "./pages/sales/sales";
 import Home from "./pages/Home/home";
 import LoginPage from "./pages/login/login";
 import { ProtectedRoute } from "./pages/ProtectedRoutes/ProtectedRoute";
+import Header from "./components/Header/header";
 
 const App: React.FC = () => {
   return (

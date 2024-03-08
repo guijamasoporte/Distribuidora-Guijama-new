@@ -76,10 +76,10 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
         console.error("Error fetching data:", error);
       }
     };
-    
+
     fetchData();
   }, []);
-  
+
   const applyFilters = (product: Product) => {
     return Object.entries(filters).every(([key, value]) => {
       const productValue = String(product[key as keyof Product]).toLowerCase();
@@ -233,12 +233,17 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
           ))}
         </tbody>
       </table>
-      <Pagination
-        totalItems={slicedProducts.length}
-        itemsPerPage={productsPerPage}
-        currentPage={currentPage}
-        paginate={paginate}
-      />
+      <div className={styles.paginationTotalContainer}>
+        <Pagination
+          totalItems={slicedProducts.length}
+          itemsPerPage={productsPerPage}
+          currentPage={currentPage}
+          paginate={paginate}
+        />
+        <div>
+          <p className={styles.totalCat}>Total de Rubro: $500.000</p>
+        </div>
+      </div>
       <div className={styles.buttonsFooter}>
         <button className={styles.buttonAdd} onClick={() => setShowModal(true)}>
           Agregar nuevo producto
@@ -269,7 +274,6 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
         categories={categories}
         brands={brands}
       />
- 
     </div>
   );
 };
