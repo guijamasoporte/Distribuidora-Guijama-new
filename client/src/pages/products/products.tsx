@@ -138,6 +138,46 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
     )
     .slice(indexOfFirstProduct, indexOfLastProduct);
 
+    const [totals, setTotals] = useState({
+      costTotal: 0,
+      saleTotal: 0,
+      stockTotal: 0,
+    });
+  
+    useEffect(() => {
+      const calculateTotals = () => {
+        const filteredProducts = currentProducts
+          .filter(applyFilters)
+          .filter((product) =>
+            searchTerm === "" ||
+            Object.values(product).some((value) =>
+              String(value).toLowerCase().includes(searchTerm.toLowerCase())
+            )
+          );
+  
+        const costTotal = filteredProducts.reduce(
+          (acc, product) => acc + product.priceCost,
+          0
+        );
+        const saleTotal = filteredProducts.reduce(
+          (acc, product) => acc + product.priceList,
+          0
+        );
+        const stockTotal = filteredProducts.reduce(
+          (acc, product) => acc + product.stock,
+          0
+        );
+  
+        setTotals({
+          costTotal,
+          saleTotal,
+          stockTotal,
+        });
+      };
+  
+      calculateTotals();
+    }, [currentProducts, applyFilters, searchTerm]);
+
   return (
     <div className={styles.tableContainer}>
       <h1 className={styles.title}>Listado de productos</h1>
@@ -233,15 +273,20 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
           ))}
         </tbody>
       </table>
-      <div className={styles.paginationTotalContainer}>
-        <Pagination
-          totalItems={slicedProducts.length}
-          itemsPerPage={productsPerPage}
-          currentPage={currentPage}
-          paginate={paginate}
-        />
-        <div>
-          <p className={styles.totalCat}>Total de Rubro: $500.000</p>
+      <div>
+      <div className={styles.totalsData}>
+          <p className={styles.totalCat}>Stock total: {totals.stockTotal}</p>
+          <p className={styles.totalCat}>Total de Costo: ${totals.costTotal}</p>
+          <p className={styles.totalCat}>Total de Venta: ${totals.saleTotal}</p>
+        </div>
+
+        <div className={styles.paginationTotalContainer}>
+          <Pagination
+            totalItems={slicedProducts.length}
+            itemsPerPage={productsPerPage}
+            currentPage={currentPage}
+            paginate={paginate}
+          />
         </div>
       </div>
       <div className={styles.buttonsFooter}>

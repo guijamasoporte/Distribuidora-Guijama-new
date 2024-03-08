@@ -99,13 +99,20 @@
 
 .paginationTotalContainer {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 }
 
 .totalCat {
   font-family: "questrial";
   font-size: 18px;
-  color: #603e20;
+  color: #ffffff;
+}
+
+.totalsData {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  padding-inline: 2rem;
+  background-color: #9ec5ca;
 }
