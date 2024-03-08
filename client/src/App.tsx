@@ -9,7 +9,7 @@ import SalesPage from "./pages/sales/sales";
 import Home from "./pages/Home/home";
 import LoginPage from "./pages/login/login";
 import { ProtectedRoute } from "./pages/ProtectedRoutes/ProtectedRoute";
-import Header from "./components/Header/header";
+import Header from "./components/header/header";
 
 const App: React.FC = () => {
   return (
