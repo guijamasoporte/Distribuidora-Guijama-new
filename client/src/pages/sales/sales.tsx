@@ -224,7 +224,6 @@ const SalesPage: React.FC = () => {
           onClose={closeModal}
           onAddProduct={function (productData: {
             code: string;
-            name: string;
             quantity: number;
             price: number;
             title: string;
