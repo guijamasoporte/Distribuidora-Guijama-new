@@ -17,5 +17,5 @@
     "jsx": "react-jsx",
     "plugins": [{ "name": "typescript-plugin-css-modules" }]
   },
-  "include": ["src", "reportWebVitals.ts", "declaration.d.ts"]
+  "include": ["src", "reportWebVitals.ts", "declaration.d.ts", "../server/src/utils/fileUpload.js"]
 }

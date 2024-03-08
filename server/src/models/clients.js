@@ -16,23 +16,23 @@ const clientsSchema = new mongoose.Schema({
   },
   name: {
     type: String,
-    default: "",
+    default: "-",
   },
   lastName: {
     type: String,
-    default: "",
+    default: "-",
   },
   phone: {
     type: String,
-    default: "",
+    default: "-",
   },
   email: {
     type: String,
-    default: "",
+    default: "-",
   },
   adress: {
     type: String,
-    default: "",
+    default: "-",
   },
   buys: { type: Array, default: [] },
 });

@@ -4,35 +4,48 @@ import {GetDecodedCookie} from '../../utils/DecodedCookie';
 import {useEffect, useRef, useState} from 'react';
 import InstanceOfAxios from '../../utils/intanceAxios';
 
-export const ProtectedRoute = ({ children }) => {
-  const { pathname } = useLocation();
+export const ProtectedRoute = ({children}) => {
+  const {pathname} = useLocation ();
   const UserRoutes = ['/profile'];
-  const AdminRoutes = ['/admin','/admin/products', '/admin/clients', '/admin/sales'];
+  const AdminRoutes = [
+    '/admin',
+    '/admin/products',
+    '/admin/clients',
+    '/admin/sales',
+  ];
 
-  const rolRef = useRef(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const token = GetDecodedCookie('cookieToken');
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (token) {
-        const { value } = DecodedToken(token);
-
-        if (value) {
-          try {
-            const data = await InstanceOfAxios(`/admin/${value}`);
-            rolRef.current = data.Rol; // Declara el rol
-          } catch (error) {
-            rolRef.current = null; // Manejar el error
+  const rolRef = useRef (null);
+  const [isLoading, setIsLoading] = useState (true);
+  const token = GetDecodedCookie ('cookieToken');
+  
+  useEffect (
+    () => {
+      const fetchData = async () => {
+        try {
+          if (token) {
+            const {success, id, error} = DecodedToken (token);
+            if (success && id) {
+              const data = await InstanceOfAxios (`/admin/${id}`);
+              if (data && data.Rol) {
+                rolRef.current = data.Rol; // Declara el rol
+              } else {
+                console.error ('Error: Data or data.Rol is undefined');
+              }
+            } else {
+              console.error ('Error decoding token:', error);
+            }
           }
+        } catch (error) {
+          console.error ('Error fetching data:', error);
+        } finally {
+          setIsLoading (false); // Finaliza la promesa y pone el loading en false
         }
-      }
+      };
 
-      setIsLoading(false); // Finaliza la promesa y pone el loading en false
-    };
-
-    fetchData();
-  }, [token]);
+      fetchData ();
+    },
+    [token]
+  );
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -43,11 +56,11 @@ export const ProtectedRoute = ({ children }) => {
     return <Navigate to={'/login'} />;
   }
 
-  if (rolRef.current === 'ROL_User' && !UserRoutes.includes(pathname)) {
+  if (rolRef.current === 'ROL_User' && !UserRoutes.includes (pathname)) {
     return <Navigate to={'/login'} />;
   }
 
-  if (rolRef.current === 'ROL_Admin' && !AdminRoutes.includes(pathname)) {
+  if (rolRef.current === 'ROL_Admin' && !AdminRoutes.includes (pathname)) {
     return <Navigate to={'/login'} />;
   }
 

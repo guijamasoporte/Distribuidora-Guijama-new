@@ -49,7 +49,7 @@ async function InstanceOfAxios<T>(
     // Manejar errores
     const apiError: ApiError = {
       message: "Error al procesar la solicitud.",
-      errorMsg: error.response?.data,
+      errorMsg: error.response?.data.error,
       // Otros campos según la estructura de tus errores
     };
 
