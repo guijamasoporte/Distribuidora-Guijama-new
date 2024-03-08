@@ -9,10 +9,9 @@ import InstanceOfAxios from "../../utils/intanceAxios";
 import Swal from "sweetalert2";
 import AddProductModal from "../../components/modals/modalProduct/modalAddProduct/modalAddProduct";
 import EditProductModal from "../../components/modals/modalProduct/modalEditProduct/modalEditProduct";
-import ModifyPriceModal from "../../components/modals/modalProduct/modalEditPriceCategory/modalEditPriceCategory";
 import { GetDecodedCookie } from "../../utils/DecodedCookie";
 import { AxiosResponse } from "axios";
-import { log } from "console";
+import ModalEditPrices from "../../components/modals/modalProduct/modalEditPricesProduct/modalEditPrices";
 
 interface Product {
   _id: string;
@@ -24,7 +23,7 @@ interface Product {
   stock: number;
   priceList: number;
   priceCost: number;
-  image: string;
+  image: [];
   sales: {};
 }
 
@@ -80,7 +79,6 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
     
     fetchData();
   }, []);
-  console.log(categories);
   
   const applyFilters = (product: Product) => {
     return Object.entries(filters).every(([key, value]) => {
@@ -265,12 +263,13 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
           handleClose={() => setShowModalEdit(false)}
         />
       )}
-      <ModifyPriceModal
+      <ModalEditPrices
         open={showModifyPriceModal}
         handleClose={() => setShowModifyPriceModal(false)}
         categories={categories}
         brands={brands}
       />
+ 
     </div>
   );
 };

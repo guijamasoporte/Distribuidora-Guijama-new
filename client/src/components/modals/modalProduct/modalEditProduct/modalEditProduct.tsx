@@ -1,10 +1,11 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Dialog, TextField } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import InstanceOfAxios from "../../../../utils/intanceAxios";
 import styles from "./modalEditProduct.module.css";
 import { GetDecodedCookie } from "../../../../utils/DecodedCookie";
 import Swal from "sweetalert2";
+import { fileUpload } from "../../../../utils/fileUpload";
 
 interface Product {
   _id: string;
@@ -15,7 +16,7 @@ interface Product {
   stock: number;
   priceCost: number;
   priceList: number;
-  image: string;
+  image: [];
   sales: {};
 }
 
@@ -39,94 +40,73 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
       stock: productSelect.stock,
       priceCost: productSelect.priceCost,
       priceList: productSelect.priceList,
-      image: productSelect.image,
       sales: {},
+      image: productSelect.image,
       _id: productSelect._id,
     };
   }, [productSelect]);
 
   const [product, setProduct] = useState<Product>(initialProduct);
-  const [imageFile, setImageFile] = useState<File | null>(null);
+
+  const [selectedImages, setSelectedImages] = useState<File[]>([]); //preview images
+  const maxImages = 1;
+  const inputRef: React.MutableRefObject<HTMLInputElement | null> =
+    useRef(null);
+  console.log(productSelect);
 
   useEffect(() => {
-    if (open) {
-      setProduct(productSelect);
-      console.log(productSelect.image);
-    } else {
-      setProduct(initialProduct);
-    }
-  }, [open, productSelect, initialProduct]);
+    setSelectedImages(initialProduct.image);
+  }, [productSelect]);
 
-  const handleChange = (prop: string, value: string | number) => {
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    const selected = Array.from(files as FileList);
+
+    if (selectedImages.length + selected.length > maxImages) {
+      alert(`Máximo ${maxImages} imágenes permitidas.`); //reemplazar este alert por sweetAlert
+    } else {
+      setSelectedImages((prevSelected) => [...prevSelected, ...selected]); //hace el prev de las imagenes y las agrega si no hay mas de 5
+    }
+    if (inputRef.current) {
+      inputRef.current.value = "";
+    }
+  };
+
+  const handleImageRemove = (index: number) => {
+    const updatedImages = [...selectedImages];
+    updatedImages.splice(index, 1);
+    setSelectedImages(updatedImages);
+  };
+
+  const handleChange = (prop: keyof Product, value: string | number) => {
     setProduct({
       ...product,
       [prop]: value,
     });
   };
 
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (files && files[0]) {
-      setImageFile(files[0]);
-      setProduct((prevProduct) => ({
-        ...prevProduct,
-        image: URL.createObjectURL(files[0]),
-      }));
-    }
-  };
-
-  useEffect(() => {
-    if (imageFile) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        if (e.target) {
-          const target = e.target as FileReader;
-          setProduct((prevProduct) => ({
-            ...prevProduct,
-            image: target.result as string,
-          }));
-        }
-      };
-      reader.readAsDataURL(imageFile);
-    }
-  }, [imageFile]);
-
-  const handleRemoveImage = () => {
-    setProduct({
-      ...product,
-      image: "",
-    });
-    setImageFile(null);
-
-    const inputFile = document.getElementById(
-      "image-input"
-    ) as HTMLInputElement;
-    if (inputFile) {
-      inputFile.value = "";
-    }
-  };
-
   const handleEditProduct = async () => {
     try {
-      const formData = new FormData();
-      formData.append("image", imageFile!);
-      formData.append("code", product.code);
-      formData.append("title", product.title);
-      formData.append("category", product.category);
-      formData.append("brand", product.brand);
-      formData.append("stock", String(product.stock));
-      formData.append("priceCost", String(product.priceCost));
-      formData.append("priceList", String(product.priceList));
-  
-      await InstanceOfAxios(`/products/${productSelect._id}`, "PUT", formData);
-  
-      Swal.fire("¡Producto editado!", "El producto se ha editado exitosamente.", "success");
+      const token = GetDecodedCookie("cookieToken");
+      const resLink: any = await fileUpload(selectedImages, "products");
+
+      await InstanceOfAxios(
+        `/products/${productSelect._id}`,
+        "PUT",
+        { product, resLink },
+        token
+      );
+
+      Swal.fire(
+        "¡Producto editado!",
+        "El producto se ha editado exitosamente.",
+        "success"
+      );
       handleClose();
     } catch (error) {
       console.error("Error al editar el producto:", error);
     }
   };
-  
 
   return (
     <Dialog className={styles.containerForm} open={open} onClose={handleClose}>
@@ -194,24 +174,31 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
           fullWidth
           inputProps={{ maxLength: 20 }}
         />
-        {product.image && (
-          <div className={styles.imageContainer}>
-            <button
-              className={styles.removeImageButton}
-              onClick={handleRemoveImage}
-            >
-              <ClearIcon />
-            </button>
-            <img className={styles.image} src={product.image} alt="Imagen" />
-          </div>
-        )}
+        {selectedImages &&
+          selectedImages.map((image, index) => (
+            <div className={styles.imageContainer}>
+              <button
+                className={styles.removeImageButton}
+                onClick={() => handleImageRemove(index)}
+              >
+                <ClearIcon />
+              </button>
+              <img
+                className={styles.image}
+                src={
+                  typeof image === "string" ? image : URL.createObjectURL(image)
+                }
+                alt={`Imagen ${index + 1}`}
+              />
+            </div>
+          ))}
         <input
           accept="image/*"
           className={styles.input}
           id="image-input"
           multiple={false}
           type="file"
-          onChange={handleImageChange}
+          onChange={(e) => handleImageUpload(e)}
         />
         <label htmlFor="image-input" className={styles.customImageButton}>
           Subir imagen
