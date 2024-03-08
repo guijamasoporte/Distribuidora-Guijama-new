@@ -3,11 +3,15 @@ import { Modal } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import styles from "./modalAddSale.module.css";
 import InstanceOfAxios from "../../../../utils/intanceAxios";
-import { log } from "console";
 
 interface Client {
+  idClient: string;
   name: string;
   lastName: string;
+  phone: string;
+  email: string;
+  adress: string;
+  buys: [];
 }
 
 interface Dues {
@@ -30,6 +34,7 @@ interface ProductData {
   invoice: string;
   state: boolean;
   priceTotal: number;
+  generic:boolean
 }
 
 interface ApiError {
@@ -43,14 +48,13 @@ interface ModalProps {
   onClose: () => void;
   onAddProduct: (productData: ProductData) => void;
 }
+interface Filters {
+  code: string;
+  cant: number;
+  importe: number;
+}
 
-const ModalComponent: React.FC<ModalProps> = ({
-  open,
-  onClose,
-  onAddProduct,
-}) => {
-  const [productList, setProductList] = useState<ProductData[]>([]);
-  const [productCode, setProductCode] = useState("");
+const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
   const [productTitle, setProductTitle] = useState("");
   const [productPrice, setProductPrice] = useState(0);
   const [productQuantity, setProductQuantity] = useState(0);
@@ -58,85 +62,94 @@ const ModalComponent: React.FC<ModalProps> = ({
   const [productPriceCost, setProductPriceCost] = useState(0);
   const [calculatedPrice, setCalculatedPrice] = useState(0);
 
+  // new code
+  const [List, setList] = useState<ProductData[]>([]);
+  const [filter, setFilter] = useState<Filters>({
+    code: "",
+    cant: 1,
+    importe: 1,
+  });
+  const [dataProducts, setDataProducts] = useState<ProductData[]>([]);
+  const [dataClients, setDataClients] = useState<Client[]>([]);
+
   useEffect(() => {
-    if (open && productCode) {
-      const fetchData = async () => {
-        try {
-          const response = await InstanceOfAxios<ApiResponse[] | ApiError>(
-            `/products/`,
-            "GET"
-          );
-          if ("message" in response) {
-            console.error(
-              "Error al obtener los datos del producto:",
-              response.message
-            );
-            return;
-          }
+    fetchData();
+  }, []);
 
-          const products = response as ProductData[];
-          const product = products.find((item) => item.code === productCode);
+  const fetchData = async () => {
+    const resProducts: any = await InstanceOfAxios("/products", "GET");
+    const resClients: any = await InstanceOfAxios("/clients", "GET");
+    setDataProducts(resProducts);
+    setDataClients(resClients);
+  };
 
-          if (product) {
-            setProductQuantity(product.quantity);
-            setProductPrice(product.price);
-            setProductTitle(product.title);
-            setProductPriceList(product.priceList);
-            setProductPriceCost(product.priceCost);
-          } else {
-            setProductQuantity(0);
-            setProductPrice(0);
-            setProductTitle("");
-            setProductPriceList(0);
-            setProductPriceCost(0);
-          }
-          console.log(product);
-        } catch (error) {
-          console.error("Error al obtener los datos del producto:", error);
-        }
-      };
-      fetchData();
-    }
-  }, [open, productCode]);
+  const handleChangeFilter = (prop: string, value: any) => {
+    setFilter({
+      ...filter,
+      [prop]: value,
+    });
+  };
 
   useEffect(() => {
     const totalPrice = productQuantity * productPriceList;
     setCalculatedPrice(totalPrice);
   }, [productQuantity, productPriceList]);
 
-  const handleAddProduct = () => {
-    const newProductData: ProductData = {
-      client: {
-        name: "",
-        lastName: "",
-      },
-      product: {},
-      date: "",
-      code: productCode,
-      name: "",
-      quantity: productQuantity,
-      price: productPrice,
-      title: productTitle,
-      priceList: productPriceList,
-      priceCost: productPriceCost,
-      dues: {
-        payd: 0,
-        cant: 0,
-      },
-      invoice: "",
-      state: false,
-      priceTotal: 0,
-    };
+  const HandlerFacturacion = () => {
+    try {
+      let filteredData = dataProducts.filter(
+        (el) => String(el.code) === String(filter.code)
+      );
 
-    setProductList([...productList, newProductData]);
-    setProductCode("");
-    setProductQuantity(0);
-    setProductPrice(0);
+      if (filteredData.length > 0) {
+        filteredData = filteredData.map((item) => ({
+          ...item,
+          unity: filter.cant,
+        }));
+
+        let productIndex = List.findIndex(
+          (el) => String(el.code) === String(filteredData[0].code)
+        );
+
+        if (productIndex >= 0) {
+          List[productIndex].quantity =
+            Number(List[productIndex].quantity) + Number(filter.cant);
+          setList([...List]);
+        } else {
+          setList([...List, ...filteredData]);
+        }
+        setFilter({ ...filter, code: "" });
+      }
+    } catch (error) {
+      console.error("Error handling facturation:", error);
+    }
   };
 
-  const handleFinishSale = () => {
-    productList.forEach((product) => onAddProduct(product));
-    onClose();
+  useEffect(() => {
+    HandlerFacturacion();
+  }, [filter.code]);
+
+  const handleAddGenericProduct = () => {
+    // setList([
+    //   ...List,
+    //   {
+    //     code: "",
+    //     title: "Producto Generico",
+    //     priceCost: 0,
+    //     priceList: filter.importe,
+    //     quantity: filter.cant,
+    //     generic: true,
+    //     client: undefined,
+    //     product: undefined,
+    //     date: "",
+    //     name: "",
+    //     price: 0,
+    //     dues: undefined,
+    //     invoice: "",
+    //     state: false,
+    //     priceTotal: 0
+    //   },
+    // ]);
   };
 
   return (
@@ -147,7 +160,7 @@ const ModalComponent: React.FC<ModalProps> = ({
           <input
             type="number"
             placeholder="Código de producto"
-            onChange={(e) => setProductCode(e.target.value)}
+            onChange={(e) => handleChangeFilter("code", e.target.value)}
             className={styles.inputAddCode}
           />
           <table className={styles.productTable}>
@@ -162,7 +175,7 @@ const ModalComponent: React.FC<ModalProps> = ({
               </tr>
             </thead>
             <tbody>
-              {productList.map((product, index) => (
+              {List.map((product, index) => (
                 <tr key={index}>
                   <td>{product.code}</td>
                   <td>{product.title}</td>
@@ -210,12 +223,12 @@ const ModalComponent: React.FC<ModalProps> = ({
           </table>
         </div>
         <div className={styles.buttonContainerSale}>
-          <button onClick={handleAddProduct} className={styles.button}>
+          <button onClick={handleAddGenericProduct} className={styles.button}>
             Agregar Producto
           </button>
-          <button onClick={handleFinishSale} className={styles.button}>
+          {/* <button onClick={handleFinishSale} className={styles.button}>
             Cargar Venta
-          </button>
+          </button> */}
         </div>
       </div>
     </Modal>
