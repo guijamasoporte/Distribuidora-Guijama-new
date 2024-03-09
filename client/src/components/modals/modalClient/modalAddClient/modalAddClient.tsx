@@ -3,25 +3,20 @@ import { Modal, TextField, Button, Dialog } from "@mui/material";
 import styles from "./modalAddClient.module.css";
 import InstanceOfAxios from "../../../../utils/intanceAxios";
 import Swal from "sweetalert2";
+import { Client, propsModals } from "../../../../interfaces/interfaces";
 
-interface CreateClientModalProps {
-  open: boolean;
-  onClose: () => void;
-  onCreate: (newClient: any) => void;
-}
-
-const CreateClientModal: React.FC<CreateClientModalProps> = ({
+const CreateClientModal: React.FC<propsModals> = ({
   open,
   onClose,
   onCreate,
 }) => {
-  const [newClient, setNewClient] = useState({
+  const [newClient, setNewClient] = useState<any>({
     name: "",
     lastName: "",
     phone: "",
     email: "",
     adress: "",
-    buys: "",
+    buys: [],
   });
 
   const handleChange = (

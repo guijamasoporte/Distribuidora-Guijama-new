@@ -12,24 +12,7 @@ import EditProductModal from "../../components/modals/modalProduct/modalEditProd
 import { GetDecodedCookie } from "../../utils/DecodedCookie";
 import { AxiosResponse } from "axios";
 import ModalEditPrices from "../../components/modals/modalProduct/modalEditPricesProduct/modalEditPrices";
-
-interface Product {
-  _id: string;
-  code: string;
-  title: string;
-  category: string;
-  description: string;
-  brand: string;
-  stock: number;
-  priceList: number;
-  priceCost: number;
-  image: [];
-  sales: {};
-}
-
-interface ProductsProps {
-  data: Product[];
-}
+import { Client, Product, ProductsProps } from "../../interfaces/interfaces";
 
 const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
   const [showModal, setShowModal] = useState(false);
@@ -41,11 +24,12 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
     category: "",
     brand: "",
     stock: "",
-    description: "",
     priceCost: "",
     priceList: "",
     image: "",
     sales: "",
+    unity: "",
+    generic: "",
     _id: "",
   };
 
@@ -138,45 +122,46 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
     )
     .slice(indexOfFirstProduct, indexOfLastProduct);
 
-    const [totals, setTotals] = useState({
-      costTotal: 0,
-      saleTotal: 0,
-      stockTotal: 0,
-    });
-  
-    useEffect(() => {
-      const calculateTotals = () => {
-        const filteredProducts = currentProducts
-          .filter(applyFilters)
-          .filter((product) =>
+  const [totals, setTotals] = useState({
+    costTotal: 0,
+    saleTotal: 0,
+    stockTotal: 0,
+  });
+
+  useEffect(() => {
+    const calculateTotals = () => {
+      const filteredProducts = currentProducts
+        .filter(applyFilters)
+        .filter(
+          (product) =>
             searchTerm === "" ||
             Object.values(product).some((value) =>
               String(value).toLowerCase().includes(searchTerm.toLowerCase())
             )
-          );
-  
-        const costTotal = filteredProducts.reduce(
-          (acc, product) => acc + product.priceCost,
-          0
         );
-        const saleTotal = filteredProducts.reduce(
-          (acc, product) => acc + product.priceList,
-          0
-        );
-        const stockTotal = filteredProducts.reduce(
-          (acc, product) => acc + product.stock,
-          0
-        );
-  
-        setTotals({
-          costTotal,
-          saleTotal,
-          stockTotal,
-        });
-      };
-  
-      calculateTotals();
-    }, [currentProducts, applyFilters, searchTerm]);
+
+      const costTotal = filteredProducts.reduce(
+        (acc, product: Product) => acc + product.priceCost,
+        0
+      );
+      const saleTotal = filteredProducts.reduce(
+        (acc, product: Product) => acc + product.priceList,
+        0
+      );
+      const stockTotal = filteredProducts.reduce(
+        (acc, product) => acc + product.stock,
+        0
+      );
+
+      setTotals({
+        costTotal,
+        saleTotal,
+        stockTotal,
+      });
+    };
+
+    calculateTotals();
+  }, [currentProducts, applyFilters, searchTerm]);
 
   return (
     <div className={styles.tableContainer}>
@@ -274,7 +259,7 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
         </tbody>
       </table>
       <div>
-      <div className={styles.totalsData}>
+        <div className={styles.totalsData}>
           <p className={styles.totalCat}>Stock total: {totals.stockTotal}</p>
           <p className={styles.totalCat}>Total de Costo: ${totals.costTotal}</p>
           <p className={styles.totalCat}>Total de Venta: ${totals.saleTotal}</p>
@@ -305,6 +290,12 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
         handleClose={() => setShowModal(false)}
         categories={categories}
         brands={brands}
+        onClose={function (): void {
+          throw new Error("Function not implemented.");
+        }}
+        onCreate={function (newClient: Client): void {
+          throw new Error("Function not implemented.");
+        }}
       />
       {productSelect && (
         <EditProductModal

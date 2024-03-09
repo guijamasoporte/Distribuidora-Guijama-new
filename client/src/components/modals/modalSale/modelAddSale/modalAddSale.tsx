@@ -3,38 +3,17 @@ import { Modal } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import styles from "./modalAddSale.module.css";
 import InstanceOfAxios from "../../../../utils/intanceAxios";
-
-interface Client {
-  idClient: string;
-  name: string;
-  lastName: string;
-  phone: string;
-  email: string;
-  adress: string;
-  buys: [];
-}
-
-interface Dues {
-  payd: number;
-  cant: number;
-}
+import { Client, Dues, Product } from "../../../../interfaces/interfaces";
 
 interface ProductData {
+  code(code: any): unknown;
   client: Client;
-  product: object;
-  date: string;
-  code: string;
-  name: string;
-  quantity: number;
-  price: number;
-  title: string;
-  priceList: number;
-  priceCost: number;
+  product: Product;
+  date: Date;
   dues: Dues;
-  invoice: string;
   state: boolean;
   priceTotal: number;
-  generic:boolean
+  generic: boolean;
 }
 
 interface ApiError {
@@ -46,7 +25,7 @@ type ApiResponse = ProductData | ApiError;
 interface ModalProps {
   open: boolean;
   onClose: () => void;
-  onAddProduct: (productData: ProductData) => void;
+  // onAddProduct: (productData: ProductData) => void;
 }
 interface Filters {
   code: string;
@@ -55,22 +34,20 @@ interface Filters {
 }
 
 const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
-  const [productTitle, setProductTitle] = useState("");
-  const [productPrice, setProductPrice] = useState(0);
-  const [productQuantity, setProductQuantity] = useState(0);
-  const [productPriceList, setProductPriceList] = useState(0);
-  const [productPriceCost, setProductPriceCost] = useState(0);
+
   const [calculatedPrice, setCalculatedPrice] = useState(0);
 
   // new code
-  const [List, setList] = useState<ProductData[]>([]);
+  const [dataProducts, setDataProducts] = useState<Product[]>([]);
+  const [dataClients, setDataClients] = useState<Client[]>([]);
+  const [List, setList] = useState<Product[]>([]);
+
   const [filter, setFilter] = useState<Filters>({
     code: "",
     cant: 1,
     importe: 1,
   });
-  const [dataProducts, setDataProducts] = useState<ProductData[]>([]);
-  const [dataClients, setDataClients] = useState<Client[]>([]);
+  const [total, setTotal] = useState<number> (0);
 
   useEffect(() => {
     fetchData();
@@ -90,15 +67,10 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
     });
   };
 
-  useEffect(() => {
-    const totalPrice = productQuantity * productPriceList;
-    setCalculatedPrice(totalPrice);
-  }, [productQuantity, productPriceList]);
-
   const HandlerFacturacion = () => {
     try {
-      let filteredData = dataProducts.filter(
-        (el) => String(el.code) === String(filter.code)
+      let filteredData: Product[] = dataProducts.filter(
+        (el: Product) => String(el.code) === String(filter.code)
       );
 
       if (filteredData.length > 0) {
@@ -108,12 +80,12 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
         }));
 
         let productIndex = List.findIndex(
-          (el) => String(el.code) === String(filteredData[0].code)
+          (el: Product) => String(el.code) === String(filteredData[0].code)
         );
 
         if (productIndex >= 0) {
-          List[productIndex].quantity =
-            Number(List[productIndex].quantity) + Number(filter.cant);
+          List[productIndex].unity =
+            Number(List[productIndex].unity) + Number(filter.cant);
           setList([...List]);
         } else {
           setList([...List, ...filteredData]);
@@ -127,29 +99,52 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
 
   useEffect(() => {
     HandlerFacturacion();
-  }, [filter.code]);
+    Calculartotal()
+  }, [filter.code,List]);
+
 
   const handleAddGenericProduct = () => {
-    // setList([
-    //   ...List,
-    //   {
-    //     code: "",
-    //     title: "Producto Generico",
-    //     priceCost: 0,
-    //     priceList: filter.importe,
-    //     quantity: filter.cant,
-    //     generic: true,
-    //     client: undefined,
-    //     product: undefined,
-    //     date: "",
-    //     name: "",
-    //     price: 0,
-    //     dues: undefined,
-    //     invoice: "",
-    //     state: false,
-    //     priceTotal: 0
-    //   },
-    // ]);
+    setList([
+      ...List,
+      {
+        code: "",
+        title: "Producto Generico",
+        priceCost: null,
+        priceList: filter.importe,
+        unity: filter.cant,
+        generic: true,
+        stock: 0,
+        category: "",
+        brand: "",
+        image: [],
+        sales: {},
+        _id: ""
+      },
+    ]);
+  };
+
+  const handlerEditTitle = (elemento: Product) => {
+    return (event: any) => {
+      const newTitle = event.target.value;
+      let productIndex = List.findIndex(
+        (el: Product) => String(el.code) === String(elemento.code)
+      );
+      if (productIndex >= 0) {
+        List[productIndex].title = newTitle;
+        setList([...List]);
+      }
+    };
+  };
+
+  const Calculartotal = () => {
+    let totalData = List.map ((el:any) => ({
+      ...el,
+      total: el.priceList * el.unity,
+    }));
+
+    // Calculate the overall total by summing up the individual totals
+    let overallTotal = totalData.reduce ((acc, curr) => acc + curr.total, 0);
+    setTotal (overallTotal);
   };
 
   return (
@@ -158,11 +153,27 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
         <h2 className={styles.titleNewSale}>Nueva Venta</h2>
         <div>
           <input
-            type="number"
+            type="text"
             placeholder="Código de producto"
             onChange={(e) => handleChangeFilter("code", e.target.value)}
             className={styles.inputAddCode}
+            value={filter.code}
           />
+          <input
+            type="number"
+            placeholder="Cantidad"
+            onChange={(e) => handleChangeFilter("cant", e.target.value)}
+            className={styles.inputAddCode}
+            value={filter.cant}
+          />
+          <input
+            type="number"
+            placeholder="Importe"
+            onChange={(e) => handleChangeFilter("importe", e.target.value)}
+            className={styles.inputAddCode}
+            value={filter.importe}
+          />
+          <p>total:${total}</p>
           <table className={styles.productTable}>
             <thead>
               <tr>
@@ -175,40 +186,34 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
               </tr>
             </thead>
             <tbody>
-              {List.map((product, index) => (
+              {List.map((product: Product, index) => (
                 <tr key={index}>
                   <td>{product.code}</td>
-                  <td>{product.title}</td>
                   <td>
-                    <input
-                      type="number"
-                      value={product.quantity}
-                      onChange={(e) =>
-                        setProductQuantity(parseInt(e.target.value))
-                      }
-                      className={styles.input}
-                    />
+                    {product.generic ? (
+                      <input
+                        type="text"
+                        id=""
+                        value={product.title}
+                        maxLength={20}
+                        onChange={handlerEditTitle(product)}
+                      />
+                    ) : (
+                      product.title
+                    )}
                   </td>
                   <td>
                     <input
                       type="number"
-                      value={product.priceCost}
-                      onChange={(e) =>
-                        setProductPriceCost(parseFloat(e.target.value))
-                      }
+                      value={product.unity}
+                      // onChange={(e) =>
+                      //   setProductQuantity(parseInt(e.target.value))
+                      // }
                       className={styles.input}
                     />
                   </td>
-                  <td>
-                    <input
-                      type="number"
-                      value={product.priceList}
-                      onChange={(e) =>
-                        setProductPriceList(parseFloat(e.target.value))
-                      }
-                      className={styles.input}
-                    />
-                  </td>
+                  <td>{product.priceCost ?? "-"}</td>
+                  <td>{product.priceList ?? "-"}</td>
                   <td>
                     <input
                       type="number"

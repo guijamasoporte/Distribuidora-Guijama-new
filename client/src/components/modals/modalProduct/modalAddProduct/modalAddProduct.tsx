@@ -7,17 +7,7 @@ import { GetDecodedCookie } from "../../../../utils/DecodedCookie";
 import InstanceOfAxios from "../../../../utils/intanceAxios";
 import Swal from "sweetalert2";
 import { fileUpload } from "../../../../utils/fileUpload";
-
-interface Product {
-  code: string;
-  title: string;
-  category: string;
-  brand: string;
-  stock: number;
-  priceCost: number;
-  priceList: number;
-  sales: {};
-}
+import { Product, propsModals } from "../../../../interfaces/interfaces";
 
 interface AddProductModalProps {
   open: boolean;
@@ -26,7 +16,7 @@ interface AddProductModalProps {
   brands: string[];
 }
 
-const AddProductModal: React.FC<AddProductModalProps> = ({
+const AddProductModal: React.FC<propsModals> = ({
   open,
   handleClose,
   categories,
@@ -40,17 +30,19 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
     stock: 0,
     priceCost: 0,
     priceList: 0,
+    image: [],
     sales: {},
+    unity: undefined,
+    generic: false,
+    _id: ""
   };
 
   const [product, setProduct] = useState<Product>(initialProduct);
-
 
   const [selectedImages, setSelectedImages] = useState<File[]>([]); //preview images
   const maxImages = 1;
   const inputRef: React.MutableRefObject<HTMLInputElement | null> =
     useRef(null);
- 
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -79,16 +71,14 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
     });
   };
 
-
   const handleAddProduct = async () => {
     try {
       const token = GetDecodedCookie("cookieToken");
 
       const resLink: any = await fileUpload(selectedImages, "products");
-  
 
       // Realizar la llamada a la API
-      await InstanceOfAxios("/products", "POST", {product,resLink}, token);
+      await InstanceOfAxios("/products", "POST", { product, resLink }, token);
 
       Swal.fire(
         "¡Producto guardado!",
@@ -132,9 +122,13 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
             options={categories}
             getOptionLabel={(option) => option}
             value={product.category}
-            onChange={(_, newInputValue:any) => handleChange("category",newInputValue)}
+            onChange={(_, newInputValue: any) =>
+              handleChange("category", newInputValue)
+            }
             inputValue={product.category}
-            onInputChange={(_, newInputValue) => handleChange("category",newInputValue)}
+            onInputChange={(_, newInputValue) =>
+              handleChange("category", newInputValue)
+            }
             renderInput={(params) => (
               <TextField {...params} label="Categoría" fullWidth />
             )}
@@ -144,9 +138,11 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
             options={brands}
             getOptionLabel={(option) => option}
             value={product.brand}
-            onChange={(_, newValue) => handleChange("brand",newValue || "")}
+            onChange={(_, newValue) => handleChange("brand", newValue || "")}
             inputValue={product.brand}
-            onInputChange={(_, newInputValue) => handleChange("brand",newInputValue)}
+            onInputChange={(_, newInputValue) =>
+              handleChange("brand", newInputValue)
+            }
             renderInput={(params) => (
               <TextField {...params} label="Marca" fullWidth />
             )}

@@ -11,17 +11,9 @@ import Swal from "sweetalert2";
 import CreateClientModal from "../../components/modals/modalClient/modalAddClient/modalAddClient";
 import EditClientModal from "../../components/modals/modalClient/modalEditClient/modalEditClient";
 import { GetDecodedCookie } from "../../utils/DecodedCookie";
+import { Client } from "../../interfaces/interfaces";
 
-interface Client {
-  [x: string]: any;
-  idClient: number;
-  name: string;
-  lastName: string;
-  phone: string;
-  email: string;
-  adress: string;
-  buys: number;
-}
+
 
 const ClientsPage: React.FC = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -265,8 +257,9 @@ const ClientsPage: React.FC = () => {
       <CreateClientModal
         open={openModal}
         onClose={() => setOpenModal(false)}
-        onCreate={handleCreateClient}
-      />
+        onCreate={handleCreateClient} handleClose={function (): void {
+          throw new Error("Function not implemented.");
+        } } categories={[]} brands={[]}      />
       {clientSelect && (
         <EditClientModal
           open={openModalEdit}

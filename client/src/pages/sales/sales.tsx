@@ -7,16 +7,9 @@ import SearchBar from "../../components/searchBar/searchBar";
 import InstanceOfAxios from "../../utils/intanceAxios";
 import Pagination from "../../components/pagination/pagination";
 import ModalComponent from "../../components/modals/modalSale/modelAddSale/modalAddSale";
+import { Client, Dues } from "../../interfaces/interfaces";
 
-interface Client {
-  name: string;
-  lastName: string;
-}
 
-interface Dues {
-  payd: number;
-  cant: number;
-}
 
 interface Sale {
   idSale: number;
@@ -222,16 +215,7 @@ const SalesPage: React.FC = () => {
         <ModalComponent
           open={modalOpen}
           onClose={closeModal}
-          onAddProduct={function (productData: {
-            code: string;
-            quantity: number;
-            price: number;
-            title: string;
-            priceList: number;
-            priceCost: number;
-          }): void {
-            throw new Error("Function not implemented.");
-          }}
+        
         />
       </div>
     </div>

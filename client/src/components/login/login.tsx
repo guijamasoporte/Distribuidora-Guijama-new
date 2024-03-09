@@ -2,11 +2,8 @@ import React, { FormEvent, useState } from "react";
 import InstanceOfAxios from "../../utils/intanceAxios";
 import style from "./login.module.css";
 import Cookies from "js-cookie";
+import { DataLogin } from "../../interfaces/interfaces";
 
-interface DataLogin {
-  email: string;
-  password: string;
-}
 
 const Login: React.FC = () => {
   const [dataLogin, setDataLogin] = useState<DataLogin>({
