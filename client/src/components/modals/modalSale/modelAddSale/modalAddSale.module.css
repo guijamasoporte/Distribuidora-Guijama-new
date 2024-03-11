@@ -6,21 +6,77 @@
   background-color: #ffffff;
   padding: 20px;
   border-radius: 10px;
-  max-width: 90%;
-  height: 90%;
-  margin: 0 auto;
+  width: 95%;
+  max-height: 90%;
+  margin: 15px auto;
+  overflow: hidden;
+  overflow-y: auto;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
 }
 
-.titleNewSale{
+.modal::-webkit-scrollbar {
+  width: 0; /* Aquí ocultamos la barra lateral del scroll */
+}
+
+.closeButtonTitle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.table {
+  border-radius: 10px;
+  width: 100%;
+  border-collapse: collapse;
+  font-family: "noto sans";
+
+}
+
+.table th,
+.table td {
+  border: 1px solid #ddd;
+  padding: 5px;
+  max-width: 5rem;
+  text-align: center;
+}
+
+.table th {
+  background-color: #603e20;
+  color: white;
+}
+
+.table tr:hover {
+  background-color: #9ec5ca67;
+}
+
+.tablesContainer {
+  width: 95%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.titleContainer {
+  display: flex;
+  align-items: center;
+  width: 80%;
+  justify-content: center;
+}
+
+.titleNewSale {
+  display: flex;
+  justify-content: center;
   font-family: "questrial";
-  margin-top: 0;
   font-size: 1.5rem;
-  color: #333333;
+  color: #000000;
+  width: 90%;
+  padding: 1rem;
+  background-color: #9ec5ca67;
+  border-radius: 5px;
 }
 
 .productTable {
-
   border-collapse: collapse;
   margin-bottom: 20px;
 }
@@ -37,60 +93,171 @@
   width: 100%;
   background-color: #f2f2f2;
   flex: 1;
+}
 
+.inputContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  font-family: "questrial";
+  border: none;
+  color: white;
+  background-color: #b69b84;
+  margin-bottom: 1.5rem;
+  height: 5rem;
+  border-radius: 5px;
 }
 
 .input {
+  padding: 8px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  box-sizing: border-box;
   width: 100%;
+  text-align: center;
+}
+
+.inputAddCode {
   padding: 8px;
   border: 1px solid #cccccc;
   border-radius: 4px;
   box-sizing: border-box;
+  font-family: "noto sans";
 }
 
-.inputAddCode{
+.inputAddCode:focus {
+  outline: none;
+  border: 2px solid #1970b8;
+}
+
+.inputEditPriceGeneric {
   padding: 8px;
   border: 1px solid #cccccc;
   border-radius: 4px;
   box-sizing: border-box;
-  margin-bottom: 2rem;
+  font-family: "noto sans";
+  text-align: center;
 }
 
-.buttonContainerSale{
-  display: flex;
-  flex-direction: row;
+.inputTitle {
+  width: 6rem;
 }
 
-
-
-.modal button {
-  background-color: #007bff;
-  color: #ffffff;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-right: 10px;
-}
-
-.modal button:hover {
-  background-color: #0056b3;
-}
-
-.modal button:last-child {
-  background-color: #dc3545;
-}
-
-.modal button:last-child:hover {
-  background-color: #bd2130;
+.quantityInputSale {
+  width: 3rem;
 }
 
 .closeButton {
-  background-color: transparent;
+  background-color: red;
+  color: white;
   border: none;
-  padding: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  margin-right: 15px;
+  padding: 0.2rem;
   cursor: pointer;
   position: absolute;
-  top: 10px;
+  top: 20px;
   right: 10px;
+}
+
+.closeButton:hover {
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
+    rgba(0, 0, 0, 0.22) 0px 10px 10px;
+}
+
+.totalSaleContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 3rem;
+  width: 20%;
+  background-color: #b69b84;
+  border-radius: 5px;
+  color: #ffffff;
+  font-family: "questrial";
+  font-size: 19px;
+}
+
+.totalSaleButtonAddContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 95%;
+}
+
+.buttonAddGeneric {
+  font-family: "questrial";
+  font-size: 18px;
+  width: 15rem;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem 3rem;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  background-color: #b69b84;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+}
+
+.buttonAddGeneric:hover {
+  background-color: #603e20;
+  color: white;
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
+    rgba(0, 0, 0, 0.22) 0px 10px 10px;
+}
+
+.buttonFinishSale {
+  font-family: "noto sans";
+  font-size: 21px;
+  width: 15rem;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem 3rem;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  background-color: #089203;
+  transition: transform 0.3s ease;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+}
+
+.buttonFinishSale:hover {
+  color: white;
+  cursor: pointer;
+  transform: scale(1.2);
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
+    rgba(0, 0, 0, 0.22) 0px 10px 10px;
+}
+
+.buttonFinishSaleDisabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.buttonDelete {
+  border: none;
+  background-color: transparent;
+  transition: transform 0.3s ease;
+  color: #d60303;
+}
+.buttonDelete:hover {
+  cursor: pointer;
+  transform: scale(1.4);
+}
+
+.inputAddGeneric {
+  border: 1px solid #ccc;
+  padding: 8px;
+  margin-top: 5px;
+  font-family: "noto sans";
 }

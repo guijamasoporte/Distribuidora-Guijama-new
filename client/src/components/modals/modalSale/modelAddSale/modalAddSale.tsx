@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Modal } from "@mui/material";
+import { Autocomplete, Modal, TextField } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import DeleteIcon from "@mui/icons-material/Delete";
 import styles from "./modalAddSale.module.css";
 import InstanceOfAxios from "../../../../utils/intanceAxios";
 import { Client, Dues, Product } from "../../../../interfaces/interfaces";
@@ -37,6 +38,7 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
   const [dataProducts, setDataProducts] = useState<Product[]>([]);
   const [dataClients, setDataClients] = useState<Client[]>([]);
   const [List, setList] = useState<Product[]>([]);
+  const [selectedClient, setSelectedClient] = useState<Client | null>(null);
 
   const [filter, setFilter] = useState<Filters>({
     code: "",
@@ -131,7 +133,6 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
       total: el.priceList * el.unity,
     }));
 
-    // Calculate the overall total by summing up the individual totals
     let overallTotal = totalData.reduce((acc, curr) => acc + curr.total, 0);
     setTotal(overallTotal);
   };
@@ -141,7 +142,7 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
       ...List,
       {
         code: "",
-        title: "Producto Generico",
+        title: "Titulo",
         priceCost: null,
         priceList: filter.importe,
         unity: filter.cant,
@@ -156,16 +157,12 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
     ]);
   };
 
-  const handlerEditTitle = (elemento: Product) => {
-    return (event: any) => {
+  const handlerEditTitle = (index: number) => {
+    return (event: React.ChangeEvent<HTMLInputElement>) => {
       const newTitle = event.target.value;
-      let productIndex = List.findIndex(
-        (el: Product) => String(el.code) === String(elemento.code)
-      );
-      if (productIndex >= 0) {
-        List[productIndex].title = newTitle;
-        setList([...List]);
-      }
+      let updatedList = [...List];
+      updatedList[index].title = newTitle;
+      setList(updatedList);
     };
   };
 
@@ -179,9 +176,23 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
     };
   };
 
+  const handlerEditPrice = (elemento: Product, index: number) => {
+    return (event: React.ChangeEvent<HTMLInputElement>) => {
+      const newPrice = event.target.value;
+      List[index].priceList = Number(newPrice);
+      setList([...List]);
+    };
+  };
+
   const handlerSubPrice = (product: any) => {
     const total = product.priceList * product.unity;
     return total.toLocaleString().replace(",", ".");
+  };
+
+  const handleDeleteProduct = (index: number) => {
+    const newList = [...List];
+    newList.splice(index, 1);
+    setList(newList);
   };
 
   useEffect(() => {
@@ -193,46 +204,76 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
   return (
     <Modal open={open} onClose={onClose}>
       <div className={styles.modal}>
-        <h2 className={styles.titleNewSale}>Nueva Venta</h2>
-        <div>
-          <input
-            type="text"
-            placeholder="Código de producto"
-            onChange={(e) => handleChangeFilter("code", e.target.value)}
-            className={styles.inputAddCode}
-            value={filter.code}
-          />
-          <input
-            type="number"
-            placeholder="Cantidad"
-            onChange={(e) => handleChangeFilter("cant", e.target.value)}
-            className={styles.inputAddCode}
-            value={filter.cant}
-          />
-          <input
-            type="number"
-            placeholder="Importe"
-            onChange={(e) => handleChangeFilter("importe", e.target.value)}
-            className={styles.inputAddCode}
-            value={filter.importe}
-          />
-          <input
-            type="text"
-            placeholder="Titulo"
-            onChange={(e) => handleChangeFilter("title", e.target.value)}
-            className={styles.inputAddCode}
-            value={filter.title}
-          />
-          <p>total:${total}</p>
-          <table className={styles.productTable}>
+        <div className={styles.closeButtonTitle}>
+          <div>
+            <button className={styles.closeButton} onClick={onClose}>
+              <CloseIcon />
+            </button>
+          </div>
+          <div className={styles.titleContainer}>
+            <h2 className={styles.titleNewSale}>Nueva Venta</h2>
+          </div>
+        </div>
+        <Autocomplete
+              options={dataClients}
+              getOptionLabel={(option) => option.name} 
+              value={selectedClient}
+              onChange={(event, newValue) => {
+                setSelectedClient(newValue);
+              }}
+              renderInput={(params) => (
+                <TextField {...params} label="Cliente" variant="outlined" />
+              )}
+            />
+        <div className={styles.tablesContainer}>
+          <div className={styles.inputContainer}>
+            <label>Código</label>
+            <input
+              type="text"
+              placeholder="Código de producto"
+              onChange={(e) => handleChangeFilter("code", e.target.value)}
+              className={styles.inputAddCode}
+              value={filter.code}
+            />
+
+            <label>Título</label>
+            <input
+              type="text"
+              placeholder="Buscar por título"
+              onChange={(e) => handleChangeFilter("title", e.target.value)}
+              className={styles.inputAddCode}
+              value={filter.title}
+            />
+
+            <label>Cantidad</label>
+            <input
+              type="number"
+              placeholder="Cantidad"
+              onChange={(e) => handleChangeFilter("cant", e.target.value)}
+              className={styles.inputAddCode}
+              value={filter.cant}
+            />
+
+            <label>Importe $</label>
+            <input
+              type="number"
+              placeholder="Importe"
+              onChange={(e) => handleChangeFilter("importe", e.target.value)}
+              className={styles.inputAddCode}
+              value={filter.importe}
+            />
+          </div>
+
+          <table className={styles.table}>
             <thead>
               <tr>
                 <th>Código</th>
                 <th>Título</th>
-                <th>Cantidad</th>
+                <th>U.</th>
                 <th>Precio Compra</th>
                 <th>Precio Venta</th>
-                <th>Precio</th>
+                <th>Sub-Total</th>
+                <th>Borrar</th>
               </tr>
             </thead>
             <tbody>
@@ -246,13 +287,14 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
                         id=""
                         value={product.title}
                         maxLength={20}
-                        onChange={handlerEditTitle(product)}
+                        onChange={handlerEditTitle(index)}
+                        className={`${styles.inputAddCode} ${styles.inputAddGeneric}`}
                       />
                     ) : (
                       product.title
                     )}
                   </td>
-                  <td>
+                  <td className={styles.quantityInputSale}>
                     <input
                       type="number"
                       value={product.unity}
@@ -262,26 +304,59 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
                     />
                   </td>
                   <td>
+                    $
                     {product.priceCost
                       ? product.priceCost.toLocaleString().replace(",", ".")
                       : "-"}
                   </td>
                   <td>
-                    {product.priceList
-                      ? product.priceList.toLocaleString().replace(",", ".")
-                      : "-"}
+                    {product.generic ? (
+                      <input
+                        type="number"
+                        value={product.priceList}
+                        onChange={handlerEditPrice(product, index)}
+                        className={styles.inputEditPriceGeneric}
+                      />
+                    ) : (
+                      `$ ${product.priceList
+                        .toLocaleString()
+                        .replace(",", ".")}`
+                    )}
                   </td>
-                  <td>{handlerSubPrice(product)}</td>
+                  <td>$ {handlerSubPrice(product)}</td>
+                  <td>
+                    <button
+                      className={styles.buttonDelete}
+                      onClick={() => handleDeleteProduct(index)}
+                    >
+                      <DeleteIcon />
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        <div className={styles.buttonContainerSale}>
-          <button onClick={handleAddGenericProduct} className={styles.button}>
-            Agregar Producto
+        <div className={styles.totalSaleButtonAddContainer}>
+          <button
+            onClick={handleAddGenericProduct}
+            className={styles.buttonAddGeneric}
+          >
+            Agregar Genérico
           </button>
-          <button className={styles.button}>Cargar Venta</button>
+          <div className={styles.buttonContainerSale}>
+            <button
+              className={`${styles.buttonFinishSale} ${
+                List.length === 0 ? styles.buttonFinishSaleDisabled : ""
+              }`}
+              disabled={List.length === 0}
+            >
+              Cargar Venta
+            </button>
+          </div>
+          <div className={styles.totalSaleContainer}>
+            <p className={styles.totalSale}>TOTAL: $ {total}</p>
+          </div>
         </div>
       </div>
     </Modal>

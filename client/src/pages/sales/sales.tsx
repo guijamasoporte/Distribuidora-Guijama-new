@@ -208,7 +208,7 @@ const SalesPage: React.FC = () => {
       />
       <div className={styles.buttonsFooter}>
         <button className={styles.buttonAdd} onClick={openModal}>
-          Cargar nueva venta
+          CARGAR NUEVA VENTA
         </button>
         <ModalComponent open={modalOpen} onClose={closeModal} />
       </div>
