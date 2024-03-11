@@ -64,6 +64,34 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
     fetchData();
   }, [showModal, showModalEdit, showModifyPriceModal]);
 
+  const handleDelete = async (id: string) => {
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: "¡No podrás revertir esto!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "¡Sí, eliminarlo!",
+      cancelButtonText: "Cancelar",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const token = GetDecodedCookie("cookieToken");
+          await InstanceOfAxios(`/products/${id}`, "DELETE", undefined, token);
+          Swal.fire("¡Eliminado!", "El cliente ha sido eliminado.", "success");
+
+          setCurrentProducts(
+            currentProducts.filter((product) => product._id !== id)
+          );
+        } catch (error) {
+          console.error("Error deleting product:", error);
+          Swal.fire("Error", "Hubo un error al eliminar el producto.", "error");
+        }
+      }
+    });
+  };
+
   const applyFilters = (product: Product) => {
     return Object.entries(filters).every(([key, value]) => {
       const productValue = String(product[key as keyof Product]).toLowerCase();
@@ -86,25 +114,6 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
 
   const handleSearch = (searchTerm: string) => {
     setSearchTerm(searchTerm);
-  };
-
-  const handleDelete = (id: string) => {
-    Swal.fire({
-      title: "¿Estás seguro?",
-      text: "¡No podrás revertir esto!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "¡Sí, eliminarlo!",
-      cancelButtonText: "Cancelar",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const token = GetDecodedCookie("cookieToken");
-        InstanceOfAxios(`/products/${id}`, "DELETE", undefined, token);
-        Swal.fire("¡Eliminado!", "El cliente ha sido eliminado.", "success");
-      }
-    });
   };
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
