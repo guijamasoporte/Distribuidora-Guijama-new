@@ -111,33 +111,22 @@ export const getAllBrands = async (req, res) => {
 export const EditPriceAllProducts = async (req, res) => {
   try {
     const { category, priceModifier } = req.body;
-
-    // Obtener productos filtrados por categoría
     const products = await Product.find({ category });
 
-    // Actualizar los precios de cada producto
     for (const product of products) {
-      // Verificar si el producto tiene la propiedad priceCost y si es un número
       if (typeof product.priceCost === "number") {
-        // Calcular el nuevo priceCost basado en el porcentaje proporcionado
-        const newPriceCost =
-          product.priceCost + (product.priceCost * priceModifier) / 100;
-
-        // Actualizar el priceCost en el producto
+        const newPriceCost = Math.ceil(
+          product.priceCost + (product.priceCost * priceModifier) / 100
+        );
         product.priceCost = newPriceCost;
       }
-
-      // Verificar si el producto tiene la propiedad priceList y si es un número
       if (typeof product.priceList === "number") {
-        // Calcular el nuevo priceList basado en el porcentaje proporcionado
-        const newPriceList =
-          product.priceList + (product.priceList * priceModifier) / 100;
-
-        // Actualizar el priceList en el producto
+        const newPriceList = Math.ceil(
+          product.priceList + (product.priceList * priceModifier) / 100
+        );
         product.priceList = newPriceList;
       }
 
-      // Guardar el producto actualizado en la base de datos
       await product.save();
     }
 
