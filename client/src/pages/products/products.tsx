@@ -287,7 +287,7 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
 
         <div className={styles.paginationTotalContainer}>
           <Pagination
-            totalItems={slicedProducts.length}
+            totalItems={currentProducts.length}
             itemsPerPage={productsPerPage}
             currentPage={currentPage}
             paginate={paginate}
