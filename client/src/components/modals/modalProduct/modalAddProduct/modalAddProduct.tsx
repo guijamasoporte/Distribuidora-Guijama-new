@@ -34,7 +34,7 @@ const AddProductModal: React.FC<propsModals> = ({
     sales: {},
     unity: undefined,
     generic: false,
-    _id: ""
+    _id: "",
   };
 
   const [product, setProduct] = useState<Product>(initialProduct);
@@ -77,14 +77,26 @@ const AddProductModal: React.FC<propsModals> = ({
 
       const resLink: any = await fileUpload(selectedImages, "products");
 
-      // Realizar la llamada a la API
-      await InstanceOfAxios("/products", "POST", { product, resLink }, token);
+      if (
+        product.title !== "" &&
+        product.code !== "" &&
+        product.category !== "" &&
+        product.brand !== ""
+      ) {
+        await InstanceOfAxios("/products", "POST", { product, resLink }, token);
 
-      Swal.fire(
-        "¡Producto guardado!",
-        "El producto se ha guardado exitosamente.",
-        "success"
-      );
+        Swal.fire(
+          "¡Producto guardado!",
+          "El producto se ha guardado exitosamente.",
+          "success"
+        );
+      } else {
+        Swal.fire({
+          title: "Atencion!",
+          text: "Faltan datos que completar.",
+          icon: "warning",
+        });
+      }
 
       handleClose();
       setProduct(initialProduct);
@@ -156,6 +168,7 @@ const AddProductModal: React.FC<propsModals> = ({
           onChange={(e) => handleChange("stock", Number(e.target.value))}
           fullWidth
           inputProps={{ maxLength: 20 }}
+          type="number"
         />
         <TextField
           className={styles.formField}
@@ -165,6 +178,7 @@ const AddProductModal: React.FC<propsModals> = ({
           onChange={(e) => handleChange("priceCost", Number(e.target.value))}
           fullWidth
           inputProps={{ maxLength: 20 }}
+          type="number"
         />
         <TextField
           className={styles.formField}
@@ -174,6 +188,7 @@ const AddProductModal: React.FC<propsModals> = ({
           onChange={(e) => handleChange("priceList", Number(e.target.value))}
           fullWidth
           inputProps={{ maxLength: 20 }}
+          type="number"
         />
         {selectedImages &&
           selectedImages.map((image, index) => (

@@ -9,7 +9,7 @@ export const createProduct = async (req, res) => {
   try {
     let product = new Product({
       code,
-      title: title[0].toUpperCase() + title.slice(1),
+      title: title[0].toString().toUpperCase() + title.toString().slice(1),
       category,
       brand,
       stock,
