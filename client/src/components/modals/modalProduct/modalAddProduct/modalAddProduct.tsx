@@ -40,7 +40,7 @@ const AddProductModal: React.FC<propsModals> = ({
   const [product, setProduct] = useState<Product>(initialProduct);
 
   const [selectedImages, setSelectedImages] = useState<File[]>([]); //preview images
-  const maxImages = 1;
+  const maxImages = 5;
   const inputRef: React.MutableRefObject<HTMLInputElement | null> =
     useRef(null);
 
