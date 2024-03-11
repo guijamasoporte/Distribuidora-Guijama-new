@@ -4,7 +4,7 @@ import { formatError } from "../utils/formatError.js";
 
 export const createProduct = async (req, res) => {
   const { resLink } = req.body;
-  const { title, category, brand, code, priceList, priceCost, sales,stock } =
+  const { title, category, brand, code, priceList, priceCost, sales, stock } =
     req.body.product;
   console.log(req.body.product);
   try {
