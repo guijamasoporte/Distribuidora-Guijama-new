@@ -172,6 +172,17 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
     calculateTotals();
   }, [currentProducts, applyFilters, searchTerm]);
 
+  function formatNumberWithCommas(number: number) {
+    let numberString = String(number);
+    let parts = [];
+    while (numberString.length > 3) {
+      parts.unshift(numberString.slice(-3));
+      numberString = numberString.slice(0, -3);
+    }
+    parts.unshift(numberString);
+    return parts.join(".");
+  }
+
   return (
     <div className={styles.tableContainer}>
       <h1 className={styles.title}>Listado de productos</h1>
@@ -241,9 +252,9 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
               <td>{product.title}</td>
               <td>{product.category}</td>
               <td>{product.brand}</td>
-              <td>{product.stock}</td>
-              <td>${product.priceCost}</td>
-              <td>${product.priceList}</td>
+              <td>{formatNumberWithCommas(product.stock)}</td>
+              <td>${formatNumberWithCommas(product.priceCost)}</td>
+              <td>${formatNumberWithCommas(product.priceList)}</td>
               <td>
                 <button
                   className={styles.buttonEdit}
@@ -269,14 +280,14 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
       </table>
       <div>
         <div className={styles.totalsData}>
-          <p className={styles.totalCat}>Stock total: {totals.stockTotal}</p>
-          <p className={styles.totalCat}>Total de Costo: ${totals.costTotal}</p>
-          <p className={styles.totalCat}>Total de Venta: ${totals.saleTotal}</p>
+          <p className={styles.totalCat}>Stock total: {formatNumberWithCommas(totals.stockTotal)}</p>
+          <p className={styles.totalCat}>Total de Costo: ${formatNumberWithCommas(totals.costTotal)}</p>
+          <p className={styles.totalCat}>Total de Venta: ${formatNumberWithCommas(totals.saleTotal)}</p>
         </div>
 
         <div className={styles.paginationTotalContainer}>
           <Pagination
-            totalItems={slicedProducts.length}
+            totalItems={currentProducts.length}
             itemsPerPage={productsPerPage}
             currentPage={currentPage}
             paginate={paginate}
