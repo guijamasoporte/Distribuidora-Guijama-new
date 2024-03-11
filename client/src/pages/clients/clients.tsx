@@ -57,7 +57,7 @@ const ClientsPage: React.FC = () => {
     };
 
     fetchClient();
-  }, []);
+  }, [openModal, openModalEdit]);
 
   const handleCreateClient = async (newClient: Client) => {
     try {

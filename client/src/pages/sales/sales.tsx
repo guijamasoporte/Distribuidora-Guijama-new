@@ -9,8 +9,6 @@ import Pagination from "../../components/pagination/pagination";
 import ModalComponent from "../../components/modals/modalSale/modelAddSale/modalAddSale";
 import { Client, Dues } from "../../interfaces/interfaces";
 
-
-
 interface Sale {
   idSale: number;
   client: Client;
@@ -49,7 +47,7 @@ const SalesPage: React.FC = () => {
     };
 
     fetchData();
-  }, []);
+  }, [modalOpen]);
 
   const handleChange = (value: string | null, field: keyof Sale) => {
     setFilters({
@@ -212,11 +210,7 @@ const SalesPage: React.FC = () => {
         <button className={styles.buttonAdd} onClick={openModal}>
           Cargar nueva venta
         </button>
-        <ModalComponent
-          open={modalOpen}
-          onClose={closeModal}
-        
-        />
+        <ModalComponent open={modalOpen} onClose={closeModal} />
       </div>
     </div>
   );

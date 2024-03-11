@@ -62,7 +62,7 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
     };
 
     fetchData();
-  }, []);
+  }, [showModal, showModalEdit, showModifyPriceModal]);
 
   const applyFilters = (product: Product) => {
     return Object.entries(filters).every(([key, value]) => {
