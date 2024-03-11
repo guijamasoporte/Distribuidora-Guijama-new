@@ -179,9 +179,10 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
     };
   };
 
-const handlerSubPrice=()=>{
-  
-}
+  const handlerSubPrice = (product: any) => {
+    const total = product.priceList * product.unity;
+    return total.toLocaleString().replace(",", ".");
+  };
 
   useEffect(() => {
     HandlerAddProduct();
@@ -270,7 +271,7 @@ const handlerSubPrice=()=>{
                       ? product.priceList.toLocaleString().replace(",", ".")
                       : "-"}
                   </td>
-                  <td>{100}</td>
+                  <td>{handlerSubPrice(product)}</td>
                 </tr>
               ))}
             </tbody>

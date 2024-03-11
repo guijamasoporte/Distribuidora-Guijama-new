@@ -4,11 +4,19 @@ import { formatError } from "../utils/formatError.js";
 
 export const createProduct = async (req, res) => {
   const { resLink } = req.body;
-  const { title } = req.body.product;
+  const { title, category, brand, code, priceList, priceCost, sales,stock } =
+    req.body.product;
+  console.log(req.body.product);
   try {
     let product = new Product({
-      ...req.body.product,
+      code,
       title: title[0].toUpperCase() + title.slice(1),
+      category,
+      brand,
+      stock,
+      priceList,
+      priceCost,
+      sales,
       image: resLink,
     });
     await product.save();
@@ -49,7 +57,7 @@ export const UpdateProductById = async (req, res) => {
       {
         ...req.body.product,
         title: title[0]?.toUpperCase() + title?.slice(1),
-        image:resLink,
+        image: resLink,
       },
       { new: true }
     );
