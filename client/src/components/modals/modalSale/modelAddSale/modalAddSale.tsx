@@ -25,19 +25,15 @@ type ApiResponse = ProductData | ApiError;
 interface ModalProps {
   open: boolean;
   onClose: () => void;
-  // onAddProduct: (productData: ProductData) => void;
 }
 interface Filters {
   code: string;
   cant: number;
   importe: number;
+  title: string;
 }
 
 const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
-
-  const [calculatedPrice, setCalculatedPrice] = useState(0);
-
-  // new code
   const [dataProducts, setDataProducts] = useState<Product[]>([]);
   const [dataClients, setDataClients] = useState<Client[]>([]);
   const [List, setList] = useState<Product[]>([]);
@@ -46,8 +42,9 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
     code: "",
     cant: 1,
     importe: 1,
+    title: "",
   });
-  const [total, setTotal] = useState<number> (0);
+  const [total, setTotal] = useState<number>(0);
 
   useEffect(() => {
     fetchData();
@@ -67,7 +64,7 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
     });
   };
 
-  const HandlerFacturacion = () => {
+  const HandlerAddProduct = () => {
     try {
       let filteredData: Product[] = dataProducts.filter(
         (el: Product) => String(el.code) === String(filter.code)
@@ -97,11 +94,47 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
     }
   };
 
-  useEffect(() => {
-    HandlerFacturacion();
-    Calculartotal()
-  }, [filter.code,List]);
+  const HandlerAddProductWithTitle = () => {
+    try {
+      let filteredData: Product[] = dataProducts.filter(
+        (el: Product) =>
+          String(el.title).toLowerCase() === String(filter.title).toLowerCase()
+      );
 
+      if (filteredData.length > 0) {
+        filteredData = filteredData.map((item) => ({
+          ...item,
+          unity: filter.cant,
+        }));
+
+        let productIndex = List.findIndex(
+          (el: Product) => String(el.title) === String(filteredData[0].title)
+        );
+
+        if (productIndex >= 0) {
+          List[productIndex].unity =
+            Number(List[productIndex].unity) + Number(filter.cant);
+          setList([...List]);
+        } else {
+          setList([...List, ...filteredData]);
+        }
+        setFilter({ ...filter, title: "" });
+      }
+    } catch (error) {
+      console.error("Error handling facturation:", error);
+    }
+  };
+
+  const Calculartotal = () => {
+    let totalData = List.map((el: any) => ({
+      ...el,
+      total: el.priceList * el.unity,
+    }));
+
+    // Calculate the overall total by summing up the individual totals
+    let overallTotal = totalData.reduce((acc, curr) => acc + curr.total, 0);
+    setTotal(overallTotal);
+  };
 
   const handleAddGenericProduct = () => {
     setList([
@@ -118,7 +151,7 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
         brand: "",
         image: [],
         sales: {},
-        _id: ""
+        _id: "",
       },
     ]);
   };
@@ -136,16 +169,25 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
     };
   };
 
-  const Calculartotal = () => {
-    let totalData = List.map ((el:any) => ({
-      ...el,
-      total: el.priceList * el.unity,
-    }));
+  const handlerEditUnity = (elemento: Product, index: number) => {
+    return (event: any) => {
+      const newUnity = event.target.value;
 
-    // Calculate the overall total by summing up the individual totals
-    let overallTotal = totalData.reduce ((acc, curr) => acc + curr.total, 0);
-    setTotal (overallTotal);
+      List[index].unity = Number(newUnity);
+      console.log(List[index]);
+      setList([...List]);
+    };
   };
+
+const handlerSubPrice=()=>{
+  
+}
+
+  useEffect(() => {
+    HandlerAddProduct();
+    Calculartotal();
+    HandlerAddProductWithTitle();
+  }, [filter.code, , filter.title, List]);
 
   return (
     <Modal open={open} onClose={onClose}>
@@ -172,6 +214,13 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
             onChange={(e) => handleChangeFilter("importe", e.target.value)}
             className={styles.inputAddCode}
             value={filter.importe}
+          />
+          <input
+            type="text"
+            placeholder="Titulo"
+            onChange={(e) => handleChangeFilter("title", e.target.value)}
+            className={styles.inputAddCode}
+            value={filter.title}
           />
           <p>total:${total}</p>
           <table className={styles.productTable}>
@@ -206,22 +255,22 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
                     <input
                       type="number"
                       value={product.unity}
-                      // onChange={(e) =>
-                      //   setProductQuantity(parseInt(e.target.value))
-                      // }
+                      onChange={handlerEditUnity(product, index)}
                       className={styles.input}
+                      name="cant"
                     />
                   </td>
-                  <td>{product.priceCost ?? "-"}</td>
-                  <td>{product.priceList ?? "-"}</td>
                   <td>
-                    <input
-                      type="number"
-                      value={calculatedPrice}
-                      readOnly
-                      className={styles.input}
-                    />
+                    {product.priceCost
+                      ? product.priceCost.toLocaleString().replace(",", ".")
+                      : "-"}
                   </td>
+                  <td>
+                    {product.priceList
+                      ? product.priceList.toLocaleString().replace(",", ".")
+                      : "-"}
+                  </td>
+                  <td>{100}</td>
                 </tr>
               ))}
             </tbody>
@@ -231,9 +280,7 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
           <button onClick={handleAddGenericProduct} className={styles.button}>
             Agregar Producto
           </button>
-          {/* <button onClick={handleFinishSale} className={styles.button}>
-            Cargar Venta
-          </button> */}
+          <button className={styles.button}>Cargar Venta</button>
         </div>
       </div>
     </Modal>
