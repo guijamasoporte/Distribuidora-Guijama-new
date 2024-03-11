@@ -13,9 +13,9 @@ export default function Header() {
   const [rol, setRol] = useState(null);
 
   useEffect(() => {
-    const fetchAdmin = async (token:string) => {
+    const fetchAdmin = async (token: string) => {
       const { id } = DecodedToken(token);
-      const data:any = await InstanceOfAxios(`/admin/${id}`, "GET");
+      const data: any = await InstanceOfAxios(`/admin/${id}`, "GET");
       if (data && data.Rol) {
         setRol(data.Rol);
       } else {
@@ -55,7 +55,7 @@ export default function Header() {
       <img src={Logo} alt="Logo" className={styles.logo} />
       <div>
         <NavLink to="/">
-          <button className={styles["logout-btn"]}>Catalogo</button>
+          <button className={styles["logout-btn"]}>Catálogo</button>
         </NavLink>
 
         {login && rol === "ROL_Admin" && (
