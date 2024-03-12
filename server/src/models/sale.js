@@ -62,6 +62,6 @@ SaleSchema.pre("save", async function (next) {
   }
 });
 
-const Sale = mongoose.model("Sale", SaleSchema);
+export const Sale = mongoose.model("Sale", SaleSchema);
 
-export default Sale;
+

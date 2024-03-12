@@ -2,6 +2,7 @@ import express from "express";
 import morgan from "morgan";
 import cors from "cors";
 import "dotenv/config";
+import bodyParser  from "body-parser"
 import "./src/dataBase/connectDB.js";
 
 import authRouter from "./src/routes/auth.routes.js";
@@ -30,6 +31,7 @@ const app = express();
 app.use(cors());
 app.use(morgan("dev"));
 app.use(express.json());
+app.use(bodyParser.json({ limit: '10mb' }));
 
 app.use("/", authRouter);
 app.use("/admin",AdminRoute);

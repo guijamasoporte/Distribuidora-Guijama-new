@@ -34,8 +34,9 @@ const productSchema = new mongoose.Schema({
     default: [],
   },
   sales: {
-    type: Object,
-    // default:{} ,
+    type: Array,
+    default: [
+    ],
   },
 });
 

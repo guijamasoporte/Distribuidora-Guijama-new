@@ -39,7 +39,7 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
   const [dataProducts, setDataProducts] = useState<Product[]>([]);
   const [dataClients, setDataClients] = useState<Client[]>([]);
   const [List, setList] = useState<Product[]>([]);
-  const [selectedClient, setSelectedClient] = useState<Client | null>(null);
+  const [selectedClient, setSelectedClient] = useState<Client | null >(null);
 
   const [filter, setFilter] = useState<Filters>({
     code: "",
@@ -193,13 +193,24 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
   };
 
   const handleSubmit = () => {
-    console.log(List, selectedClient);
+    
     const token = GetDecodedCookie("cookieToken");
-    InstanceOfAxios("/sales", "POST", { List, selectedClient }, token);
+  
+    if (selectedClient) { // Verificar si selectedClient no es nulo
+      const dataClient = {
+        name: selectedClient.name,
+        lastName: selectedClient.lastName,
+        id: selectedClient._id,
+        email: selectedClient.email
+      };
+  
+      InstanceOfAxios("/sales", "POST", { List, client: dataClient }, token);
+    }
+    
     setList([]);
     setSelectedClient(null);
   };
-
+  
   useEffect(() => {
     fetchData();
   }, []);
@@ -229,7 +240,9 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
           getOptionLabel={(options) => options.name}
           value={selectedClient}
           onChange={(event, newValue) => {
-            setSelectedClient(newValue);
+            if (newValue) {
+              setSelectedClient(newValue);
+            }
           }}
           renderInput={(params) => (
             <TextField {...params} label="Cliente" variant="outlined" />
