@@ -5,6 +5,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import styles from "./modalAddSale.module.css";
 import InstanceOfAxios from "../../../../utils/intanceAxios";
 import { Client, Dues, Product } from "../../../../interfaces/interfaces";
+import { GetDecodedCookie } from "../../../../utils/DecodedCookie";
 
 interface ProductData {
   code(code: any): unknown;
@@ -48,15 +49,11 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
   });
   const [total, setTotal] = useState<number>(0);
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
   const fetchData = async () => {
     const resProducts: any = await InstanceOfAxios("/products", "GET");
     const resClients: any = await InstanceOfAxios("/clients", "GET");
     setDataProducts(resProducts);
-    setDataClients(resClients);
+    setDataClients(resClients.clients);
   };
 
   const handleChangeFilter = (prop: string, value: any) => {
@@ -195,6 +192,18 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
     setList(newList);
   };
 
+  const handleSubmit = () => {
+    console.log(List, selectedClient);
+    const token = GetDecodedCookie("cookieToken");
+    InstanceOfAxios("/sales", "POST", { List, selectedClient }, token);
+    setList([]);
+    setSelectedClient(null);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   useEffect(() => {
     HandlerAddProduct();
     Calculartotal();
@@ -215,16 +224,17 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
           </div>
         </div>
         <Autocomplete
-              options={dataClients}
-              getOptionLabel={(option) => option.name} 
-              value={selectedClient}
-              onChange={(event, newValue) => {
-                setSelectedClient(newValue);
-              }}
-              renderInput={(params) => (
-                <TextField {...params} label="Cliente" variant="outlined" />
-              )}
-            />
+          fullWidth={true}
+          options={dataClients}
+          getOptionLabel={(options) => options.name}
+          value={selectedClient}
+          onChange={(event, newValue) => {
+            setSelectedClient(newValue);
+          }}
+          renderInput={(params) => (
+            <TextField {...params} label="Cliente" variant="outlined" />
+          )}
+        />
         <div className={styles.tablesContainer}>
           <div className={styles.inputContainer}>
             <label>Código</label>
@@ -350,6 +360,7 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
                 List.length === 0 ? styles.buttonFinishSaleDisabled : ""
               }`}
               disabled={List.length === 0}
+              onClick={handleSubmit}
             >
               Cargar Venta
             </button>

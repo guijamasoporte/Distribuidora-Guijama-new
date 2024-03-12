@@ -1,41 +1,93 @@
+import { Client } from "../models/clients.js";
 import { Product } from "../models/products.js";
 import Sale from "../models/sale.js";
 import { formatError } from "../utils/formatError.js";
+import mongoose from 'mongoose'; 
+
+
+
 
 export const createSale = async (req, res) => {
-  const { products, priceTotal, client, dues, invoice } = req.body;
+  const { List, selectedClient, dues, invoice } = req.body;
   try {
     let currentDate = new Date();
     const timeZoneOffset = -3; // La diferencia de la zona horaria en horas
     currentDate.setHours(currentDate.getHours() + timeZoneOffset);
 
+    const pricetotalFunction = () => {
+      const total = List.reduce((acc, el) => {
+        return acc + el.priceList * el.unity;
+      }, 0);
+      return total;
+    };
+
+    //--------new sale--------
     let sale = new Sale({
       date: currentDate,
-      products: products,
-      priceTotal: priceTotal,
+      products: List,
+      priceTotal: pricetotalFunction(),
       dues: dues,
-      client: client,
+      client: selectedClient,
       invoice: invoice,
     });
-
-    // for (const el of List) {
-    //   // Check if the element has an '_id' property before updating stock
-    //   if (el._id) {
-    //     const product = await Product.findById(el._id);
-    //     const currentStock = product.stock;
-
-    //     await Product.findByIdAndUpdate(el._id, {
-    //       stock: currentStock - el.unity,
-    //     });
-    //   }
-    // }
-
     await sale.save();
+    //--------new sale--------
+
+    //--------edit product--------
+
+    function getMonthName(monthNumber) {
+      const months = [
+        "enero", "febrero", "marzo", "abril", "mayo", "junio",
+        "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
+      ];
+      return months[monthNumber];
+    }
+
+    for (const product of List) {
+      if (!mongoose.Types.ObjectId.isValid(product._id)) {
+        console.error(`El ID del producto "${product._id}" no es válido`);
+        continue;
+      }
+      const existingProduct = await Product.findById(product._id);
+      existingProduct.stock -= product.unity;
+    
+      const currentMonth = currentDate.getMonth(); // Obtener el mes actual (0 = enero, 1 = febrero, etc.)
+      const monthName = getMonthName(currentMonth);
+    
+      // Verificar si existe una entrada para el mes actual en 'sales'
+      if (existingProduct.sales && existingProduct.sales[monthName] !== undefined) {
+        // Si existe, sumar las unidades vendidas al valor existente
+        existingProduct.sales[monthName] += product.unity;
+      } else {
+        // Si no existe, inicializar una nueva entrada para el mes actual
+        // existingProduct.sales = existingProduct.sales || {}; // Asegurar que 'sales' exista
+        existingProduct.sales[monthName] = product.unity;
+      }
+    
+      await existingProduct.save();
+    }
+    
+    //--------edit product--------
+
+    //--------edit Client--------
+    let id = selectedClient._id;
+    await Client.findOneAndUpdate(
+      { _id: id },
+      {
+        $push: { buys: sale },
+      }
+    );
+    //--------edit Client--------
+
     return res.status(200).json({ msg: "Sale creado" });
   } catch (error) {
+    console.log(error);
     res.status(400).json(formatError(error.message));
   }
 };
+
+// Función para obtener el nombre del mes a partir de su número
+
 
 export const GetAllSale = async (req, res) => {
   try {
@@ -71,7 +123,7 @@ export const UpdateSaletById = async (req, res) => {
         dues: dues,
         client: client,
         invoice: invoice,
-        state:state,
+        state: state,
       },
       { new: true }
     );
