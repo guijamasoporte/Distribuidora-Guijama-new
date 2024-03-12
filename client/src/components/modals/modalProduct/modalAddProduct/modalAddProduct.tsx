@@ -25,7 +25,7 @@ const AddProductModal: React.FC<propsModals> = ({
   const initialProduct: Product = {
     code: "",
     title: "",
-    category: "",
+    category: categories[0] || "",
     brand: "",
     stock: 0,
     priceCost: 0,
@@ -135,16 +135,17 @@ const AddProductModal: React.FC<propsModals> = ({
             getOptionLabel={(option) => option}
             value={product.category}
             onChange={(_, newInputValue: any) =>
-              handleChange("category", newInputValue)
+              handleChange("category", newInputValue ? newInputValue : "")
             }
             inputValue={product.category}
             onInputChange={(_, newInputValue) =>
-              handleChange("category", newInputValue)
+              handleChange("category", newInputValue ? newInputValue : "")
             }
             renderInput={(params) => (
               <TextField {...params} label="Categoría" fullWidth />
             )}
           />
+
           <Autocomplete
             className={styles.formAutocomplete}
             options={brands}

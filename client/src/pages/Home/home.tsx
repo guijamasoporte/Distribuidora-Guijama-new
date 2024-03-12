@@ -19,31 +19,62 @@ const Home: React.FC = () => {
     fetchProducts();
   }, []);
 
+  const productsByCategory: { [category: string]: Product[] } = {};
+  products.forEach((product) => {
+    if (!productsByCategory[product.category]) {
+      productsByCategory[product.category] = [];
+    }
+    productsByCategory[product.category].push(product);
+  });
+
   return (
     <div className={styles.productCatalog}>
-      <h2>Productos Destacados</h2>
-      <div className={styles.productList}>
-        {products.map((product) => (
-          <div key={product.code} className={styles.product}>
-            <p>Titulo: {product.title}</p>
-            <p>Stock: {product.stock}</p>
-            <p>Precio: {product.priceList}</p>
-            <p>Categoría: {product.category}</p>
-            <p>Marca: {product.brand}</p>
-            <div className={styles.imageContainer}>
-              {Array.isArray(product.image) &&
-                product.image.map((imageUrl, index) => (
-                  <img
-                    key={index}
-                    src={imageUrl}
-                    alt={`${product.title}-${index}`}
-                    className={styles.productImage}
-                  />
-                ))}
+      <p className={styles.titleCatalogue}>Catálogo de Productos</p>
+      <p className={styles.descriptionCatalogue}>
+        Bienvenido al catálogo de productos de nuestra tienda de tabaquería.
+        Aquí encontrarás una amplia selección de los mejores productos
+        relacionados con tabaco, puros, accesorios y más. ¡Explora nuestras
+        ofertas y descubre todo lo que necesitas para disfrutar de una
+        experiencia única!
+      </p>
+
+      {Object.entries(productsByCategory).map(
+        ([category, categoryProducts]) => (
+          <div className={styles.listContainer} key={category}>
+            <p className={styles.category}>{category}</p>
+            <div className={styles.productList}>
+              {categoryProducts.map((product) => (
+                <div
+                  key={product.code}
+                  className={`${styles.product} ${
+                    product.stock === 0 ? styles.disabled : ""
+                  }`}
+                >
+                  <p>
+                    <strong>{product.title}</strong>
+                  </p>
+                  <p>Marca: {product.brand}</p>
+                  {product.stock === 0 && (
+                    <p className={styles.stockWarning}>Artículo sin stock</p>
+                  )}
+                  <div className={styles.imageContainer}>
+                    {Array.isArray(product.image) &&
+                      product.image.map((imageUrl, index) => (
+                        <img
+                          key={index}
+                          src={imageUrl}
+                          alt={`${product.title}-${index}`}
+                          className={styles.productImage}
+                        />
+                      ))}
+                  </div>
+                </div>
+              ))}
             </div>
+        
           </div>
-        ))}
-      </div>
+        )
+      )}
     </div>
   );
 };
