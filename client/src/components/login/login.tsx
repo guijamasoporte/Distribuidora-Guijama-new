@@ -1,6 +1,6 @@
 import React, { FormEvent, useState } from "react";
 import InstanceOfAxios from "../../utils/intanceAxios";
-import style from "./login.module.css";
+import styles from "./login.module.css";
 import Cookies from "js-cookie";
 import { DataLogin } from "../../interfaces/interfaces";
 
@@ -31,9 +31,9 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className={style.containForms}>
-      <div className={style.login}>
-        <h4>Inicio de Sesion</h4>
+    <div className={styles.containForms}>
+      <div className={styles.login}>
+        <p>Inicio de Sesión</p>
         <form onSubmit={handleSubmitLogin}>
           <input
             type="email"
@@ -41,14 +41,16 @@ const Login: React.FC = () => {
             value={dataLogin.email}
             onChange={handleChangeLogin}
             name="email"
+            className={styles.input} 
           />
           <input
             type="password"
-            placeholder="contraseña"
+            placeholder="Contraseña"
             name="password"
             onChange={handleChangeLogin}
+            className={styles.input} 
           />
-          <button className="button-login" type="submit">
+          <button className={styles.buttonLogin} type="submit">
             Iniciar sesión
           </button>
         </form>

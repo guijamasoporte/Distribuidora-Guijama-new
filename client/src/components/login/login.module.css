@@ -1,42 +1,57 @@
-
 .containForms {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* min-height: 100vh; */
-  }
-  
-  .login {
-    width: 50%;
-  }
-  
-  .login form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  .login form input {
-    border-radius: 10px;
-    padding: 0.5rem;
-  }
-  
-  .login form button {
-    border-radius: 10px;
-    padding: 0.5rem;
-  }
-  
-  
-  .activeForm{
-    text-decoration: underline;
-  }
-  
-  .activeForm:hover{
-    cursor: pointer;
-    color:#f8efc6
-  
-  }
-  .footer {
-    width: 100%;
-  }
-  
+  display: flex;
+  justify-content: center;
+  margin-top: 10rem;
+  width: 50rem;
+}
+
+.login {
+  background-color: #f4f4f4;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 25rem;
+  border: 1px solid #ccc;
+}
+
+.login p {
+  text-align: center;
+  font-family: "questrial";
+  font-size: 21px;
+}
+
+.login form {
+  display: flex;
+  flex-direction: column;
+}
+
+.login input {
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  font-family: "noto sans";
+}
+
+.login input:focus {
+  border-color: #603e20;
+}
+
+.login button {
+  padding: 10px;
+  background-color: #b69b84;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  font-family: "questrial";
+}
+
+.login button:hover {
+  background-color: #603e20;
+  cursor: pointer;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+}
