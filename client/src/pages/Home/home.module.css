@@ -1,0 +1,33 @@
+.productCatalog {
+    margin: 20px;
+    padding: 20px;
+    border-radius: 5px;
+  }
+  
+  .productList {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-gap: 20px;
+  }
+  
+  .product {
+    border: 1px solid #eee;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  
+  .product p {
+    margin: 0;
+  }
+  
+  .productImage {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin-top: 10px;
+  }
+  
+  .imageContainer {
+    display: flex;
+    flex-wrap: wrap;
+  }
