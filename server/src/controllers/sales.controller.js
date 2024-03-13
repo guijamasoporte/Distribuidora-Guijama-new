@@ -40,14 +40,12 @@ export const createSale = async (req, res) => {
       products: List,
       priceTotal: pricetotalFunction(),
       client: client,
-      // dues: dues,
       invoice: invoice,
     });
     await sale.save();
     //--------new sale--------
 
     //--------edit product--------
-
     for (const product of List) {
       const currentDate = new Date();
       const currentMonth = currentDate.getMonth(); // Obtener el mes actual (0 = enero, 1 = febrero, etc.)
@@ -55,7 +53,7 @@ export const createSale = async (req, res) => {
 
       const existingProduct = await Product.findById(product._id);
       existingProduct.stock -= product.unity;
-      
+
       const monthIndex = existingProduct.sales.findIndex(
         (sale) => sale.month === monthName
       );
@@ -70,7 +68,6 @@ export const createSale = async (req, res) => {
           amount: Number(product.unity),
         });
       }
-
       await existingProduct.save();
     }
 
@@ -78,12 +75,21 @@ export const createSale = async (req, res) => {
 
     //--------edit Client--------
     let id = client.id;
+
+    let dataSale = {
+      date: currentDate,
+      products: List,
+      priceTotal: pricetotalFunction(),
+      invoice: invoice,
+      dues: dues,
+    };
+
     await Client.findOneAndUpdate(
       { _id: id },
       {
         $push: {
           buys: {
-            sale,
+            dataSale,
           },
         },
       }

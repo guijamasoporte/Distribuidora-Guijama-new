@@ -77,7 +77,6 @@ const CreateClientModal: React.FC<propsModals> = ({
               value={newClient.email}
               fullWidth
               onChange={(e) => handleChange(e)}
-              inputProps={{ maxLength: 20 }}
             />
             <TextField
               className={styles.formField}
@@ -86,7 +85,7 @@ const CreateClientModal: React.FC<propsModals> = ({
               value={newClient.adress}
               fullWidth
               onChange={(e) => handleChange(e)}
-              inputProps={{ maxLength: 20 }}
+              inputProps={{ maxLength: 40 }}
             />
 
             <button className={styles.buttonAdd} type="submit">

@@ -10,8 +10,8 @@ export const createProduct = async (req, res) => {
     let product = new Product({
       code,
       title: title[0].toString().toUpperCase() + title.toString().slice(1),
-      category,
-      brand,
+      category:category[0].toString().toUpperCase() + category.toString().slice(1),
+      brand:brand[0].toString().toUpperCase() + brand.toString().slice(1),
       stock,
       priceList,
       priceCost,

@@ -39,7 +39,9 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
   const [dataProducts, setDataProducts] = useState<Product[]>([]);
   const [dataClients, setDataClients] = useState<Client[]>([]);
   const [List, setList] = useState<Product[]>([]);
-  const [selectedClient, setSelectedClient] = useState<Client | null >(null);
+  const [selectedClient, setSelectedClient] = useState<Client | null>(null);
+  const [openModalSelectProduct, setOpenModalSelectProduct] =
+    useState<boolean>(false);
 
   const [filter, setFilter] = useState<Filters>({
     code: "",
@@ -69,7 +71,9 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
         (el: Product) => String(el.code) === String(filter.code)
       );
 
-      if (filteredData.length > 0) {
+      if (filteredData && filteredData.length > 1) {
+        setOpenModalSelectProduct(true);
+      } else if (filteredData && filteredData.length === 1) {
         filteredData = filteredData.map((item) => ({
           ...item,
           unity: filter.cant,
@@ -193,24 +197,24 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
   };
 
   const handleSubmit = () => {
-    
     const token = GetDecodedCookie("cookieToken");
-  
-    if (selectedClient) { // Verificar si selectedClient no es nulo
+
+    if (selectedClient) {
+      // Verificar si selectedClient no es nulo
       const dataClient = {
         name: selectedClient.name,
         lastName: selectedClient.lastName,
         id: selectedClient._id,
-        email: selectedClient.email
+        email: selectedClient.email,
       };
-  
+
       InstanceOfAxios("/sales", "POST", { List, client: dataClient }, token);
     }
-    
+
     setList([]);
     setSelectedClient(null);
   };
-  
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -222,6 +226,7 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
   }, [filter.code, , filter.title, List]);
 
   return (
+    <>
     <Modal open={open} onClose={onClose}>
       <div className={styles.modal}>
         <div className={styles.closeButtonTitle}>
@@ -383,7 +388,11 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
           </div>
         </div>
       </div>
+
+
     </Modal>
+    
+      </>
   );
 };
 
