@@ -206,7 +206,8 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
         lastName: selectedClient.lastName,
         id: selectedClient._id,
         email: selectedClient.email,
-        adress:selectedClient.adress
+        adress:selectedClient.adress,
+        idClient:selectedClient.idClient,
       };
 
       InstanceOfAxios("/sales", "POST", { List, client: dataClient }, token);

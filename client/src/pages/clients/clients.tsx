@@ -266,6 +266,7 @@ const ClientsPage: React.FC = () => {
           onClose={() => setOpenModalEdit(false)}
           onCreate={setOpenModalEdit}
           client={clientSelect}
+          setClientSelect={setClientSelect}
         />
       )}
     </div>
