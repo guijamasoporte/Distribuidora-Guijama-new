@@ -10,8 +10,9 @@ export interface Client {
 }
 
 export interface Product {
+
   _id: string;
-  unity: string | number | readonly string[] | undefined;
+  unity: string | number | readonly string[] | undefined | any;
   generic: boolean;
   code: string;
   title: string;
@@ -21,7 +22,7 @@ export interface Product {
   category: string;
   brand: string;
   image: [];
-  sales: {};
+  // sales: {};
 }
 
 export interface ProductsProps {
@@ -31,7 +32,7 @@ export interface ProductsProps {
 export interface Sales {
   idSale: string;
   date: Date;
-  products: Product;
+  products: Product[];
   priceTotal: number;
   client: {};
   dues: Dues;

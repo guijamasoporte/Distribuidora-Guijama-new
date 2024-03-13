@@ -21,7 +21,7 @@ function getMonthName(monthNumber) {
   return months[monthNumber];
 }
 export const createSale = async (req, res) => {
-  const { List, client, dues, invoice } = req.body;
+  const { List, client } = req.body;
   try {
     let currentDate = new Date();
     const timeZoneOffset = -3; // La diferencia de la zona horaria en horas
@@ -40,8 +40,8 @@ export const createSale = async (req, res) => {
       products: List,
       priceTotal: pricetotalFunction(),
       client: client,
-      invoice: invoice,
     });
+
     await sale.save();
     //--------new sale--------
 
@@ -82,8 +82,6 @@ export const createSale = async (req, res) => {
       date: currentDate,
       products: List,
       priceTotal: pricetotalFunction(),
-      invoice: invoice,
-      dues: dues,
     };
 
     await Client.findOneAndUpdate(

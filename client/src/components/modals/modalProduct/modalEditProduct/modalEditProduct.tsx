@@ -6,19 +6,7 @@ import styles from "./modalEditProduct.module.css";
 import { GetDecodedCookie } from "../../../../utils/DecodedCookie";
 import Swal from "sweetalert2";
 import { fileUpload } from "../../../../utils/fileUpload";
-
-interface Product {
-  _id: string;
-  code: string;
-  title: string;
-  category: string;
-  brand: string;
-  stock: number;
-  priceCost: number;
-  priceList: number;
-  image: [];
-  sales: {};
-}
+import { Product } from "../../../../interfaces/interfaces";
 
 interface EditProductModalProps {
   open: boolean;
@@ -40,9 +28,10 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
       stock: productSelect.stock,
       priceCost: productSelect.priceCost,
       priceList: productSelect.priceList,
-      sales: {},
       image: productSelect.image,
       _id: productSelect._id,
+      unity: "",
+      generic: false,
     };
   }, [productSelect]);
 
@@ -56,7 +45,7 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
 
   useEffect(() => {
     setSelectedImages(initialProduct.image);
-  }, [productSelect]);
+  }, []);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;

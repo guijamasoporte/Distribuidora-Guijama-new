@@ -24,10 +24,6 @@ const SaleSchema = new mongoose.Schema({
       cant: 1,
     },
   },
-  invoice: {
-    type: String,
-    default: "",
-  },
   state:{
     type:Boolean,
     default:false //sale open
@@ -50,9 +46,9 @@ SaleSchema.pre("save", async function (next) {
     const lastSale = await Sale.findOne().sort({ idSale: -1 });
 
     if (lastSale) {
-      this.idSale = padWithZeros(Number(lastSale.idSale) + 1, 6);
+      this.idSale = padWithZeros(Number(lastSale.idSale) + 1, 8);
     } else {
-      this.idSale = "000001";
+      this.idSale = "00000001";
     }
 
     next();

@@ -9,13 +9,6 @@ import Swal from "sweetalert2";
 import { fileUpload } from "../../../../utils/fileUpload";
 import { Product, propsModals } from "../../../../interfaces/interfaces";
 
-interface AddProductModalProps {
-  open: boolean;
-  handleClose: () => void;
-  categories: string[];
-  brands: string[];
-}
-
 const AddProductModal: React.FC<propsModals> = ({
   open,
   handleClose,
@@ -31,7 +24,6 @@ const AddProductModal: React.FC<propsModals> = ({
     priceCost: 0,
     priceList: 0,
     image: [],
-    sales: {},
     unity: undefined,
     generic: false,
     _id: "",

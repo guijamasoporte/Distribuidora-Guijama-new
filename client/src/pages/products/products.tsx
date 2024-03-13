@@ -10,7 +10,6 @@ import Swal from "sweetalert2";
 import AddProductModal from "../../components/modals/modalProduct/modalAddProduct/modalAddProduct";
 import EditProductModal from "../../components/modals/modalProduct/modalEditProduct/modalEditProduct";
 import { GetDecodedCookie } from "../../utils/DecodedCookie";
-import { AxiosResponse } from "axios";
 import ModalEditPrices from "../../components/modals/modalProduct/modalEditPricesProduct/modalEditPrices";
 import { Client, Product, ProductsProps } from "../../interfaces/interfaces";
 
@@ -27,7 +26,6 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
     priceCost: "",
     priceList: "",
     image: "",
-    sales: "",
     unity: "",
     generic: "",
     _id: "",

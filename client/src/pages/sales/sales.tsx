@@ -8,6 +8,8 @@ import InstanceOfAxios from "../../utils/intanceAxios";
 import Pagination from "../../components/pagination/pagination";
 import ModalComponent from "../../components/modals/modalSale/modelAddSale/modalAddSale";
 import { Client, Dues } from "../../interfaces/interfaces";
+import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
+import Pdfinvoice from "../../components/PDFcomponents/PdfInvoice/pdfInvoice";
 
 interface Sale {
   idSale: number;
@@ -189,7 +191,35 @@ const SalesPage: React.FC = () => {
               <td>
                 {sale.dues.payd}/{sale.dues.cant}
               </td>
-              <td>{sale.invoice}</td>
+              <td>
+                <PDFDownloadLink
+                  document={<Pdfinvoice sales={sale} />}
+                  fileName="invoice.pdf"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    className={styles.svgremito}
+                  >
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                    <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
+                    <path d="M9 9l1 0" />
+                    <path d="M9 13l6 0" />
+                    <path d="M9 17l6 0" />
+                  </svg>
+                </PDFDownloadLink>
+                 {/* <PDFViewer>
+                 <Pdfinvoice sales={sale} />
+                </PDFViewer> */}
+              </td>
               <td>{sale.state ? "Cerrada" : "Pendiente"}</td>
               <td>
                 <button className={styles.buttonEdit}>
