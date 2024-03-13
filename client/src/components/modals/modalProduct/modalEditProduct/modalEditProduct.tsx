@@ -41,6 +41,7 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
       _id: productSelect._id,
       unity: "",
       generic: false,
+      variant:productSelect.variant,
     };
   }, [productSelect]);
 

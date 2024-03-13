@@ -259,7 +259,7 @@ const ClientsPage: React.FC = () => {
         onClose={() => setOpenModal(false)}
         onCreate={handleCreateClient} handleClose={function (): void {
           throw new Error("Function not implemented.");
-        } } categories={[]} brands={[]}      />
+        } } categories={[]} brands={[]} variant={[]}      />
       {clientSelect && (
         <EditClientModal
           open={openModalEdit}

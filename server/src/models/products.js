@@ -33,10 +33,13 @@ const productSchema = new mongoose.Schema({
     type: Array,
     default: [],
   },
+
+  variant: {
+    type: String,
+  },
   sales: {
     type: Array,
-    default: [
-    ],
+    default: [],
   },
 });
 

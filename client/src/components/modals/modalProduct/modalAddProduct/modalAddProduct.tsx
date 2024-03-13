@@ -14,6 +14,7 @@ const AddProductModal: React.FC<propsModals> = ({
   handleClose,
   categories,
   brands,
+  variant,
 }) => {
   const initialProduct: Product = {
     code: "",
@@ -27,6 +28,7 @@ const AddProductModal: React.FC<propsModals> = ({
     unity: undefined,
     generic: false,
     _id: "",
+    variant:""
   };
 
   const [product, setProduct] = useState<Product>(initialProduct);
@@ -119,6 +121,20 @@ const AddProductModal: React.FC<propsModals> = ({
           onChange={(e) => handleChange("title", e.target.value)}
           fullWidth
           inputProps={{ maxLength: 20 }}
+        />
+        <Autocomplete
+          className={styles.formAutocomplete}
+          options={variant}
+          getOptionLabel={(option) => option}
+          value={product.variant}
+          onChange={(_, newValue) => handleChange("variant", newValue || "")}
+          inputValue={product.variant}
+          onInputChange={(_, newInputValue) =>
+            handleChange("variant", newInputValue ? newInputValue : "")
+          }
+          renderInput={(params) => (
+            <TextField {...params} label="Variante" fullWidth />
+          )}
         />
         <div className={styles.inputsSelect}>
           <Autocomplete

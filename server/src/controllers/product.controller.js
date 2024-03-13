@@ -4,14 +4,17 @@ import { formatError } from "../utils/formatError.js";
 
 export const createProduct = async (req, res) => {
   const { resLink } = req.body;
-  const { title, category, brand, code, priceList, priceCost, stock } =
+  const { title, category, brand, code, priceList, priceCost, stock, variant } =
     req.body.product;
   try {
     let product = new Product({
       code,
       title: title[0].toString().toUpperCase() + title.toString().slice(1),
-      category:category[0].toString().toUpperCase() + category.toString().slice(1),
-      brand:brand[0].toString().toUpperCase() + brand.toString().slice(1),
+      category:
+        category[0].toString().toUpperCase() + category.toString().slice(1),
+      brand: brand[0].toString().toUpperCase() + brand.toString().slice(1),
+      variant:
+        variant[0].toString().toUpperCase() + variant.toString().slice(1),
       stock,
       priceList,
       priceCost,
@@ -46,7 +49,7 @@ export const GetProductById = async (req, res) => {
 
 export const UpdateProductById = async (req, res) => {
   const { id } = req.params;
-  const { title } = req.body.product;
+  const { title, category, brand, variant } = req.body.product;
   const { resLink } = req.body;
 
   try {
@@ -55,6 +58,11 @@ export const UpdateProductById = async (req, res) => {
       {
         ...req.body.product,
         title: title[0]?.toUpperCase() + title?.slice(1),
+        category:
+          category[0].toString().toUpperCase() + category.toString().slice(1),
+        brand: brand[0].toString().toUpperCase() + brand.toString().slice(1),
+        variant:
+          variant[0].toString().toUpperCase() + variant.toString().slice(1),
         image: resLink,
       },
       { new: true }
@@ -79,14 +87,22 @@ export const DeleteProductById = async (req, res) => {
   }
 };
 
-export const getAllCategories = async (req, res) => {
+export const getAllCategoriesBrandsVariants = async (req, res) => {
   try {
     let products = await Product.find();
-    const categoriesPrimary = new Set(products.map((el) => el.category));
-    const uniqueCategoriesPrimary = Array.from(categoriesPrimary);
+    const categoriesAlls = new Set(products.map((el) => el.category));
+    const uniqueCategoriesAlls = Array.from(categoriesAlls);
+
+    const brandsAlls = new Set(products.map((el) => el.brand));
+    const uniqueBrands = Array.from(brandsAlls);
+
+    const variantAlls = new Set(products.map((el) => el.variant));
+    const uniqueVariantAlls = Array.from(variantAlls);
 
     return res.status(200).json({
-      categories: uniqueCategoriesPrimary,
+      categories: uniqueCategoriesAlls,
+      brands: uniqueBrands,
+      variants: uniqueVariantAlls,
     });
   } catch (error) {
     res.status(400).json(formatError(error.message));
@@ -96,11 +112,11 @@ export const getAllCategories = async (req, res) => {
 export const getAllBrands = async (req, res) => {
   try {
     let products = await Product.find();
-    const categoriesPrimary = new Set(products.map((el) => el.brand));
-    const uniqueCategoriesPrimary = Array.from(categoriesPrimary);
+    const brandsAlls = new Set(products.map((el) => el.brand));
+    const uniqueBrands = Array.from(brandsAlls);
 
     return res.status(200).json({
-      brands: uniqueCategoriesPrimary,
+      brands: uniqueBrands,
     });
   } catch (error) {
     res.status(400).json(formatError(error.message));

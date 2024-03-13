@@ -3,8 +3,7 @@ import {
   createProduct,
   DeleteProductById,
   EditPriceAllProducts,
-  getAllBrands,
-  getAllCategories,
+  getAllCategoriesBrandsVariants,
   GetAllProduct,
   GetProductById,
   UpdateProductById,
@@ -16,8 +15,8 @@ const router = express.Router();
 router.post("/", [verifyToken, isAdmin], createProduct);
 
 router.get("/", GetAllProduct);
-router.get("/categories", getAllCategories);
-router.get("/brands", getAllBrands);
+router.get("/categories", getAllCategoriesBrandsVariants);
+
 router.get("/:id", GetProductById);
 
 router.put("/editprices", [verifyToken, isAdmin], EditPriceAllProducts);

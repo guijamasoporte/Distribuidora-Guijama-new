@@ -29,6 +29,7 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
     unity: "",
     generic: "",
     _id: "",
+    variant: "",
   };
 
   const [filters, setFilters] = useState(initialFilters);
@@ -39,6 +40,7 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
   const [productSelect, setProductSelect] = useState<Product | null>(null);
   const [categories, setCategories] = useState<string[]>([]);
   const [brands, setBrands] = useState<string[]>([]);
+  const [variant, setVariant] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -51,9 +53,8 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
           "GET"
         );
         setCategories(resCategory.categories);
-
-        const resBrands: any = await InstanceOfAxios("/products/brands", "GET");
-        setBrands(resBrands.brands);
+        setBrands(resCategory.brands);
+        setVariant(resCategory.variants);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -234,6 +235,7 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
           <tr>
             <th>Código</th>
             <th>Título</th>
+            <th>Variedad</th>
             <th>Rubro</th>
             <th>Marca</th>
             <th>Stock</th>
@@ -248,6 +250,7 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
             <tr key={index}>
               <td>{product.code}</td>
               <td>{product.title}</td>
+              <td>{product.variant}</td>
               <td>{product.category}</td>
               <td>{product.brand}</td>
               <td>{formatNumberWithCommas(product.stock)}</td>
@@ -278,9 +281,15 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
       </table>
       <div>
         <div className={styles.totalsData}>
-          <p className={styles.totalCat}>Stock total: {formatNumberWithCommas(totals.stockTotal)}</p>
-          <p className={styles.totalCat}>Total de Costo: ${formatNumberWithCommas(totals.costTotal)}</p>
-          <p className={styles.totalCat}>Total de Venta: ${formatNumberWithCommas(totals.saleTotal)}</p>
+          <p className={styles.totalCat}>
+            Stock total: {formatNumberWithCommas(totals.stockTotal)}
+          </p>
+          <p className={styles.totalCat}>
+            Total de Costo: ${formatNumberWithCommas(totals.costTotal)}
+          </p>
+          <p className={styles.totalCat}>
+            Total de Venta: ${formatNumberWithCommas(totals.saleTotal)}
+          </p>
         </div>
 
         <div className={styles.paginationTotalContainer}>
@@ -308,6 +317,7 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
         handleClose={() => setShowModal(false)}
         categories={categories}
         brands={brands}
+        variant={variant}
         onClose={function (): void {
           throw new Error("Function not implemented.");
         }}

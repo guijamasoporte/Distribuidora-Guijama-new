@@ -10,7 +10,6 @@ export interface Client {
 }
 
 export interface Product {
-
   _id: string;
   unity: string | number | readonly string[] | undefined | any;
   generic: boolean;
@@ -22,7 +21,7 @@ export interface Product {
   category: string;
   brand: string;
   image: [];
-  // sales: {};
+  variant: string;
 }
 
 export interface ProductsProps {
@@ -54,7 +53,8 @@ export interface propsModals {
   open: boolean;
   onClose: () => void;
   onCreate: (newClient: Client) => void;
-  handleClose:() => void;
+  handleClose: () => void;
   categories: string[];
   brands: string[];
+  variant: string[];
 }
