@@ -1,4 +1,11 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Dialog, TextField } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import InstanceOfAxios from "../../../../utils/intanceAxios";
@@ -12,12 +19,14 @@ interface EditProductModalProps {
   open: boolean;
   handleClose: () => void;
   productSelect: Product;
+  setProductSelect: Dispatch<SetStateAction<Product | null>>;
 }
 
 const EditProductModal: React.FC<EditProductModalProps> = ({
   open,
   handleClose,
   productSelect,
+  setProductSelect,
 }) => {
   const initialProduct = useMemo(() => {
     return {
@@ -41,7 +50,6 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
   const maxImages = 1;
   const inputRef: React.MutableRefObject<HTMLInputElement | null> =
     useRef(null);
-  console.log(productSelect);
 
   useEffect(() => {
     setSelectedImages(initialProduct.image);
@@ -92,6 +100,7 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
         "success"
       );
       handleClose();
+      setProductSelect(null);
     } catch (error) {
       console.error("Error al editar el producto:", error);
     }

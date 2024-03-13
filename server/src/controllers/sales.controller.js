@@ -24,6 +24,7 @@ export const createSale = async (req, res) => {
   const { List, client } = req.body;
   try {
     let currentDate = new Date();
+  
     const timeZoneOffset = -3; // La diferencia de la zona horaria en horas
     currentDate.setHours(currentDate.getHours() + timeZoneOffset);
 
@@ -77,7 +78,6 @@ export const createSale = async (req, res) => {
 
     //--------edit Client--------
     let id = client.id;
-
     let dataSale = {
       date: currentDate,
       products: List,
@@ -103,7 +103,6 @@ export const createSale = async (req, res) => {
   }
 };
 
-// Función para obtener el nombre del mes a partir de su número
 
 export const GetAllSale = async (req, res) => {
   try {
@@ -151,7 +150,6 @@ export const UpdateSaletById = async (req, res) => {
 
 export const DeleteSaleById = async (req, res) => {
   const { id } = req.params;
-
   try {
     await Sale.findByIdAndDelete(id);
     return res.status(200).json("Sale eliminado");

@@ -24,6 +24,7 @@ const SaleSchema = new mongoose.Schema({
       cant: 1,
     },
   },
+  
   state:{
     type:Boolean,
     default:false //sale open

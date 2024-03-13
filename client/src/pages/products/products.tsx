@@ -320,6 +320,7 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
           open={showModalEdit}
           productSelect={productSelect}
           handleClose={() => setShowModalEdit(false)}
+          setProductSelect={setProductSelect}
         />
       )}
       <ModalEditPrices

@@ -8,8 +8,9 @@ import {
   Image,
   View,
 } from "@react-pdf/renderer";
-import { PDFDownloadLink } from "@react-pdf/renderer";
-import { Product, Sales } from "../../../interfaces/interfaces"; // Importa la interfaz Sale
+
+import guijama from "../../../assets/guijamapdf.png";
+import { Product } from "../../../interfaces/interfaces"; // Importa la interfaz Sale
 
 interface SalesPdf {
   [x: string]: any;
@@ -32,7 +33,7 @@ const Pdfinvoice: React.FC<{ sales: SalesPdf }> = ({ sales }) => {
     const diaFormateado = dia < 10 ? "0" + dia : dia;
     const mesFormateado = mes < 10 ? "0" + mes : mes;
 
-    return `${año}-${mesFormateado}-${diaFormateado}`;
+    return `${diaFormateado}-${mesFormateado}-${año}`;
   }
 
   function formatNumberWithCommas(number: number) {
@@ -55,7 +56,7 @@ const Pdfinvoice: React.FC<{ sales: SalesPdf }> = ({ sales }) => {
       display: "flex",
       flexDirection: "row",
       marginBottom: 40,
-      paddingBottom: "3rem",
+      paddingBottom: 30,
       borderBottom: "3px solid black",
     },
     HeaderPresupuesto: {
@@ -64,6 +65,7 @@ const Pdfinvoice: React.FC<{ sales: SalesPdf }> = ({ sales }) => {
       alignItems: "center",
       textAlign: "center",
       marginHorizontal: 20,
+      fontSize: 15,
     },
 
     infoClientContain: {
@@ -99,36 +101,44 @@ const Pdfinvoice: React.FC<{ sales: SalesPdf }> = ({ sales }) => {
       padding: 3,
       borderRight: "1px solid black",
     },
+    strong: {
+      fontSize: 20,
+    },
+    image: {
+      width: "5cm",
+      marginBottom: 10,
+    },
   });
 
   return (
     <Document>
-      <Page style={styles.page}>
+      <Page size="A4" style={styles.page}>
         <View style={styles.Header}>
           <View style={styles.HeaderPresupuesto}>
+            <Image src={guijama} style={styles.image} />
             <Text style={{ fontSize: 15 }}>
-              Tel:221 591-6564 / 221 673-2423
+              Tel: 221 591-6564 / 221 673-2423
             </Text>
           </View>
 
           <View style={styles.HeaderPresupuesto}>
-            <Text>PRESUPUESTO</Text>
-            <Text>Documento NO valido como factura</Text>
+            <Text style={styles.strong}>PRESUPUESTO</Text>
+            <Text>Documento no valido como factura</Text>
             <Text>N° {sales.idSale}</Text>
           </View>
         </View>
 
         <View style={styles.infoClientContain}>
           <View>
-            <Text>Datos del Cliente</Text>
+            <Text>Cliente N°: {sales.client.idClient}</Text>
             <Text>
               Nombre: {sales.client.name + " " + sales.client.lastName}
             </Text>
-            <Text>Direccion: {sales.client.adress}</Text>
           </View>
 
           <View>
-            <Text>Email: {sales.client.email}</Text>
+            <Text>Direccion: {sales.client.adress}</Text>
+            {/* <Text>Email: {sales.client.email}</Text> */}
             <Text>Fecha: {obtenerFechaSinHora(sales.date)}</Text>
           </View>
         </View>
@@ -149,7 +159,7 @@ const Pdfinvoice: React.FC<{ sales: SalesPdf }> = ({ sales }) => {
                 ${formatNumberWithCommas(el.priceList)}
               </Text>
               <Text style={styles.productsContainTitle}>
-               ${formatNumberWithCommas(el.priceList * el.unity)}
+                ${formatNumberWithCommas(el.priceList * el.unity)}
               </Text>
             </View>
           ))}
