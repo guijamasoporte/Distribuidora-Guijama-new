@@ -40,6 +40,7 @@ export interface Sales {
 }
 
 export interface Dues {
+  length: number;
   payd: number;
   cant: number;
 }

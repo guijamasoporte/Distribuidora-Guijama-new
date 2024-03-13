@@ -8,8 +8,10 @@ import InstanceOfAxios from "../../utils/intanceAxios";
 import Pagination from "../../components/pagination/pagination";
 import ModalComponent from "../../components/modals/modalSale/modelAddSale/modalAddSale";
 import { Client, Dues } from "../../interfaces/interfaces";
-import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
+import { PDFDownloadLink } from "@react-pdf/renderer";
 import Pdfinvoice from "../../components/PDFcomponents/PdfInvoice/pdfInvoice";
+import Modal from "@mui/material/Modal";
+import EditSaleComponent from "../../components/modals/modalSale/modalEditSale/modalEditSale";
 
 interface Sale {
   idSale: number;
@@ -31,11 +33,14 @@ interface Sale {
 
 const SalesPage: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [saleIdToEdit, setSaleIdToEdit] = useState<number | null>(null);
   const [filters, setFilters] = useState<Partial<Sale>>({});
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const salesPerPage = 15;
   const [dataSales, setDataSales] = useState<Sale[]>([]);
+  const [priceTotal, setPriceTotal] = useState<number>(0);
   const [stateFilter, setStateFilter] = useState<string | null>(null);
 
   useEffect(() => {
@@ -43,6 +48,11 @@ const SalesPage: React.FC = () => {
       try {
         const response: any = await InstanceOfAxios("/sales", "GET");
         setDataSales(response);
+
+        const total = response.reduce((acc: number, sale: Sale) => {
+          return acc + sale.priceTotal;
+        }, 0);
+        setPriceTotal(total);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -131,6 +141,16 @@ const SalesPage: React.FC = () => {
     setModalOpen(false);
   };
 
+  const openEditModal = (saleId: number) => {
+    setSaleIdToEdit(saleId);
+    setEditModalOpen(true);
+  };
+
+  const closeEditModal = () => {
+    setEditModalOpen(false);
+    setSaleIdToEdit(null);
+  };
+
   return (
     <div className={styles.tableContainer}>
       <h1 className={styles.title}>Listado de ventas</h1>
@@ -203,9 +223,9 @@ const SalesPage: React.FC = () => {
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
-                    stroke-width="1"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     className={styles.svgremito}
                   >
                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -216,13 +236,16 @@ const SalesPage: React.FC = () => {
                     <path d="M9 17l6 0" />
                   </svg>
                 </PDFDownloadLink>
-                 {/* <PDFViewer>
+                {/* <PDFViewer>
                  <Pdfinvoice sales={sale} />
                 </PDFViewer> */}
               </td>
               <td>{sale.state ? "Cerrada" : "Pendiente"}</td>
               <td>
-                <button className={styles.buttonEdit}>
+                <button
+                  className={styles.buttonEdit}
+                  onClick={() => openEditModal(sale.idSale)}
+                >
                   <EditIcon />
                 </button>
               </td>
@@ -242,6 +265,17 @@ const SalesPage: React.FC = () => {
         </button>
         <ModalComponent open={modalOpen} onClose={closeModal} />
       </div>
+      <Modal open={editModalOpen} onClose={closeEditModal}>
+        <div>
+          {saleIdToEdit && (
+            <EditSaleComponent
+              saleId={saleIdToEdit}
+              onClose={closeEditModal}
+              priceTotal={priceTotal}
+            />
+          )}
+        </div>
+      </Modal>
     </div>
   );
 };
