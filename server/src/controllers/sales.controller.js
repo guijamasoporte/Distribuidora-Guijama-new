@@ -34,7 +34,7 @@ export const createSale = async (req, res) => {
       return total;
     };
 
-    //--------new sale--------
+    // --------new sale--------
     let sale = new Sale({
       date: currentDate,
       products: List,
@@ -47,28 +47,30 @@ export const createSale = async (req, res) => {
 
     //--------edit product--------
     for (const product of List) {
-      const currentDate = new Date();
-      const currentMonth = currentDate.getMonth(); // Obtener el mes actual (0 = enero, 1 = febrero, etc.)
-      const monthName = getMonthName(currentMonth);
+      if (product.generic === false) {
+        const currentDate = new Date();
+        const currentMonth = currentDate.getMonth(); // Obtener el mes actual (0 = enero, 1 = febrero, etc.)
+        const monthName = getMonthName(currentMonth);
 
-      const existingProduct = await Product.findById(product._id);
-      existingProduct.stock -= product.unity;
+        const existingProduct = await Product.findById(product._id);
+        existingProduct.stock -= product.unity;
 
-      const monthIndex = existingProduct.sales.findIndex(
-        (sale) => sale.month === monthName
-      );
+        const monthIndex = existingProduct.sales.findIndex(
+          (sale) => sale.month === monthName
+        );
 
-      if (monthIndex !== -1) {
-        const updatedSale = { ...existingProduct.sales[monthIndex] };
-        updatedSale.amount += Number(product.unity);
-        existingProduct.sales[monthIndex] = updatedSale;
-      } else {
-        existingProduct.sales.push({
-          month: monthName,
-          amount: Number(product.unity),
-        });
+        if (monthIndex !== -1) {
+          const updatedSale = { ...existingProduct.sales[monthIndex] };
+          updatedSale.amount += Number(product.unity);
+          existingProduct.sales[monthIndex] = updatedSale;
+        } else {
+          existingProduct.sales.push({
+            month: monthName,
+            amount: Number(product.unity),
+          });
+        }
+        await existingProduct.save();
       }
-      await existingProduct.save();
     }
 
     //--------edit product--------

@@ -50,9 +50,9 @@ SaleSchema.pre("save", async function (next) {
     const lastSale = await Sale.findOne().sort({ idSale: -1 });
 
     if (lastSale) {
-      this.idSale = padWithZeros(Number(lastSale.idSale) + 1, 4);
+      this.idSale = padWithZeros(Number(lastSale.idSale) + 1, 6);
     } else {
-      this.idSale = "0001";
+      this.idSale = "000001";
     }
 
     next();
