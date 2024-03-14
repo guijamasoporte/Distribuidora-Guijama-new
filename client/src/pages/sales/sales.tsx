@@ -7,39 +7,39 @@ import SearchBar from "../../components/searchBar/searchBar";
 import InstanceOfAxios from "../../utils/intanceAxios";
 import Pagination from "../../components/pagination/pagination";
 import ModalComponent from "../../components/modals/modalSale/modelAddSale/modalAddSale";
-import { Client, Dues } from "../../interfaces/interfaces";
+import { Client, Dues, Sales } from "../../interfaces/interfaces";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import Pdfinvoice from "../../components/PDFcomponents/PdfInvoice/pdfInvoice";
 import Modal from "@mui/material/Modal";
 import EditSaleComponent from "../../components/modals/modalSale/modalEditSale/modalEditSale";
 
-interface Sale {
-  idSale: number;
-  client: Client;
-  product: object;
-  date: string;
-  code: string;
-  name: string;
-  quantity: number;
-  price: number;
-  title: string;
-  priceList: number;
-  priceCost: number;
-  dues: Dues;
-  invoice: string;
-  state: boolean;
-  priceTotal: number;
-}
+// interface Sale {
+//   idSale: number;
+//   client: Client;
+//   product: object;
+//   date: string;
+//   code: string;
+//   name: string;
+//   quantity: number;
+//   price: number;
+//   title: string;
+//   priceList: number;
+//   priceCost: number;
+//   dues: Dues;
+//   invoice: string;
+//   state: boolean;
+//   priceTotal: number;
+// }
 
 const SalesPage: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
-  const [saleIdToEdit, setSaleIdToEdit] = useState<number | null>(null);
-  const [filters, setFilters] = useState<Partial<Sale>>({});
+  const [salesSelected, setSalesSelected] = useState<Sales | null>(null);
+  const [filters, setFilters] = useState<Partial<Sales>>({});
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const salesPerPage = 15;
-  const [dataSales, setDataSales] = useState<Sale[]>([]);
+  const [dataSales, setDataSales] = useState<Sales[]>([]);
   const [priceTotal, setPriceTotal] = useState<number>(0);
   const [stateFilter, setStateFilter] = useState<string | null>(null);
 
@@ -49,7 +49,7 @@ const SalesPage: React.FC = () => {
         const response: any = await InstanceOfAxios("/sales", "GET");
         setDataSales(response);
 
-        const total = response.reduce((acc: number, sale: Sale) => {
+        const total = response.reduce((acc: number, sale: Sales) => {
           return acc + sale.priceTotal;
         }, 0);
         setPriceTotal(total);
@@ -59,9 +59,9 @@ const SalesPage: React.FC = () => {
     };
 
     fetchData();
-  }, [modalOpen]);
+  }, [modalOpen, editModalOpen]);
 
-  const handleChange = (value: string | null, field: keyof Sale) => {
+  const handleChange = (value: string | null, field: keyof Sales) => {
     setFilters({
       ...filters,
       [field]: value !== null ? value : "",
@@ -78,13 +78,13 @@ const SalesPage: React.FC = () => {
       ? sale.client.lastName.toLowerCase()
       : "";
     const saleId = sale.idSale ? sale.idSale.toString().toLowerCase() : "";
-    const date = sale.date ? sale.date.toLowerCase() : "";
+    // const date = sale.date ? sale.date.toLowerCase() : "";
     const priceTotal = sale.priceTotal
       ? sale.priceTotal.toString().toLowerCase()
       : "";
     const duesPayd = sale.dues ? sale.dues.payd.toString().toLowerCase() : "";
     const duesCant = sale.dues ? sale.dues.cant.toString().toLowerCase() : "";
-    const invoice = sale.invoice ? sale.invoice.toLowerCase() : "";
+
     const searchTermLower = searchTerm.toLowerCase();
     const state = sale.state ? "Cerrada" : "Pendiente";
 
@@ -92,11 +92,11 @@ const SalesPage: React.FC = () => {
       (clientName.includes(searchTermLower) ||
         clientLastName.includes(searchTermLower) ||
         saleId.includes(searchTermLower) ||
-        date.includes(searchTermLower) ||
+        // date.includes(searchTermLower) ||
         priceTotal.includes(searchTermLower) ||
         duesPayd.includes(searchTermLower) ||
-        duesCant.includes(searchTermLower) ||
-        invoice.includes(searchTermLower)) &&
+        duesCant.includes(searchTermLower)) &&
+      // invoice.includes(searchTermLower)
       (stateFilter
         ? state.toLowerCase().includes(stateFilter.toLowerCase())
         : true) &&
@@ -141,15 +141,14 @@ const SalesPage: React.FC = () => {
     setModalOpen(false);
   };
 
-  const openEditModal = (saleId: number) => {
-    setSaleIdToEdit(saleId);
+  const openEditModal = () => {
     setEditModalOpen(true);
   };
 
   const closeEditModal = () => {
     setEditModalOpen(false);
-    setSaleIdToEdit(null);
   };
+  console.log(filteredSales);
 
   return (
     <div className={styles.tableContainer}>
@@ -200,6 +199,7 @@ const SalesPage: React.FC = () => {
             <th>Editar</th>
           </tr>
         </thead>
+
         <tbody>
           {filteredSales.map((sale, index) => (
             <tr key={index}>
@@ -209,7 +209,8 @@ const SalesPage: React.FC = () => {
               <td>{formatDateModal(sale.date)}</td>
               <td>$ {sale.priceTotal}</td>
               <td>
-                {sale.dues.payd}/{sale.dues.cant}
+                {sale.dues.payd.filter((state) => state === true).length} /{" "}
+                {sale.dues.cant}
               </td>
               <td>
                 <PDFDownloadLink
@@ -244,7 +245,10 @@ const SalesPage: React.FC = () => {
               <td>
                 <button
                   className={styles.buttonEdit}
-                  onClick={() => openEditModal(sale.idSale)}
+                  onClick={() => {
+                    setEditModalOpen(true);
+                    setSalesSelected(sale);
+                  }}
                 >
                   <EditIcon />
                 </button>
@@ -267,14 +271,11 @@ const SalesPage: React.FC = () => {
       </div>
       <Modal open={editModalOpen} onClose={closeEditModal}>
         <div>
-          {saleIdToEdit && (
+          {salesSelected && (
             <EditSaleComponent
-              saleId={saleIdToEdit}
+              salesSelected={salesSelected}
               onClose={closeEditModal}
-              priceTotal={
-                dataSales.find((sale) => sale.idSale === saleIdToEdit)
-                  ?.priceTotal || 0
-              }
+              setSalesSelected={setSalesSelected}
             />
           )}
         </div>

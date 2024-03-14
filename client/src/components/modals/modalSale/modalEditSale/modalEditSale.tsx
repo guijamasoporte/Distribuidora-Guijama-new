@@ -1,43 +1,34 @@
-import React, { useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import styles from "./modalEditSale.module.css";
 import CloseIcon from "@mui/icons-material/Close";
 import Checkbox from "@mui/material/Checkbox";
+import InstanceOfAxios from "../../../../utils/intanceAxios";
+import { GetDecodedCookie } from "../../../../utils/DecodedCookie";
+import { Sales } from "../../../../interfaces/interfaces";
 
 interface EditSaleProps {
-  saleId: number;
-  priceTotal: number;
+  salesSelected: Sales;
+  setSalesSelected:Dispatch<SetStateAction<Sales | null>>;
+
   onClose: () => void;
 }
 
 const EditSaleComponent: React.FC<EditSaleProps> = ({
-  saleId,
+  salesSelected,
   onClose,
-  priceTotal,
+  setSalesSelected
 }) => {
+  console.log(salesSelected);
+
   const [saleData, setSaleData] = useState<any>(null);
-  const [editedDues, setEditedDues] = useState<number | null>(null);
+  const [editedDues, setEditedDues] = useState<number | null>(salesSelected.dues.payd.length); //cantidad de cuotas
   const [dueValues, setDueValues] = useState<number[]>(
     Array.from({ length: 6 }, () => 0)
   );
-  const [checkboxStates, setCheckboxStates] = useState<boolean[]>([]);
+  const [checkboxStates, setCheckboxStates] = useState<boolean[]>(salesSelected.dues.payd);
   const [pricePerDue, setPricePerDue] = useState<number>(0);
 
-  const fetchSaleData = async () => {
-    try {
-      const response = await fetch(`/sales/${saleId}`);
-      const data = await response.json();
-      setSaleData(data);
-      const duesCount = Math.min(data?.dues?.cant || 1, 6);
-      setEditedDues(duesCount);
-      initializeCheckboxStates(duesCount);
-    } catch (error) {
-      console.error("Error fetching sale data:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchSaleData();
-  }, []);
+  console.log(checkboxStates);
 
   useEffect(() => {
     if (editedDues !== null && saleData && saleData.price) {
@@ -46,11 +37,11 @@ const EditSaleComponent: React.FC<EditSaleProps> = ({
   }, [editedDues, saleData]);
 
   useEffect(() => {
-    if (priceTotal && editedDues) {
-      const pricePerDue = priceTotal / editedDues;
+    if (salesSelected.priceTotal && editedDues) {
+      const pricePerDue = salesSelected.priceTotal / editedDues;
       setPricePerDue(pricePerDue);
     }
-  }, [priceTotal, editedDues]);
+  }, [salesSelected.priceTotal, editedDues]);
 
   const initializeCheckboxStates = (duesCount: number) => {
     const initialCheckboxStates = Array.from(
@@ -102,13 +93,11 @@ const EditSaleComponent: React.FC<EditSaleProps> = ({
     });
   };
 
-  const handleSave = () => {
-    if (!saleData) {
-      console.error("Error: No sale data available");
-      return;
-    }
-
+  const handleSave = async () => {
+    const token = GetDecodedCookie("cookieToken");
+    await InstanceOfAxios(`/sales/${salesSelected._id}`, "PUT", {checkboxStates}, token);
     onClose();
+    setSalesSelected(null)
   };
 
   return (
@@ -121,8 +110,8 @@ const EditSaleComponent: React.FC<EditSaleProps> = ({
         </div>
         <div className={styles.modalContainerData}>
           <div className={styles.priceID}>
-            <p>Total: $ {priceTotal}</p>
-            <p>Venta N°: {saleId}</p>
+            <p>Total: $ {salesSelected.priceTotal}</p>
+            <p>Venta N°: {salesSelected.idSale}</p>
           </div>
           <div className={styles.inputField}>
             <label>Cuotas:</label>

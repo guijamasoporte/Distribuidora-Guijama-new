@@ -24,7 +24,7 @@ export const createSale = async (req, res) => {
   const { List, client } = req.body;
   try {
     let currentDate = new Date();
-  
+
     const timeZoneOffset = -3; // La diferencia de la zona horaria en horas
     currentDate.setHours(currentDate.getHours() + timeZoneOffset);
 
@@ -103,7 +103,6 @@ export const createSale = async (req, res) => {
   }
 };
 
-
 export const GetAllSale = async (req, res) => {
   try {
     let sale = await Sale.find();
@@ -123,27 +122,25 @@ export const GetSaletById = async (req, res) => {
   }
 };
 
-export const UpdateSaletById = async (req, res) => {
+export const UpdateSaleById = async (req, res) => {
   const { id } = req.params;
-
-  const { products, priceTotal, client, dues, invoice, state } = req.body;
-
+  const { checkboxStates } = req.body;
   try {
+    let statesTrue = checkboxStates.filter((state) => state === true).length;
+    console.log(checkboxStates.length);
+
     let sale = await Sale.findByIdAndUpdate(
       id,
       {
-        date: currentDate,
-        products: products,
-        priceTotal: priceTotal,
-        dues: dues,
-        client: client,
-        invoice: invoice,
-        state: state,
+        dues: { cant: checkboxStates.length, payd: checkboxStates },
+        state: statesTrue === checkboxStates.length ? true : false,
       },
       { new: true }
     );
+
     return res.status(200).json({ sale });
   } catch (error) {
+    console.log(error);
     res.status(400).json(formatError(error.message));
   }
 };

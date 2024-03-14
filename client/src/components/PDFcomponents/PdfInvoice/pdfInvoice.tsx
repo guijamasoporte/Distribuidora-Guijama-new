@@ -21,7 +21,7 @@ interface SalesPdf {
 }
 
 const Pdfinvoice: React.FC<{ sales: SalesPdf }> = ({ sales }) => {
-  console.log(sales);
+
 
   function obtenerFechaSinHora(fechaConHora: any) {
     const fecha = new Date(fechaConHora);

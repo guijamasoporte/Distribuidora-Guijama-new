@@ -29,19 +29,20 @@ export interface ProductsProps {
 }
 
 export interface Sales {
+  _id: string;
+  saleId: string;
   idSale: string;
-  date: Date;
+  date: string;
   products: Product[];
   priceTotal: number;
-  client: {};
+  client:Client;
   dues: Dues;
-  invoice: string;
   state: boolean;
 }
 
 export interface Dues {
   length: number;
-  payd: number;
+  payd: [];
   cant: number;
 }
 
