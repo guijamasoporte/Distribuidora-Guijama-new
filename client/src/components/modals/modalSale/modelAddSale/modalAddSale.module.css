@@ -15,7 +15,7 @@
 }
 
 .modal::-webkit-scrollbar {
-  width: 0; /* Aquí ocultamos la barra lateral del scroll */
+  width: 0;
 }
 
 .closeButtonTitle {

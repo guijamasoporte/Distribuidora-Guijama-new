@@ -271,7 +271,10 @@ const SalesPage: React.FC = () => {
             <EditSaleComponent
               saleId={saleIdToEdit}
               onClose={closeEditModal}
-              priceTotal={priceTotal}
+              priceTotal={
+                dataSales.find((sale) => sale.idSale === saleIdToEdit)
+                  ?.priceTotal || 0
+              }
             />
           )}
         </div>

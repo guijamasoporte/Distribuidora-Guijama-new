@@ -16,14 +16,15 @@ const EditSaleComponent: React.FC<EditSaleProps> = ({
 }) => {
   const [saleData, setSaleData] = useState<any>(null);
   const [editedDues, setEditedDues] = useState<number | null>(null);
-  const [dueValues, setDueValues] = useState<number[]>(Array.from({ length: 6 }, () => 0));
-
+  const [dueValues, setDueValues] = useState<number[]>(
+    Array.from({ length: 6 }, () => 0)
+  );
   const [checkboxStates, setCheckboxStates] = useState<boolean[]>([]);
+  const [pricePerDue, setPricePerDue] = useState<number>(0);
 
   const fetchSaleData = async () => {
     try {
       const response = await fetch(`/sales/${saleId}`);
-      //acá llamar saleprice
       const data = await response.json();
       setSaleData(data);
       const duesCount = Math.min(data?.dues?.cant || 1, 6);
@@ -38,6 +39,19 @@ const EditSaleComponent: React.FC<EditSaleProps> = ({
     fetchSaleData();
   }, []);
 
+  useEffect(() => {
+    if (editedDues !== null && saleData && saleData.price) {
+      calculateDueValues(saleData.price, editedDues);
+    }
+  }, [editedDues, saleData]);
+
+  useEffect(() => {
+    if (priceTotal && editedDues) {
+      const pricePerDue = priceTotal / editedDues;
+      setPricePerDue(pricePerDue);
+    }
+  }, [priceTotal, editedDues]);
+
   const initializeCheckboxStates = (duesCount: number) => {
     const initialCheckboxStates = Array.from(
       { length: duesCount },
@@ -46,8 +60,9 @@ const EditSaleComponent: React.FC<EditSaleProps> = ({
     setCheckboxStates(initialCheckboxStates);
   };
 
-  const calculateDueValues = (totalPrice: number, duesCount: number) => {
-    const pricePerDue = totalPrice / duesCount;
+  const calculateDueValues = (priceTotal: number, duesCount: number) => {
+    const pricePerDue = priceTotal / duesCount;
+    setPricePerDue(pricePerDue);
     const values = Array.from({ length: duesCount }, (_, index) => {
       return pricePerDue * (index + 1);
     });
@@ -68,11 +83,10 @@ const EditSaleComponent: React.FC<EditSaleProps> = ({
     initializeCheckboxStates(value);
 
     if (saleData && saleData.price) {
-        const totalPrice = saleData.price || 0;
-        calculateDueValues(totalPrice, value);
-        console.log("Total Price:", totalPrice);
-      }
-    };
+      const totalPrice = saleData.price || 0;
+      calculateDueValues(totalPrice, value);
+    }
+  };
 
   const handleCheckboxChange = (index: number) => {
     setCheckboxStates((prevStates) => {
@@ -94,11 +108,6 @@ const EditSaleComponent: React.FC<EditSaleProps> = ({
       return;
     }
 
-    const totalPrice = saleData.price || 0;
-    const pricePerDue = totalPrice / (editedDues || 1);
-    console.log("Total Price:", totalPrice);
-    console.log("Price Per Due:", pricePerDue);
-
     onClose();
   };
 
@@ -106,42 +115,51 @@ const EditSaleComponent: React.FC<EditSaleProps> = ({
     <div className={styles.modalContainer}>
       <div className={styles.modalContent}>
         <div className={styles.modalHeader}>
-          <h2 className={styles.modalTitle}>Editar Venta</h2>
-          <button className={styles.modalcloseButton} onClick={onClose}>
+          <button className={styles.modalCloseButton} onClick={onClose}>
             <CloseIcon />
           </button>
         </div>
-        <p>Total: $ {priceTotal}</p>
-        <p>ID de Venta: {saleId}</p>
+        <div className={styles.modalContainerData}>
+          <div className={styles.priceID}>
+            <p>Total: $ {priceTotal}</p>
+            <p>Venta N°: {saleId}</p>
+          </div>
+          <div className={styles.inputField}>
+            <label>Cuotas:</label>
+            <input
+              type="number"
+              value={editedDues !== null ? editedDues : ""}
+              min="1"
+              onChange={handleDuesChange}
+            />
+          </div>
 
-        <div className={styles.inputField}>
-          <label>Cuotas:</label>
-          <input
-            type="number"
-            value={editedDues !== null ? editedDues : ""}
-            min="1"
-            onChange={handleDuesChange}
-          />
-        </div>
+          <div className={styles.checkboxContainer}>
+            {[...Array(editedDues || 0)].map((_, index) => (
+              <div key={index} className={styles.checkboxItem}>
+                <Checkbox
+                  defaultChecked
+                  sx={{
+                    color: "#0abd04",
+                    "&.Mui-checked": {
+                      color: "#0abd04",
+                    },
+                  }}
+                  checked={checkboxStates[index] || false}
+                  onChange={() => handleCheckboxChange(index)}
+                />
+                <span>
+                  Cuota {index + 1} - Monto de cuota: ${pricePerDue.toFixed(2)}
+                </span>
+              </div>
+            ))}
+          </div>
 
-        <div className={styles.checkboxContainer}>
-          {[...Array(editedDues || 0)].map((_, index) => (
-            <div key={index} className={styles.checkboxItem}>
-              <Checkbox
-                checked={checkboxStates[index] || false}
-                onChange={() => handleCheckboxChange(index)}
-              />
-              <span>
-                Cuota {index + 1} - Monto de cuota: ${dueValues[index]}
-              </span>
-            </div>
-          ))}
-        </div>
-
-        <div className={styles.buttonContainer}>
-          <button className={styles.saveButton} onClick={handleSave}>
-            Guardar
-          </button>
+          <div className={styles.buttonContainer}>
+            <button className={styles.saveButton} onClick={handleSave}>
+              Guardar
+            </button>
+          </div>
         </div>
       </div>
     </div>
