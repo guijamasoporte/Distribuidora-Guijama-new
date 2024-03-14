@@ -28,13 +28,12 @@ const AddProductModal: React.FC<propsModals> = ({
     unity: undefined,
     generic: false,
     _id: "",
-    variant:""
+    variant: "",
   };
 
   const [product, setProduct] = useState<Product>(initialProduct);
-
-  const [selectedImages, setSelectedImages] = useState<File[]>([]); //preview images
-  const maxImages = 5;
+  const [selectedImages, setSelectedImages] = useState<File[]>([]);
+  const maxImages = 1;
   const inputRef: React.MutableRefObject<HTMLInputElement | null> =
     useRef(null);
 
@@ -42,20 +41,19 @@ const AddProductModal: React.FC<propsModals> = ({
     const files = event.target.files;
     const selected = Array.from(files as FileList);
 
-    if (selectedImages.length + selected.length > maxImages) {
-      alert(`Máximo ${maxImages} imágenes permitidas.`); //reemplazar este alert por sweetAlert
-    } else {
-      setSelectedImages((prevSelected) => [...prevSelected, ...selected]); //hace el prev de las imagenes y las agrega si no hay mas de 5
+    if (selected.length > maxImages) {
+      return;
     }
+
+    setSelectedImages(selected);
+
     if (inputRef.current) {
       inputRef.current.value = "";
     }
   };
 
-  const handleImageRemove = (index: number) => {
-    const updatedImages = [...selectedImages];
-    updatedImages.splice(index, 1);
-    setSelectedImages(updatedImages);
+  const handleImageRemove = () => {
+    setSelectedImages([]);
   };
 
   const handleChange = (prop: keyof Product, value: string | number) => {
@@ -133,7 +131,7 @@ const AddProductModal: React.FC<propsModals> = ({
             handleChange("variant", newInputValue ? newInputValue : "")
           }
           renderInput={(params) => (
-            <TextField {...params} label="Variante" fullWidth />
+            <TextField {...params} label="Variedad" fullWidth />
           )}
         />
         <div className={styles.inputsSelect}>
@@ -199,24 +197,22 @@ const AddProductModal: React.FC<propsModals> = ({
           inputProps={{ maxLength: 20 }}
           type="number"
         />
-        {selectedImages &&
-          selectedImages.map((image, index) => (
-            <div className={styles.imageContainer} key={index}>
-              <button
-                className={styles.removeImageButton}
-                onClick={() => handleImageRemove(index)}
-              >
-                <ClearIcon />
-              </button>
-              <img
-                className={styles.image}
-                src={
-                  typeof image === "string" ? image : URL.createObjectURL(image)
-                }
-                alt={`Imagen ${index + 1}`}
-              />
-            </div>
-          ))}
+        {selectedImages.length > 0 && (
+          <div className={styles.imageContainer}>
+            <button
+              className={styles.removeImageButton}
+              onClick={handleImageRemove}
+            >
+              <ClearIcon />
+            </button>
+            <img
+              className={styles.image}
+              src={URL.createObjectURL(selectedImages[0])}
+              alt={`Imagen`}
+            />
+          </div>
+        )}
+
         <label htmlFor="image-input" className={styles.customImageButton}>
           Subir imagen
         </label>
