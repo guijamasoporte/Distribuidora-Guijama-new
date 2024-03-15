@@ -422,25 +422,27 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
             </p>
           </div>
           <div className={styles.gridContainer}>
-            {matchProduct.map((el: Product, index: number) => (
+            {matchProduct.map((product: Product, index: number) => (
               <div
                 className={styles.gridItem}
                 onClick={() => {
                   let productIndex = List.findIndex(
-                    (el: Product) => String(el.code) === String(el.code)
+                    (el: Product) =>
+                      String(el.code) === String(el.code) &&
+                      el.variant === product.variant
                   );
                   if (productIndex >= 0) {
                     List[productIndex].unity =
                       Number(List[productIndex].unity) + Number(filter.cant);
                     setList([...List]);
                   } else {
-                    setList([...List, { ...el, unity: Number(filter.cant) }]);
+                    setList([...List, { ...product, unity: Number(filter.cant) }]);
                   }
 
                   closeModal();
                 }}
               >
-                <p className={styles.titleVariant}>{el.variant}</p>
+                <p className={styles.titleVariant}>{product.variant}</p>
               </div>
             ))}
           </div>
