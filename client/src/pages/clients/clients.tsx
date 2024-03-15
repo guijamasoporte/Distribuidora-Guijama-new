@@ -10,6 +10,7 @@ import Pagination from "../../components/pagination/pagination";
 import Swal from "sweetalert2";
 import CreateClientModal from "../../components/modals/modalClient/modalAddClient/modalAddClient";
 import EditClientModal from "../../components/modals/modalClient/modalEditClient/modalEditClient";
+import PurchaseModal from "../../components/modals/modalClient/modalBuysClient/modalBuysClient";
 import { GetDecodedCookie } from "../../utils/DecodedCookie";
 import { Client } from "../../interfaces/interfaces";
 
@@ -18,6 +19,7 @@ import { Client } from "../../interfaces/interfaces";
 const ClientsPage: React.FC = () => {
   const [openModal, setOpenModal] = useState(false);
   const [openModalEdit, setOpenModalEdit] = useState(false);
+  const [openPurchaseModal, setOpenPurchaseModal] = useState(false);
   const initialFilters = {
     idClient: "",
     name: "",
@@ -25,7 +27,7 @@ const ClientsPage: React.FC = () => {
     phone: "",
     email: "",
     adress: "",
-    buys: "",
+    buys: [],
   };
 
   const [filters, setFilters] = useState<{ [key: string]: string }>(
@@ -38,6 +40,7 @@ const ClientsPage: React.FC = () => {
   const [dataSale, setDataSale] = useState<Array<Client>>([]);
   const [filteredClients, setFilteredClients] = useState<Client[]>([]);
   const [clientSelect, setClientSelect] = useState<Client | null>(null);
+  const [clientPurchases, setClientPurchases] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchClient = async () => {
@@ -107,6 +110,27 @@ const ClientsPage: React.FC = () => {
       }
     });
   };
+
+  const handleViewBuys = async (client: Client) => {
+    try {
+      const response: any = await InstanceOfAxios(
+        `/clients/${client.idClient}/buys`, 
+        "GET"
+      );
+      if (Array.isArray(response.buys)) {
+        setClientPurchases(response.buys); 
+        setOpenPurchaseModal(true); 
+      } else {
+        console.error(
+          "La respuesta no contiene un array de compras:",
+          response
+        );
+      }
+    } catch (error) {
+      console.error("Error fetching purchases:", error);
+    }
+  };
+
 
   useEffect(() => {
     const filteredData = dataSale.filter((client) => {
@@ -215,7 +239,7 @@ const ClientsPage: React.FC = () => {
               <td>
                 <button
                   className={styles.buttonSee}
-                  onClick={() => handleEdit(`${client.buys}`)}
+                  onClick={() => handleViewBuys(client)}
                 >
                   <SearchIcon />
                 </button>
@@ -269,6 +293,11 @@ const ClientsPage: React.FC = () => {
           setClientSelect={setClientSelect}
         />
       )}
+       <PurchaseModal
+        open={openPurchaseModal}
+        onClose={() => setOpenPurchaseModal(false)}
+        purchases={dataSale.buys}
+      />
     </div>
   );
 };
