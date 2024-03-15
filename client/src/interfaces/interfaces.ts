@@ -1,4 +1,5 @@
 export interface Client {
+  date: any;
   _id: any;
   idClient: string;
   name: string;

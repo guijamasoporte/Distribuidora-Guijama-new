@@ -1,0 +1,103 @@
+.purchaseModal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 40rem;
+  width: 100%;
+  margin: 5rem auto;
+}
+
+.closeButtonModal {
+  display: flex;
+  justify-content: end;
+  width: 100%;
+}
+
+.buttonClose {
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  margin-right: 15px;
+  padding: 0.2rem;
+  cursor: pointer;
+  position: relative;
+  top: 10px;
+  right: 5px;
+}
+
+.buttonClose:hover {
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
+    rgba(0, 0, 0, 0.22) 0px 10px 10px;
+}
+
+.clientBuysTitle {
+  font-family: "questrial";
+  font-size: 22px;
+  margin-bottom: 20px;
+}
+
+.idNameContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  width: 100%;
+  font-family: "questrial";
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+
+.idNameContainer p {
+  font-size: 18px;
+}
+
+.iconPDF {
+  color: #b69b84;
+  border: none;
+  background-color: transparent;
+  transition: transform 0.3s ease;
+}
+
+.iconPDF:hover {
+  color: #603e20;
+  cursor: pointer;
+  background-color: transparent;
+  cursor: pointer;
+  transform: scale(1.4);
+}
+
+.purchaseTable {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.purchaseTable th,
+.purchaseTable td {
+  padding: 5px;
+  text-align: center;
+  font-family: "questrial";
+  font-size: 18px;
+  font-weight: lighter;
+  border-bottom: 1px solid #ddd;
+}
+
+.purchaseTable th {
+  background-color: #603e20;
+  color: white;
+}
+
+.purchaseTable tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
+.purchaseTable tbody tr:last-child td {
+  border-bottom: none;
+}

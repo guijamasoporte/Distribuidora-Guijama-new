@@ -26,6 +26,7 @@ const ClientsPage: React.FC = () => {
     phone: "",
     email: "",
     adress: "",
+    date: "",
     buys: [],
   };
 

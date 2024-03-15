@@ -3,6 +3,7 @@ import { Autocomplete, Modal, TextField } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
 import styles from "./modalAddSale.module.css";
+import Swal from "sweetalert2";
 import InstanceOfAxios from "../../../../utils/intanceAxios";
 import {
   Client,
@@ -187,7 +188,7 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
     setList(newList);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const token = GetDecodedCookie("cookieToken");
 
     if (selectedClient) {
@@ -200,7 +201,27 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
         idClient: selectedClient.idClient,
       };
 
-      InstanceOfAxios("/sales", "POST", { List, client: dataClient }, token);
+      try {
+        await InstanceOfAxios(
+          "/sales",
+          "POST",
+          { List, client: dataClient },
+          token
+        );
+        onClose();
+        Swal.fire({
+          icon: "success",
+          title: "Venta guardada",
+          text: "La venta se ha guardado exitosamente.",
+        });
+      } catch (error) {
+        console.error("Error saving sale:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Ocurrió un error al guardar la venta. Por favor, inténtelo de nuevo.",
+        });
+      }
     }
 
     setList([]);
@@ -419,7 +440,7 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
                   closeModal();
                 }}
               >
-                <p className={styles.titleVariant}>{el.title}</p>
+                <p className={styles.titleVariant}>{el.variant}</p>
               </div>
             ))}
           </div>
