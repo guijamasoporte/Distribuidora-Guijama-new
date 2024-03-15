@@ -5,34 +5,26 @@ import Checkbox from "@mui/material/Checkbox";
 import InstanceOfAxios from "../../../../utils/intanceAxios";
 import { GetDecodedCookie } from "../../../../utils/DecodedCookie";
 import { Sales } from "../../../../interfaces/interfaces";
+import { formatNumberWithCommas } from "../../../../utils/formatNumberwithCommas";
 
 interface EditSaleProps {
   salesSelected: Sales;
-  setSalesSelected:Dispatch<SetStateAction<Sales | null>>;
-
+  setSalesSelected: Dispatch<SetStateAction<Sales | null>>;
   onClose: () => void;
 }
 
 const EditSaleComponent: React.FC<EditSaleProps> = ({
   salesSelected,
   onClose,
-  setSalesSelected
+  setSalesSelected,
 }) => {
-
-  const [saleData, setSaleData] = useState<any>(null);
-  const [editedDues, setEditedDues] = useState<number | null>(salesSelected.dues.payd.length); //cantidad de cuotas
-  const [dueValues, setDueValues] = useState<number[]>(
-    Array.from({ length: 6 }, () => 0)
+  const [editedDues, setEditedDues] = useState<number | null>(
+    salesSelected.dues.payd.length
   );
-  const [checkboxStates, setCheckboxStates] = useState<boolean[]>(salesSelected.dues.payd);
+  const [checkboxStates, setCheckboxStates] = useState<boolean[]>(
+    salesSelected.dues.payd
+  );
   const [pricePerDue, setPricePerDue] = useState<number>(0);
-
-
-  useEffect(() => {
-    if (editedDues !== null && saleData && saleData.price) {
-      calculateDueValues(saleData.price, editedDues);
-    }
-  }, [editedDues, saleData]);
 
   useEffect(() => {
     if (salesSelected.priceTotal && editedDues) {
@@ -40,42 +32,6 @@ const EditSaleComponent: React.FC<EditSaleProps> = ({
       setPricePerDue(pricePerDue);
     }
   }, [salesSelected.priceTotal, editedDues]);
-
-  const initializeCheckboxStates = (duesCount: number) => {
-    const initialCheckboxStates = Array.from(
-      { length: duesCount },
-      () => false
-    );
-    setCheckboxStates(initialCheckboxStates);
-  };
-
-  const calculateDueValues = (priceTotal: number, duesCount: number) => {
-    const pricePerDue = priceTotal / duesCount;
-    setPricePerDue(pricePerDue);
-    const values = Array.from({ length: duesCount }, (_, index) => {
-      return pricePerDue * (index + 1);
-    });
-    setDueValues(values);
-  };
-
-  const handleDuesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(event.target.value);
-    if (!isNaN(value) && value >= 1 && value <= 6) {
-      setEditedDues(value);
-    } else if (event.target.value === "") {
-      setEditedDues(null);
-    } else {
-      return;
-    }
-
-    setEditedDues(value);
-    initializeCheckboxStates(value);
-
-    if (saleData && saleData.price) {
-      const totalPrice = saleData.price || 0;
-      calculateDueValues(totalPrice, value);
-    }
-  };
 
   const handleCheckboxChange = (index: number) => {
     setCheckboxStates((prevStates) => {
@@ -93,9 +49,14 @@ const EditSaleComponent: React.FC<EditSaleProps> = ({
 
   const handleSave = async () => {
     const token = GetDecodedCookie("cookieToken");
-    await InstanceOfAxios(`/sales/${salesSelected._id}`, "PUT", {checkboxStates}, token);
+    await InstanceOfAxios(
+      `/sales/${salesSelected._id}`,
+      "PUT",
+      { checkboxStates },
+      token
+    );
     onClose();
-    setSalesSelected(null)
+    setSalesSelected(null);
   };
 
   return (
@@ -108,7 +69,7 @@ const EditSaleComponent: React.FC<EditSaleProps> = ({
         </div>
         <div className={styles.modalContainerData}>
           <div className={styles.priceID}>
-            <p>Total: $ {salesSelected.priceTotal}</p>
+            <p>Total: $ {formatNumberWithCommas(salesSelected.priceTotal)}</p>
             <p>Venta N°: {salesSelected.idSale}</p>
           </div>
           <div className={styles.inputField}>
@@ -117,7 +78,6 @@ const EditSaleComponent: React.FC<EditSaleProps> = ({
               type="number"
               value={editedDues !== null ? editedDues : ""}
               min="1"
-              onChange={handleDuesChange}
             />
           </div>
 
@@ -136,7 +96,8 @@ const EditSaleComponent: React.FC<EditSaleProps> = ({
                   onChange={() => handleCheckboxChange(index)}
                 />
                 <span>
-                  Cuota {index + 1} - Monto de cuota: ${pricePerDue.toFixed(2)}
+                  Cuota {index + 1} - Monto de cuota: $
+                  {formatNumberWithCommas(pricePerDue)}
                 </span>
               </div>
             ))}

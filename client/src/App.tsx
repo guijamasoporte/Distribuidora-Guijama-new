@@ -34,7 +34,7 @@ const App: React.FC = () => {
                     path="products"
                     element={
                       <ProtectedRoute>
-                        <ProductsPage data={[]} />
+                        <ProductsPage/>
                       </ProtectedRoute>
                     }
                   />
