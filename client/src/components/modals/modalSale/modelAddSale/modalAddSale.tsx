@@ -203,7 +203,6 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
     const token = GetDecodedCookie("cookieToken");
 
     if (selectedClient) {
-      // Verificar si selectedClient no es nulo
       const dataClient = {
         name: selectedClient.name,
         lastName: selectedClient.lastName,
@@ -250,9 +249,12 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
             </div>
           </div>
           <Autocomplete
+            className={styles.clientSelect}
             fullWidth={true}
             options={dataClients}
-            getOptionLabel={(options) => options.name}
+            getOptionLabel={(option) =>
+              `N° ${option.idClient} - ${option.name} ${option.lastName}`
+            }
             value={selectedClient}
             onChange={(event, newValue) => {
               if (newValue) {
@@ -260,7 +262,11 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
               }
             }}
             renderInput={(params) => (
-              <TextField {...params} label="Cliente" variant="outlined" />
+              <TextField
+                {...params}
+                label="Seleccionar cliente"
+                variant="outlined"
+              />
             )}
           />
           <div className={styles.tablesContainer}>
@@ -394,23 +400,31 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
               </button>
             </div>
             <div className={styles.totalSaleContainer}>
-              <p className={styles.totalSale}>TOTAL: $ {total}</p>
+              <p className={styles.totalSale}>Total: $ {total}</p>
             </div>
           </div>
         </div>
       </Modal>
       <Modal open={openModalSelectProduct} onClose={closeModal}>
-        <div className={styles.modal}>
-          {matchProduct.map((el: Product) => (
-            <div
-              onClick={() => {
-                setList([...List, el]);
-                closeModal();
-              }}
-            >
-              <p>{el.title}</p>
-            </div>
-          ))}
+        <div className={styles.modalVariant}>
+          <div className={styles.titleContainerVariant}>
+            <p className={styles.titleVariantModal}>
+              Selecciona la variedad del producto
+            </p>
+          </div>
+          <div className={styles.gridContainer}>
+            {matchProduct.map((el: Product) => (
+              <div
+                className={styles.gridItem}
+                onClick={() => {
+                  setList([...List, el]);
+                  closeModal();
+                }}
+              >
+                <p className={styles.titleVariant}>{el.title}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </Modal>
     </>

@@ -41,13 +41,13 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
       _id: productSelect._id,
       unity: "",
       generic: false,
-      variant:productSelect.variant,
+      variant: productSelect.variant,
     };
   }, [productSelect]);
 
   const [product, setProduct] = useState<Product>(initialProduct);
 
-  const [selectedImages, setSelectedImages] = useState<File[]>([]); //preview images
+  const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const maxImages = 1;
   const inputRef: React.MutableRefObject<HTMLInputElement | null> =
     useRef(null);
@@ -61,9 +61,9 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
     const selected = Array.from(files as FileList);
 
     if (selectedImages.length + selected.length > maxImages) {
-      alert(`Máximo ${maxImages} imágenes permitidas.`); //reemplazar este alert por sweetAlert
+      alert(`Máximo ${maxImages} imágenes permitidas.`);
     } else {
-      setSelectedImages((prevSelected) => [...prevSelected, ...selected]); //hace el prev de las imagenes y las agrega si no hay mas de 5
+      setSelectedImages((prevSelected) => [...prevSelected, ...selected]);
     }
     if (inputRef.current) {
       inputRef.current.value = "";
@@ -128,6 +128,16 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
           fullWidth
           inputProps={{ maxLength: 20 }}
         />
+        <TextField
+          className={styles.formField}
+          name="variant"
+          label="Variedad"
+          value={product.variant}
+          onChange={(e) => handleChange("variant", e.target.value)}
+          fullWidth
+          inputProps={{ maxLength: 20 }}
+        />
+
         <TextField
           className={styles.formField}
           name="category"

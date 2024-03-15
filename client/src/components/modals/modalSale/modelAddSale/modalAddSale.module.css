@@ -7,7 +7,7 @@
   padding: 20px;
   border-radius: 10px;
   width: 95%;
-  max-height: 90%;
+  height: 90%;
   margin: 15px auto;
   overflow: hidden;
   overflow-y: auto;
@@ -18,19 +18,11 @@
   width: 0;
 }
 
-.closeButtonTitle {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-}
-
 .table {
   border-radius: 10px;
   width: 100%;
   border-collapse: collapse;
   font-family: "noto sans";
-
 }
 
 .table th,
@@ -72,8 +64,13 @@
   color: #000000;
   width: 90%;
   padding: 1rem;
+  color:#603e20;
   background-color: #9ec5ca67;
   border-radius: 5px;
+}
+
+.clientSelect {
+  width: 20rem;
 }
 
 .productTable {
@@ -160,8 +157,8 @@
   padding: 0.2rem;
   cursor: pointer;
   position: absolute;
-  top: 20px;
-  right: 10px;
+  top: 30px;
+  right: 30px;
 }
 
 .closeButton:hover {
@@ -170,11 +167,18 @@
     rgba(0, 0, 0, 0.22) 0px 10px 10px;
 }
 
+.closeButtonTitle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
 .totalSaleContainer {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 3rem;
+  height: 2.5rem;
   width: 20%;
   background-color: #b69b84;
   border-radius: 5px;
@@ -186,14 +190,17 @@
 .totalSaleButtonAddContainer {
   display: flex;
   flex-direction: row;
+  align-items: center;
   justify-content: space-between;
   width: 95%;
+  margin-bottom: 0;
 }
 
 .buttonAddGeneric {
   font-family: "questrial";
   font-size: 18px;
   width: 15rem;
+  height: 2.5rem;
   align-items: center;
   display: flex;
   justify-content: center;
@@ -218,6 +225,7 @@
   font-family: "noto sans";
   font-size: 21px;
   width: 15rem;
+  height: 2.5rem;
   align-items: center;
   display: flex;
   justify-content: center;
@@ -234,7 +242,7 @@
 .buttonFinishSale:hover {
   color: white;
   cursor: pointer;
-  transform: scale(1.2);
+  transform: scale(1.1);
   box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
     rgba(0, 0, 0, 0.22) 0px 10px 10px;
 }
@@ -260,4 +268,75 @@
   padding: 8px;
   margin-top: 5px;
   font-family: "noto sans";
+}
+
+.modalVariant {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  background-color: #ffffff;
+  border: none;
+  padding: 20px;
+  border-radius: 10px;
+  width: 70%;
+  height: auto;
+  margin: 5rem auto;
+  overflow: hidden;
+  overflow-y: auto;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.titleContainerVariant {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.titleVariantModal {
+  display: flex;
+  justify-content: center;
+  width: 40rem;
+  font-family: "questrial";
+  font-size: 22px;
+  color: #ffffff;
+  background-color: #603e20;
+  border-radius: 5px;
+  padding: 1rem;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+}
+
+.titleVariant {
+  font-size: 18px;
+  font-family: "questrial";
+}
+
+.gridContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-gap: 1rem;
+}
+
+.gridItem {
+  display: flex;
+  justify-content: center;
+  width: 20rem;
+  border-radius: 5px;
+  cursor: pointer;
+  color: #603e20;
+  border: 2px solid #b69b84;
+  transition: transform 0.3s ease;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+}
+
+.gridItem:hover {
+  background-color:#b69b84;
+  border: none;
+  color: white;
+  transform: scale(1.1);
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
+    rgba(0, 0, 0, 0.22) 0px 10px 10px;
 }
