@@ -60,3 +60,10 @@ export interface propsModals {
   brands: string[];
   variant: string[];
 }
+
+export interface Filters {
+  code: string;
+  cant: number;
+  importe: number;
+  title: string;
+}

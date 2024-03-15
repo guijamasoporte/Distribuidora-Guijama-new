@@ -1,38 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { Autocomplete, Modal, TextField, dividerClasses } from "@mui/material";
+import { Autocomplete, Modal, TextField } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
 import styles from "./modalAddSale.module.css";
 import InstanceOfAxios from "../../../../utils/intanceAxios";
-import { Client, Dues, Product } from "../../../../interfaces/interfaces";
+import {
+  Client,
+  Dues,
+  Filters,
+  Product,
+} from "../../../../interfaces/interfaces";
 import { GetDecodedCookie } from "../../../../utils/DecodedCookie";
-
-interface ProductData {
-  code(code: any): unknown;
-  client: Client;
-  product: Product;
-  date: Date;
-  dues: Dues;
-  state: boolean;
-  priceTotal: number;
-  generic: boolean;
-}
 
 interface ApiError {
   message: string;
 }
 
-type ApiResponse = ProductData | ApiError;
+type ApiResponse = Product[] | Client | ApiError;
 
 interface ModalProps {
   open: boolean;
   onClose: () => void;
-}
-interface Filters {
-  code: string;
-  cant: number;
-  importe: number;
-  title: string;
 }
 
 const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
@@ -413,11 +401,21 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
             </p>
           </div>
           <div className={styles.gridContainer}>
-            {matchProduct.map((el: Product) => (
+            {matchProduct.map((el: Product, index: number) => (
               <div
                 className={styles.gridItem}
                 onClick={() => {
-                  setList([...List, el]);
+                  let productIndex = List.findIndex(
+                    (el: Product) => String(el.code) === String(el.code)
+                  );
+                  if (productIndex >= 0) {
+                    List[productIndex].unity =
+                      Number(List[productIndex].unity) + Number(filter.cant);
+                    setList([...List]);
+                  } else {
+                    setList([...List, { ...el, unity: Number(filter.cant) }]);
+                  }
+
                   closeModal();
                 }}
               >

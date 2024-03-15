@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Autocomplete, TextField } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -11,9 +11,10 @@ import AddProductModal from "../../components/modals/modalProduct/modalAddProduc
 import EditProductModal from "../../components/modals/modalProduct/modalEditProduct/modalEditProduct";
 import { GetDecodedCookie } from "../../utils/DecodedCookie";
 import ModalEditPrices from "../../components/modals/modalProduct/modalEditPricesProduct/modalEditPrices";
-import { Client, Product, ProductsProps } from "../../interfaces/interfaces";
+import { Client, Product } from "../../interfaces/interfaces";
+import { formatNumberWithCommas } from "../../utils/formatNumberwithCommas";
 
-const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
+const ProductsPage: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [showModalEdit, setShowModalEdit] = useState(false);
   const [showModifyPriceModal, setShowModifyPriceModal] = useState(false);
@@ -91,14 +92,20 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
     });
   };
 
-  const applyFilters = (product: Product) => {
-    return Object.entries(filters).every(([key, value]) => {
-      const productValue = String(product[key as keyof Product]).toLowerCase();
-      return (
-        value.toLowerCase() === "" || productValue.includes(value.toLowerCase())
-      );
-    });
-  };
+  const applyFilters = useCallback(
+    (product: Product) => {
+      return Object.entries(filters).every(([key, value]) => {
+        const productValue = String(
+          product[key as keyof Product]
+        ).toLowerCase();
+        return (
+          value.toLowerCase() === "" ||
+          productValue.includes(value.toLowerCase())
+        );
+      });
+    },
+    [filters]
+  );
 
   const handleFilterChange = (
     event: React.SyntheticEvent<Element, Event>,
@@ -170,17 +177,6 @@ const ProductsPage: React.FC<ProductsProps> = ({ data }) => {
 
     calculateTotals();
   }, [currentProducts, applyFilters, searchTerm]);
-
-  function formatNumberWithCommas(number: number) {
-    let numberString = String(number);
-    let parts = [];
-    while (numberString.length > 3) {
-      parts.unshift(numberString.slice(-3));
-      numberString = numberString.slice(0, -3);
-    }
-    parts.unshift(numberString);
-    return parts.join(".");
-  }
 
   return (
     <div className={styles.tableContainer}>

@@ -7,52 +7,29 @@ import SearchBar from "../../components/searchBar/searchBar";
 import InstanceOfAxios from "../../utils/intanceAxios";
 import Pagination from "../../components/pagination/pagination";
 import ModalComponent from "../../components/modals/modalSale/modelAddSale/modalAddSale";
-import { Client, Dues, Sales } from "../../interfaces/interfaces";
+import { Sales } from "../../interfaces/interfaces";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import Pdfinvoice from "../../components/PDFcomponents/PdfInvoice/pdfInvoice";
 import Modal from "@mui/material/Modal";
 import EditSaleComponent from "../../components/modals/modalSale/modalEditSale/modalEditSale";
-
-// interface Sale {
-//   idSale: number;
-//   client: Client;
-//   product: object;
-//   date: string;
-//   code: string;
-//   name: string;
-//   quantity: number;
-//   price: number;
-//   title: string;
-//   priceList: number;
-//   priceCost: number;
-//   dues: Dues;
-//   invoice: string;
-//   state: boolean;
-//   priceTotal: number;
-// }
+import { formatNumberWithCommas } from "../../utils/formatNumberwithCommas";
 
 const SalesPage: React.FC = () => {
-  const [modalOpen, setModalOpen] = useState(false);
-  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [dataSales, setDataSales] = useState<Sales[]>([]);
   const [salesSelected, setSalesSelected] = useState<Sales | null>(null);
   const [filters, setFilters] = useState<Partial<Sales>>({});
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const salesPerPage = 15;
-  const [dataSales, setDataSales] = useState<Sales[]>([]);
-  const [priceTotal, setPriceTotal] = useState<number>(0);
   const [stateFilter, setStateFilter] = useState<string | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response: any = await InstanceOfAxios("/sales", "GET");
         setDataSales(response);
-
-        const total = response.reduce((acc: number, sale: Sales) => {
-          return acc + sale.priceTotal;
-        }, 0);
-        setPriceTotal(total);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -78,7 +55,7 @@ const SalesPage: React.FC = () => {
       ? sale.client.lastName.toLowerCase()
       : "";
     const saleId = sale.idSale ? sale.idSale.toString().toLowerCase() : "";
-    // const date = sale.date ? sale.date.toLowerCase() : "";
+    const date = sale.date ? sale.date.toLowerCase() : "";
     const priceTotal = sale.priceTotal
       ? sale.priceTotal.toString().toLowerCase()
       : "";
@@ -92,11 +69,10 @@ const SalesPage: React.FC = () => {
       (clientName.includes(searchTermLower) ||
         clientLastName.includes(searchTermLower) ||
         saleId.includes(searchTermLower) ||
-        // date.includes(searchTermLower) ||
+        date.includes(searchTermLower) ||
         priceTotal.includes(searchTermLower) ||
         duesPayd.includes(searchTermLower) ||
         duesCant.includes(searchTermLower)) &&
-      // invoice.includes(searchTermLower)
       (stateFilter
         ? state.toLowerCase().includes(stateFilter.toLowerCase())
         : true) &&
@@ -141,14 +117,9 @@ const SalesPage: React.FC = () => {
     setModalOpen(false);
   };
 
-  const openEditModal = () => {
-    setEditModalOpen(true);
-  };
-
   const closeEditModal = () => {
     setEditModalOpen(false);
   };
-  console.log(filteredSales);
 
   return (
     <div className={styles.tableContainer}>
@@ -207,7 +178,7 @@ const SalesPage: React.FC = () => {
               <td>{sale.client.name}</td>
               <td>{sale.client.lastName}</td>
               <td>{formatDateModal(sale.date)}</td>
-              <td>$ {sale.priceTotal}</td>
+              <td>$ {formatNumberWithCommas(sale.priceTotal)}</td>
               <td>
                 {sale.dues.payd.filter((state) => state === true).length} /{" "}
                 {sale.dues.cant}
@@ -258,7 +229,7 @@ const SalesPage: React.FC = () => {
         </tbody>
       </table>
       <Pagination
-        totalItems={filteredSales.length}
+        totalItems={currentSales.length}
         itemsPerPage={salesPerPage}
         currentPage={currentPage}
         paginate={handlePaginate}
