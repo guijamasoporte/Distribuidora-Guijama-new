@@ -6,7 +6,7 @@ export interface Client {
   phone: string;
   email: string;
   adress: string;
-  buys: Sales[];
+  buys: [];
 }
 
 export interface Product {

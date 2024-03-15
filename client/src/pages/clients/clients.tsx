@@ -12,15 +12,14 @@ import CreateClientModal from "../../components/modals/modalClient/modalAddClien
 import EditClientModal from "../../components/modals/modalClient/modalEditClient/modalEditClient";
 import PurchaseModal from "../../components/modals/modalClient/modalBuysClient/modalBuysClient";
 import { GetDecodedCookie } from "../../utils/DecodedCookie";
-import { Client } from "../../interfaces/interfaces";
-
-
+import { Client, Sales } from "../../interfaces/interfaces";
 
 const ClientsPage: React.FC = () => {
   const [openModal, setOpenModal] = useState(false);
   const [openModalEdit, setOpenModalEdit] = useState(false);
   const [openPurchaseModal, setOpenPurchaseModal] = useState(false);
-  const initialFilters = {
+  const initialFilters: Record<keyof Client, string | any> = {
+    _id: "",
     idClient: "",
     name: "",
     lastName: "",
@@ -30,14 +29,12 @@ const ClientsPage: React.FC = () => {
     buys: [],
   };
 
-  const [filters, setFilters] = useState<{ [key: string]: string }>(
-    initialFilters
-  );
+  const [filters, setFilters] = useState(initialFilters);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const clientsPerPage = 15;
-  const [dataSale, setDataSale] = useState<Array<Client>>([]);
+  const [dataSale, setDataSale] = useState<Client[]>([]);
   const [filteredClients, setFilteredClients] = useState<Client[]>([]);
   const [clientSelect, setClientSelect] = useState<Client | null>(null);
   const [clientPurchases, setClientPurchases] = useState<string[]>([]);
@@ -61,6 +58,7 @@ const ClientsPage: React.FC = () => {
 
     fetchClient();
   }, [openModal, openModalEdit]);
+  console.log(clientSelect);
 
   const handleCreateClient = async (newClient: Client) => {
     try {
@@ -111,27 +109,6 @@ const ClientsPage: React.FC = () => {
     });
   };
 
-  const handleViewBuys = async (client: Client) => {
-    try {
-      const response: any = await InstanceOfAxios(
-        `/clients/${client.idClient}/buys`, 
-        "GET"
-      );
-      if (Array.isArray(response.buys)) {
-        setClientPurchases(response.buys); 
-        setOpenPurchaseModal(true); 
-      } else {
-        console.error(
-          "La respuesta no contiene un array de compras:",
-          response
-        );
-      }
-    } catch (error) {
-      console.error("Error fetching purchases:", error);
-    }
-  };
-
-
   useEffect(() => {
     const filteredData = dataSale.filter((client) => {
       return (
@@ -139,17 +116,18 @@ const ClientsPage: React.FC = () => {
           filters[key as keyof Client]
             ? String(client[key as keyof Client])
                 .toLowerCase()
-                .includes(filters[key as keyof Client].toLowerCase())
+                .includes(String(filters[key as keyof Client]).toLowerCase())
             : true
         ) &&
         (searchTerm === "" ||
           Object.values(client).some((value) =>
-            String(value).toLowerCase().includes(searchTerm.toLowerCase())
+            typeof value === 'string' && value.toLowerCase().includes(searchTerm.toLowerCase())
           ))
       );
     });
     setFilteredClients(filteredData);
   }, [dataSale, filters, searchTerm]);
+  
 
   const indexOfLastClient = currentPage * clientsPerPage;
   const indexOfFirstClient = indexOfLastClient - clientsPerPage;
@@ -239,7 +217,11 @@ const ClientsPage: React.FC = () => {
               <td>
                 <button
                   className={styles.buttonSee}
-                  onClick={() => handleViewBuys(client)}
+                  onClick={() => {
+                    // handleViewBuys(client);
+                    setOpenPurchaseModal(true);
+                    setClientSelect(client);
+                  }}
                 >
                   <SearchIcon />
                 </button>
@@ -281,9 +263,14 @@ const ClientsPage: React.FC = () => {
       <CreateClientModal
         open={openModal}
         onClose={() => setOpenModal(false)}
-        onCreate={handleCreateClient} handleClose={function (): void {
+        onCreate={handleCreateClient}
+        handleClose={function (): void {
           throw new Error("Function not implemented.");
-        } } categories={[]} brands={[]} variant={[]}      />
+        }}
+        categories={[]}
+        brands={[]}
+        variant={[]}
+      />
       {clientSelect && (
         <EditClientModal
           open={openModalEdit}
@@ -293,11 +280,13 @@ const ClientsPage: React.FC = () => {
           setClientSelect={setClientSelect}
         />
       )}
-       <PurchaseModal
-        open={openPurchaseModal}
-        onClose={() => setOpenPurchaseModal(false)}
-        purchases={dataSale.buys}
-      />
+      {clientSelect && (
+        <PurchaseModal
+          open={openPurchaseModal}
+          onClose={() => setOpenPurchaseModal(false)}
+          dataSale={clientSelect}
+        />
+      )}
     </div>
   );
 };

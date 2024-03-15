@@ -5,30 +5,35 @@ import { Client } from "../../../../interfaces/interfaces";
 interface PurchaseModalProps {
   open: boolean;
   onClose: () => void;
-  client: Client | null;
-  buys: string[] | undefined;
+  dataSale: Client;
 }
 
 const PurchaseModal: React.FC<PurchaseModalProps> = ({
   open,
   onClose,
-  client,
-  buys,
+  dataSale,
 }) => {
+
   return (
     <Modal open={open} onClose={onClose}>
       <div style={{ backgroundColor: "white", padding: 20 }}>
         <h2>Compras del cliente</h2>
-        {client && (
-          <>
-            <p>ID: {client.idClient}</p>
-            <p>Nombre: {client.name}</p>
-            <p>Apellido: {client.lastName}</p>
-          </>
-        )}
+
+        <>
+          <p>ID: {dataSale.idClient}</p>
+          <p>Nombre: {dataSale.name}</p>
+          <p>Apellido: {dataSale.lastName}</p>
+        </>
+
         <ul>
-          {buys &&
-            buys.map((purchase, index) => <li key={index}>{purchase}</li>)}
+          {dataSale &&
+            dataSale.buys.map(
+              (purchase: any) =>
+                purchase.products &&
+                purchase.products.map((product: any, productIndex: number) => (
+                  <li key={productIndex}>{product.title}</li>
+                ))
+            )}
         </ul>
         <Button onClick={onClose} variant="contained">
           Cerrar
