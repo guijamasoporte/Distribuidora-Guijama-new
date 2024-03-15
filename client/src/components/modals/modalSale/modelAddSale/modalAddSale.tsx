@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Autocomplete, Modal, TextField } from "@mui/material";
+import { Autocomplete, Modal, TextField, dividerClasses } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
 import styles from "./modalAddSale.module.css";
@@ -43,6 +43,8 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
   const [openModalSelectProduct, setOpenModalSelectProduct] =
     useState<boolean>(false);
 
+  const [matchProduct, setMatchProduct] = useState<Product[]>([]);
+
   const [filter, setFilter] = useState<Filters>({
     code: "",
     cant: 1,
@@ -73,6 +75,7 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
 
       if (filteredData && filteredData.length > 1) {
         setOpenModalSelectProduct(true);
+        setMatchProduct(filteredData);
       } else if (filteredData && filteredData.length === 1) {
         filteredData = filteredData.map((item) => ({
           ...item,
@@ -226,6 +229,11 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
     Calculartotal();
     HandlerAddProductWithTitle();
   }, [filter.code, , filter.title, List]);
+
+  const closeModal = () => {
+    setOpenModalSelectProduct(false);
+    setFilter({ ...filter, code: "" });
+  };
 
   return (
     <>
@@ -389,6 +397,20 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
               <p className={styles.totalSale}>TOTAL: $ {total}</p>
             </div>
           </div>
+        </div>
+      </Modal>
+      <Modal open={openModalSelectProduct} onClose={closeModal}>
+        <div className={styles.modal}>
+          {matchProduct.map((el: Product) => (
+            <div
+              onClick={() => {
+                setList([...List, el]);
+                closeModal();
+              }}
+            >
+              <p>{el.title}</p>
+            </div>
+          ))}
         </div>
       </Modal>
     </>

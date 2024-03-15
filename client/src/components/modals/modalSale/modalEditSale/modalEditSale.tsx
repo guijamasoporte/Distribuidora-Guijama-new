@@ -18,7 +18,6 @@ const EditSaleComponent: React.FC<EditSaleProps> = ({
   onClose,
   setSalesSelected
 }) => {
-  console.log(salesSelected);
 
   const [saleData, setSaleData] = useState<any>(null);
   const [editedDues, setEditedDues] = useState<number | null>(salesSelected.dues.payd.length); //cantidad de cuotas
@@ -28,7 +27,6 @@ const EditSaleComponent: React.FC<EditSaleProps> = ({
   const [checkboxStates, setCheckboxStates] = useState<boolean[]>(salesSelected.dues.payd);
   const [pricePerDue, setPricePerDue] = useState<number>(0);
 
-  console.log(checkboxStates);
 
   useEffect(() => {
     if (editedDues !== null && saleData && saleData.price) {
