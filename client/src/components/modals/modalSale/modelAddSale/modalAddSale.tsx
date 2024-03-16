@@ -7,7 +7,6 @@ import Swal from "sweetalert2";
 import InstanceOfAxios from "../../../../utils/intanceAxios";
 import {
   Client,
-  Dues,
   Filters,
   Product,
 } from "../../../../interfaces/interfaces";
@@ -16,8 +15,6 @@ import { GetDecodedCookie } from "../../../../utils/DecodedCookie";
 interface ApiError {
   message: string;
 }
-
-type ApiResponse = Product[] | Client | ApiError;
 
 interface ModalProps {
   open: boolean;

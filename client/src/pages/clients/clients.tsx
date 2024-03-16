@@ -12,7 +12,7 @@ import CreateClientModal from "../../components/modals/modalClient/modalAddClien
 import EditClientModal from "../../components/modals/modalClient/modalEditClient/modalEditClient";
 import PurchaseModal from "../../components/modals/modalClient/modalBuysClient/modalBuysClient";
 import { GetDecodedCookie } from "../../utils/DecodedCookie";
-import { Client, Sales } from "../../interfaces/interfaces";
+import { Client} from "../../interfaces/interfaces";
 
 const ClientsPage: React.FC = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -38,7 +38,7 @@ const ClientsPage: React.FC = () => {
   const [dataSale, setDataSale] = useState<Client[]>([]);
   const [filteredClients, setFilteredClients] = useState<Client[]>([]);
   const [clientSelect, setClientSelect] = useState<Client | null>(null);
-  const [clientPurchases, setClientPurchases] = useState<string[]>([]);
+ 
 
   useEffect(() => {
     const fetchClient = async () => {
@@ -85,10 +85,6 @@ const ClientsPage: React.FC = () => {
 
   const handleSearch = (searchTerm: string) => {
     setSearchTerm(searchTerm);
-  };
-
-  const handleEdit = (id: string) => {
-    console.log(`Edit product with id ${id}`);
   };
 
   const handleDelete = (id: string) => {

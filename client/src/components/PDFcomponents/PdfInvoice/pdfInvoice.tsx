@@ -1,5 +1,4 @@
 import React, { ReactNode } from "react";
-import styles from "./pdfInvoice.module.css";
 import {
   Document,
   Text,
@@ -14,10 +13,9 @@ import { Product } from "../../../interfaces/interfaces"; // Importa la interfaz
 
 interface SalesPdf {
   [x: string]: any;
-  //   products: Product[];
   date: ReactNode;
   client: any;
-  // sales:Sales
+
 }
 
 const Pdfinvoice: React.FC<{ sales: SalesPdf }> = ({ sales }) => {

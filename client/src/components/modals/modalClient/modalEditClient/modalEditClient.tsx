@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
-import { Modal, TextField, Button, Dialog } from "@mui/material";
+import { TextField, Dialog } from "@mui/material";
 import styles from "./modalEditClient.module.css";
 import { GetDecodedCookie } from "../../../../utils/DecodedCookie";
 import InstanceOfAxios from "../../../../utils/intanceAxios";
@@ -11,7 +11,7 @@ interface CreateClientModalProps {
   onClose: () => void;
   onCreate: (newClient: any) => void;
   client: any;
-  setClientSelect:  Dispatch<SetStateAction<Client | null>>;
+  setClientSelect: Dispatch<SetStateAction<Client | null>>;
 }
 
 const EditClientModal: React.FC<CreateClientModalProps> = ({
@@ -19,7 +19,7 @@ const EditClientModal: React.FC<CreateClientModalProps> = ({
   onClose,
   onCreate,
   client,
-  setClientSelect
+  setClientSelect,
 }) => {
   const [newClient, setNewClient] = useState({
     name: client.name,
@@ -49,7 +49,7 @@ const EditClientModal: React.FC<CreateClientModalProps> = ({
         "success"
       );
       onClose();
-      setClientSelect(null)
+      setClientSelect(null);
     } catch (error) {
       console.error("Error al actualizar el cliente:", error);
     }

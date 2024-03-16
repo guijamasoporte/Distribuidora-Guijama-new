@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { Modal, TextField, Button, Dialog } from "@mui/material";
+import React, { useState } from "react";
+import { TextField, Dialog } from "@mui/material";
 import styles from "./modalAddClient.module.css";
-import InstanceOfAxios from "../../../../utils/intanceAxios";
 import Swal from "sweetalert2";
-import { Client, propsModals } from "../../../../interfaces/interfaces";
+import { propsModals } from "../../../../interfaces/interfaces";
 
 const CreateClientModal: React.FC<propsModals> = ({
   open,
@@ -32,10 +31,13 @@ const CreateClientModal: React.FC<propsModals> = ({
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     onCreate(newClient);
-    Swal.fire("¡Cliente creado!", "El cliente se ha creado exitosamente.", "success");
+    Swal.fire(
+      "¡Cliente creado!",
+      "El cliente se ha creado exitosamente.",
+      "success"
+    );
     onClose();
   };
-  
 
   return (
     <Dialog className={styles.containerForm} open={open} onClose={onClose}>

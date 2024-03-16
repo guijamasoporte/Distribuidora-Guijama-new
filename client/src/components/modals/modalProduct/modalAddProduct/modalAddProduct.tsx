@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { Dialog, IconButton, TextField } from "@mui/material";
+import { Dialog, TextField } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import Autocomplete from "@mui/material/Autocomplete";
 import styles from "./modalAddProduct.module.css";
