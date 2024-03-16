@@ -1,0 +1,116 @@
+.titleForm {
+    font-family: "questrial";
+    font-size: 24px;
+    display: flex;
+    justify-content: center;
+    color: #603e20;
+  }
+  
+  .formInputs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 1rem;
+    width: 30rem;
+    padding: 1rem;
+  }
+  .inputsSelect {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    gap: 3rem;
+  }
+  
+  .formAutocomplete {
+    width: 12rem;
+  }
+  
+  .form {
+    width: 30rem;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .imageContainer {
+    position: relative;
+    margin-top: 10px;
+  }
+  
+  .removeImageButton {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 0;
+    right: 0;
+    background-color: rgba(255, 255, 255, 0.7);
+    color: red;
+    border-radius: 50%;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+  }
+  
+  .removeImageButton:hover {
+    cursor: pointer;
+    color: white;
+    background-color: red;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
+      rgba(0, 0, 0, 0.22) 0px 10px 10px;
+  }
+  
+  .image {
+    max-width: 100%;
+    max-height: 100px;
+    border-radius: 5px;
+  }
+  
+  .customImageButton {
+    width: 10rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-family: "questrial";
+    font-size: 16px;
+    background-color: #b69b84;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .customImageButton:hover {
+    background-color: #603e20;
+    cursor: pointer;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
+      rgba(0, 0, 0, 0.22) 0px 10px 10px;
+  }
+  
+  .input {
+    display: none;
+  }
+  
+  .buttonAdd {
+    height: 3rem;
+    margin: 10px;
+    border-radius: 5px;
+    border: none;
+    font-family: "questrial";
+    font-size: 20px;
+    color: white;
+    background-color: #b69b84;
+  }
+  
+  .buttonAdd:hover {
+    background-color: #603e20;
+    cursor: pointer;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
+      rgba(0, 0, 0, 0.22) 0px 10px 10px;
+  }
+  
+  
+  .my-swal-popup {
+    z-index: 9999 !important;
+  }

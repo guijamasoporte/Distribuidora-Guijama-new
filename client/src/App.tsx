@@ -11,6 +11,7 @@ import LoginPage from "./pages/login/login";
 import { ProtectedRoute } from "./pages/ProtectedRoutes/ProtectedRoute";
 import Header from "./components/header/header";
 
+
 const App: React.FC = () => {
   return (
     <div className="App">

@@ -1,0 +1,112 @@
+.modalContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10rem;
+    height: 100%;
+    width: 100%;
+  }
+  
+  .modalContent {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    width: 30rem;
+    font-family: "questrial";
+  }
+  
+  .modalContainerData {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modalHeader {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  
+  .priceID {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 3rem;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .modalCloseButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 2rem;
+    width: 2rem;
+    color: #ff0000;
+    transition: color 0.3s ease;
+    border-radius: 50%;
+    border: none;
+  }
+  
+  .modalCloseButton:hover {
+    color: #ffffff;
+    background-color: #ff0000;
+    cursor: pointer;
+    border: none;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
+      rgba(0, 0, 0, 0.22) 0px 10px 10px;
+  }
+  
+  .inputField {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 16px;
+  }
+  
+  .inputField label {
+    font-family: "questrial";
+    font-size: 16px;
+    display: block;
+  }
+  
+  .inputField input {
+    font-family: "questrial";
+    font-size: 18px;
+    width: 2rem;
+    padding: 8px;
+    border: 1px solid #b69b84;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  
+  .buttonContainer {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 16px;
+  }
+  
+  .saveButton {
+    font-family: "questrial";
+    background-color: #b69b84;
+    color: #fff;
+    padding: 8px 16px;
+    width: 8rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  }
+  
+  .saveButton:hover {
+    background-color: #0abd04;
+    width: calc(8rem + 1rem);
+    transition: width 0.3s ease;
+    box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+  }

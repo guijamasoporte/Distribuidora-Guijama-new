@@ -10,9 +10,9 @@ import Swal from "sweetalert2";
 import AddProductModal from "../../components/modals/modalProduct/modalAddProduct/modalAddProduct";
 import EditProductModal from "../../components/modals/modalProduct/modalEditProduct/modalEditProduct";
 import { GetDecodedCookie } from "../../utils/DecodedCookie";
-import ModalEditPrices from "../../components/modals/modalProduct/modalEditPricesProduct/modalEditPrices";
 import { Client, Product } from "../../interfaces/interfaces";
 import { formatNumberWithCommas } from "../../utils/formatNumberwithCommas";
+import ModalEditPrices from "../../components/modals/modalProduct/modalEditPricesProduct/modalEditPrice";
 
 const ProductsPage: React.FC = () => {
   const [showModal, setShowModal] = useState(false);

@@ -6,13 +6,14 @@ import styles from "./sales.module.css";
 import SearchBar from "../../components/searchBar/searchBar";
 import InstanceOfAxios from "../../utils/intanceAxios";
 import Pagination from "../../components/pagination/pagination";
-import ModalComponent from "../../components/modals/modalSale/modelAddSale/modalAddSale";
+import ModalComponent from "../../components/modals/modalSale/modalAddSale/modalAddSale";
 import { Sales } from "../../interfaces/interfaces";
 import { PDFDownloadLink } from "@react-pdf/renderer";
-import Pdfinvoice from "../../components/PDFcomponents/PdfInvoice/pdfInvoice";
+
 import Modal from "@mui/material/Modal";
 import EditSaleComponent from "../../components/modals/modalSale/modalEditSale/modalEditSale";
 import { formatNumberWithCommas } from "../../utils/formatNumberwithCommas";
+import Pdfinvoice from "../../components/pdfComponents/pdfInvoice";
 
 const SalesPage: React.FC = () => {
   const [dataSales, setDataSales] = useState<Sales[]>([]);
