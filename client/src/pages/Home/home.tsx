@@ -7,7 +7,7 @@ import styles from "./home.module.css";
 const Home: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [showScrollButton, setShowScrollButton] = useState(false);
-  const [sortedCategories, setSortedCategories] = useState<any>([]);
+  const [productsByCategory, setProductsByCategory] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -40,20 +40,21 @@ const Home: React.FC = () => {
     };
   }, []);
 
-  const productsByCategory: { [category: string]: Product[] } = {};
-  products &&
   
-  useEffect(()=>{
-  products.forEach((product) => {
-    if (!productsByCategory[product.category]) {
-      productsByCategory[product.category] = [];
-    }
-    productsByCategory[product.category].push(product);
-  });
-
-  setSortedCategories( Object.keys(productsByCategory).sort());
-
-},[products])
+  useEffect(() => {
+    const productsByCategory: { category: string, products: Product[] }[] = [];
+  
+    products.forEach((product) => {
+      const existingCategoryIndex = productsByCategory.findIndex(categoryObj => categoryObj.category === product.category);
+      if (existingCategoryIndex === -1) {
+        productsByCategory.push({ category: product.category, products: [product] });
+      } else {
+        productsByCategory[existingCategoryIndex].products.push(product);
+      }
+    });
+  
+    setProductsByCategory(productsByCategory);
+  }, [products]);
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -78,38 +79,38 @@ const Home: React.FC = () => {
         ¡Explorá nuestros productos y encontrá todo lo que necesitas!
       </p>
 
-      {sortedCategories.map((category:string) => (
-        <div className={styles.listContainer} key={category}>
-          <p className={styles.category}>{category}</p>
+      {productsByCategory.map((categoryObj) => (
+        <div className={styles.listContainer} key={categoryObj.category}>
+          <p className={styles.category}>{categoryObj.category}</p>
           <div className={styles.productList}>
-            {productsByCategory[category].map((product) => (
+            {categoryObj.products.map((el: Product) => (
               <div
-                key={product.code}
+                key={el.code}
                 className={`${styles.product} ${
-                  product.stock === 0 ? styles.disabled : ""
+                  el.stock === 0 ? styles.disabled : ""
                 }`}
               >
                 <p className={styles.title}>
-                  <strong>{product.title}</strong>
+                  <strong>{el.title}</strong>
                 </p>
-                <p>Marca: {product.brand}</p>
-                {product.stock === 0 && (
+                <p>Marca: {el.brand}</p>
+                {el.stock === 0 && (
                   <p className={styles.stockWarning}>Artículo sin stock</p>
                 )}
                 <div className={styles.imageContainer}>
-                  {Array.isArray(product.image) &&
-                    product.image.map((imageUrl, index) => (
+                  {Array.isArray(el.image) &&
+                    el.image.map((imageUrl, index) => (
                       <img
                         key={index}
                         src={imageUrl}
-                        alt={`${product.title}-${index}`}
+                        alt={`${el.title}-${index}`}
                         className={styles.productImage}
                       />
                     ))}
                   <div className={styles.priceContainer}>
                     <p className={styles.priceLabel}>Precio:</p>
                     <p className={styles.priceValue}>
-                      <strong>$ {product.priceList}</strong>
+                      <strong>$ {el.priceList}</strong>
                     </p>
                   </div>
                 </div>
