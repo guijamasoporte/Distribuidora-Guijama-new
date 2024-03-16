@@ -7,6 +7,7 @@ import styles from "./home.module.css";
 const Home: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [showScrollButton, setShowScrollButton] = useState(false);
+  const [sortedCategories, setSortedCategories] = useState<any>([]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -41,14 +42,18 @@ const Home: React.FC = () => {
 
   const productsByCategory: { [category: string]: Product[] } = {};
   products &&
-    products.forEach((product) => {
-      if (!productsByCategory[product.category]) {
-        productsByCategory[product.category] = [];
-      }
-      productsByCategory[product.category].push(product);
-    });
+  
+  useEffect(()=>{
+  products.forEach((product) => {
+    if (!productsByCategory[product.category]) {
+      productsByCategory[product.category] = [];
+    }
+    productsByCategory[product.category].push(product);
+  });
 
-  const sortedCategories = Object.keys(productsByCategory).sort();
+  setSortedCategories( Object.keys(productsByCategory).sort());
+
+},[products])
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -73,7 +78,7 @@ const Home: React.FC = () => {
         ¡Explorá nuestros productos y encontrá todo lo que necesitas!
       </p>
 
-      {sortedCategories.map((category) => (
+      {sortedCategories.map((category:string) => (
         <div className={styles.listContainer} key={category}>
           <p className={styles.category}>{category}</p>
           <div className={styles.productList}>
