@@ -36,12 +36,13 @@ const Home: React.FC = () => {
   }, []);
 
   const productsByCategory: { [category: string]: Product[] } = {};
-  products.forEach((product) => {
-    if (!productsByCategory[product.category]) {
-      productsByCategory[product.category] = [];
-    }
-    productsByCategory[product.category].push(product);
-  });
+  products &&
+    products.forEach((product) => {
+      if (!productsByCategory[product.category]) {
+        productsByCategory[product.category] = [];
+      }
+      productsByCategory[product.category].push(product);
+    });
 
   const sortedCategories = Object.keys(productsByCategory).sort();
 
