@@ -12,14 +12,18 @@ const Home: React.FC = () => {
     const fetchProducts = async () => {
       try {
         const response: any = await InstanceOfAxios("/products", "GET");
-        setProducts(response);
+        if (Array.isArray(response)) {
+          setProducts(response);
+        } else {
+          console.error("Error: Response is not an array:", response);
+        }
       } catch (error) {
         console.error("Error fetching products:", error);
       }
     };
-
+  
     fetchProducts();
-
+  
     const handleScroll = () => {
       if (window.scrollY > 100) {
         setShowScrollButton(true);
@@ -27,9 +31,9 @@ const Home: React.FC = () => {
         setShowScrollButton(false);
       }
     };
-
+  
     window.addEventListener("scroll", handleScroll);
-
+  
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
