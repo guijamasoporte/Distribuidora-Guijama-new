@@ -8,7 +8,7 @@ import { NavLink } from "react-router-dom";
 import { DecodedToken } from "../../utils/DecodedToken";
 import InstanceOfAxios from "../../utils/intanceAxios";
 
-export default function Header() {
+const Header: React.FC = () => {
   const [login, setLogin] = useState(false);
   const [rol, setRol] = useState(null);
 
@@ -76,4 +76,6 @@ export default function Header() {
       </div>
     </header>
   );
-}
+};
+
+export default Header;

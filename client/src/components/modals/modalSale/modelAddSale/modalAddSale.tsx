@@ -12,9 +12,7 @@ import {
 } from "../../../../interfaces/interfaces";
 import { GetDecodedCookie } from "../../../../utils/DecodedCookie";
 
-interface ApiError {
-  message: string;
-}
+
 
 interface ModalProps {
   open: boolean;
