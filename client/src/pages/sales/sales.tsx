@@ -214,7 +214,7 @@ const SalesPage: React.FC = () => {
                       strokeWidth="1"
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      className={styles.svgremito}
+                      className={styles.iconPDF}
                     >
                       <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                       <path d="M14 3v4a1 1 0 0 0 1 1h4" />

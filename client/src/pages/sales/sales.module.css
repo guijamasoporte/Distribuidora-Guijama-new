@@ -125,6 +125,21 @@
   color: #ffffff;
 }
 
+.iconPDF {
+  color: #b69b84;
+  border: none;
+  background-color: transparent;
+  transition: transform 0.3s ease;
+}
+
+.iconPDF:hover {
+  color: #603e20;
+  cursor: pointer;
+  background-color: transparent;
+  cursor: pointer;
+  transform: scale(1.4);
+}
+
 @media only screen and (max-width: 1100px) {
   .filters {
     display: flex;
