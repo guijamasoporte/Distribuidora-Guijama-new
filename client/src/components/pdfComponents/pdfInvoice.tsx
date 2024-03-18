@@ -48,15 +48,54 @@ const Pdfinvoice: React.FC<{
       display: "flex",
       padding: "1cm",
     },
-    header: {
+    Header: {
       display: "flex",
       flexDirection: "row",
       marginBottom: 40,
       paddingBottom: 30,
       borderBottom: "3px solid black",
     },
-    headerText: {
+    HeaderPresupuesto: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      textAlign: "center",
+      marginHorizontal: 20,
       fontSize: 15,
+    },
+
+    infoClientContain: {
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "space-between",
+      marginBottom: 40,
+    },
+    productsContain: {},
+
+    productsContainTable: {
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "space-between",
+      textAlign: "center",
+      border: "1px solid black",
+    },
+    productsContainTitle: {
+      padding: 3,
+      borderRight: "1px solid black",
+      flex: 1,
+    },
+    productsContainTotal: {
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "space-between",
+      textAlign: "center",
+      border: "1px solid black",
+    },
+
+    productsContainTotaltext: {
+      flex: 1,
+      padding: 3,
+      borderRight: "1px solid black",
     },
     strong: {
       fontSize: 20,
@@ -64,16 +103,6 @@ const Pdfinvoice: React.FC<{
     image: {
       width: "5cm",
       marginBottom: 10,
-    },
-    section: {
-      marginBottom: 10,
-    },
-    title: {
-      fontSize: 18,
-      marginBottom: 5,
-    },
-    content: {
-      fontSize: 12,
     },
   });
 
@@ -107,28 +136,15 @@ const Pdfinvoice: React.FC<{
     }
   }, [sales, saleClient, id]);
 
-  const renderProductRows = () => {
-    if (!dataInvoice) return null;
-
-    return dataInvoice.products.map((product, index) => (
-      <View key={index} style={styles.section}>
-        <Text style={styles.title}>{product.title}</Text>
-        <Text style={styles.content}>
-          Cantidad: {product.quantity} Precio unitario: ${product.price}
-        </Text>
-      </View>
-    ));
-  };
-
   return (
     <>
       {dataInvoice && (
         <Document>
           <Page size="A4" style={styles.page}>
-            <View style={styles.header}>
-              <View>
+            <View style={styles.Header}>
+              <View style={styles.HeaderPresupuesto}>
                 <Image src={guijama} style={styles.image} />
-                <Text style={styles.headerText}>
+                <Text style={{ fontSize: 15 }}>
                   Tel: 221 591-6564 / 221 673-2423
                 </Text>
               </View>
@@ -139,33 +155,50 @@ const Pdfinvoice: React.FC<{
                 <Text>N° {dataInvoice.idSale}</Text>
               </View>
             </View>
+            <View style={styles.infoClientContain}>
+              <View>
+                <Text>Cliente N°: {dataInvoice.idClient}</Text>
+                <Text>
+                  Nombre: {dataInvoice.name + " " + dataInvoice.lastName}
+                </Text>
+              </View>
 
-            <View style={styles.section}>
-              <Text style={styles.title}>Detalles del Cliente:</Text>
-              <Text style={styles.content}>
-                Cliente N°: {dataInvoice.idClient}
-              </Text>
-              <Text style={styles.content}>
-                Nombre: {dataInvoice.name} {dataInvoice.lastName}
-              </Text>
-              <Text style={styles.content}>
-                Dirección: {dataInvoice.address}
-              </Text>
-              <Text style={styles.content}>
-                Fecha: {obtenerFechaSinHora(dataInvoice.date)}
-              </Text>
+              <View>
+                <Text>Direccion: {dataInvoice.address}</Text>
+
+                <Text>Fecha: {obtenerFechaSinHora(dataInvoice.date)}</Text>
+              </View>
             </View>
 
-            <View style={styles.section}>
-              <Text style={styles.title}>Productos:</Text>
-              {renderProductRows()}
-            </View>
+            <View style={styles.productsContain}>
+              <View style={styles.productsContainTable}>
+                <Text style={styles.productsContainTitle}>Cantidad</Text>
+                <Text style={styles.productsContainTitle}>Detalle</Text>
+                <Text style={styles.productsContainTitle}>Precio unitario</Text>
+                <Text style={styles.productsContainTitle}>Total</Text>
+              </View>
 
-            <View style={styles.section}>
-              <Text style={styles.title}>Total:</Text>
-              <Text style={styles.content}>
-                Total: ${formatNumberWithCommas(dataInvoice.priceTotal || 0)}
-              </Text>
+              {dataInvoice.products.map((el: any) => (
+                <View style={styles.productsContainTable}>
+                  <Text style={styles.productsContainTitle}>{el.unity}</Text>
+                  <Text style={styles.productsContainTitle}>{el.title}</Text>
+                  <Text style={styles.productsContainTitle}>
+                    ${formatNumberWithCommas(el.priceList)}
+                  </Text>
+                  <Text style={styles.productsContainTitle}>
+                    ${formatNumberWithCommas(el.priceList * el.unity)}
+                  </Text>
+                </View>
+              ))}
+              <View style={styles.productsContainTotal}>
+                <Text style={styles.productsContainTitle}> </Text>
+                <Text style={styles.productsContainTitle}> </Text>
+                <Text style={styles.productsContainTitle}> </Text>
+
+                <Text style={styles.productsContainTotaltext}>
+                  ${formatNumberWithCommas(dataInvoice.priceTotal)}
+                </Text>
+              </View>
             </View>
           </Page>
         </Document>
