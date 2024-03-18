@@ -7,10 +7,12 @@ import Cookies from "js-cookie";
 import { NavLink } from "react-router-dom";
 import { DecodedToken } from "../../utils/DecodedToken";
 import InstanceOfAxios from "../../utils/intanceAxios";
+import CloseIcon from "@mui/icons-material/Close";
 
 export default function Header() {
   const [login, setLogin] = useState(false);
   const [rol, setRol] = useState(null);
+  const [showMenu, setShowMenu] = useState(false);
 
   useEffect(() => {
     const fetchAdmin = async (token: string) => {
@@ -50,29 +52,45 @@ export default function Header() {
     });
   };
 
+  const toggleMenu = () => {
+    setShowMenu(!showMenu);
+  };
+
   return (
     <header className={styles.navbar}>
       <img src={Logo} alt="Logo" className={styles.logo} />
-      <div>
-        <NavLink to="/">
-          <button className={styles["logout-btn"]}>Catálogo</button>
-        </NavLink>
-
-        {login && rol === "ROL_Admin" && (
-          <NavLink to="/admin/products">
-            <button className={styles["logout-btn"]}>Admin</button>
+      <div className={styles.menuWrapper}>
+        <div
+          className={`${styles["nav-links"]} ${showMenu ? styles.active : ""}`}
+        >
+          <NavLink to="/">
+            <button className={styles["logout-btn"]}>Catálogo</button>
           </NavLink>
-        )}
 
-        {login ? (
-          <button className={styles["logout-btn"]} onClick={handleLogout}>
-            Cerrar sesión
+          {login && rol === "ROL_Admin" && (
+            <NavLink to="/admin/products">
+              <button className={styles["logout-btn"]}>Admin</button>
+            </NavLink>
+          )}
+
+          {login ? (
+            <button className={styles["logout-btn"]} onClick={handleLogout}>
+              Cerrar sesión
+            </button>
+          ) : (
+            <NavLink to="/login">
+              <button className={styles["logout-btn"]}>Iniciar sesion</button>
+            </NavLink>
+          )}
+          <button className={styles.closeButton} onClick={toggleMenu}>
+            <CloseIcon />
           </button>
-        ) : (
-          <NavLink to="/login">
-            <button className={styles["logout-btn"]}>Iniciar sesion</button>
-          </NavLink>
-        )}
+        </div>
+        <div className={styles.menuIcon} onClick={toggleMenu}>
+          <div className={styles.menuLine}></div>
+          <div className={styles.menuLine}></div>
+          <div className={styles.menuLine}></div>
+        </div>
       </div>
     </header>
   );

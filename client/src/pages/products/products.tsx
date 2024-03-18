@@ -183,6 +183,7 @@ const ProductsPage: React.FC = () => {
       <h1 className={styles.title}>Listado de productos</h1>
       <div className={styles.filters}>
         <Autocomplete
+          className={styles.autocomplete}
           disablePortal
           id="combo-box-codigo"
           options={Array.from(
@@ -193,6 +194,7 @@ const ProductsPage: React.FC = () => {
           onChange={(event, value) => handleFilterChange(event, value, "code")}
         />
         <Autocomplete
+          className={styles.autocomplete}
           disablePortal
           id="combo-box-titulo"
           options={Array.from(
@@ -203,6 +205,7 @@ const ProductsPage: React.FC = () => {
           onChange={(event, value) => handleFilterChange(event, value, "title")}
         />
         <Autocomplete
+          className={styles.autocomplete}
           disablePortal
           id="combo-box-rubro"
           options={Array.from(
@@ -215,6 +218,7 @@ const ProductsPage: React.FC = () => {
           }
         />
         <Autocomplete
+          className={styles.autocomplete}
           disablePortal
           id="combo-box-marca"
           options={Array.from(
@@ -226,55 +230,57 @@ const ProductsPage: React.FC = () => {
         />
         <SearchBar onSearch={handleSearch} />
       </div>
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            <th>Código</th>
-            <th>Título</th>
-            <th>Variedad</th>
-            <th>Rubro</th>
-            <th>Marca</th>
-            <th>Stock</th>
-            <th>Costo</th>
-            <th>Venta</th>
-            <th>Editar</th>
-            <th>Borrar</th>
-          </tr>
-        </thead>
-        <tbody>
-          {slicedProducts.map((product, index) => (
-            <tr key={index}>
-              <td>{product.code}</td>
-              <td>{product.title}</td>
-              <td>{product.variant}</td>
-              <td>{product.category}</td>
-              <td>{product.brand}</td>
-              <td>{formatNumberWithCommas(product.stock)}</td>
-              <td>${formatNumberWithCommas(product.priceCost)}</td>
-              <td>${formatNumberWithCommas(product.priceList)}</td>
-              <td>
-                <button
-                  className={styles.buttonEdit}
-                  onClick={() => {
-                    setShowModalEdit(true);
-                    setProductSelect(product);
-                  }}
-                >
-                  <EditIcon />
-                </button>
-              </td>
-              <td>
-                <button
-                  className={styles.buttonDelete}
-                  onClick={() => handleDelete(product._id)}
-                >
-                  <DeleteIcon />
-                </button>
-              </td>
+      <div className={styles.tableWrapper}>
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              <th className={styles.titleCode}>Código</th>
+              <th className={styles.titleTable}>Título</th>
+              <th>Variedad</th>
+              <th>Rubro</th>
+              <th>Marca</th>
+              <th>Stock</th>
+              <th>Costo</th>
+              <th>Venta</th>
+              <th>Editar</th>
+              <th>Borrar</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {slicedProducts.map((product, index) => (
+              <tr key={index}>
+                <td className={styles.titleCode}>{product.code}</td>
+                <td className={styles.titleTable}>{product.title}</td>
+                <td>{product.variant}</td>
+                <td>{product.category}</td>
+                <td>{product.brand}</td>
+                <td>{formatNumberWithCommas(product.stock)}</td>
+                <td>${formatNumberWithCommas(product.priceCost)}</td>
+                <td>${formatNumberWithCommas(product.priceList)}</td>
+                <td>
+                  <button
+                    className={styles.buttonEdit}
+                    onClick={() => {
+                      setShowModalEdit(true);
+                      setProductSelect(product);
+                    }}
+                  >
+                    <EditIcon />
+                  </button>
+                </td>
+                <td>
+                  <button
+                    className={styles.buttonDelete}
+                    onClick={() => handleDelete(product._id)}
+                  >
+                    <DeleteIcon />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       <div>
         <div className={styles.totalsData}>
           <p className={styles.totalCat}>

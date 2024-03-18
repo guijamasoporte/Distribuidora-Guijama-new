@@ -1,49 +1,132 @@
 .navbar {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  align-items: center;
+  background-image: url("../../assets/backgroundNavbar.svg");
+  color: rgb(255, 255, 255);
+  padding: 10px 20px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+  z-index: 999;
+}
+
+.logo {
+  width: 5rem;
+  height: 3rem;
+}
+
+.nav-links {
+  display: flex;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+}
+
+.logout-btn {
+  background-color: transparent;
+  font-family: "questrial";
+  font-size: 21px;
+  border: none;
+  color: rgb(255, 255, 255);
+  cursor: pointer;
+}
+
+.menuWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.menuIcon {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.menuLine {
+  width: 25px;
+  height: 3px;
+  background-color: white;
+  margin: 3px;
+}
+
+.closeButton {
+  display: none;
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5rem;
+  padding: 0.2rem;
+  cursor: pointer;
+}
+
+.closeButton:hover {
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
+    rgba(0, 0, 0, 0.22) 0px 10px 10px;
+}
+
+@media screen and (max-width: 600px) {
+  .navbar {
     flex-direction: row;
-    align-items: center;
-    background-image: url("../../assets/backgroundNavbar.svg");
-    color: rgb(255, 255, 255);
-    padding: 10px 20px;
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
-    z-index: 999;
   }
-  
-  .logo {
-    width: 5rem;
-    height: 3rem;
-  }
-  
+
   .nav-links {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    backdrop-filter: blur(5px);
+    background-color: #b69b84a8;
+    z-index: 999;
+    transition: all 0.3s ease;
+  }
+
+  .menuWrapper .nav-links.active {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nav-links a {
+    text-align: center;
+    width: 100%;
+  }
+
+  .logout-btn {
+    margin: 20px 0;
+    width: 100%;
+    font-size: 30px;
+    color: #ffffff;
+    padding: 1.5rem;
+    background-color: #603e20d2;
+  }
+
+  .menuIcon {
     display: flex;
   }
-  
-  .nav-links a {
-    color: white;
-    text-decoration: none;
-    margin-right: 20px;
+
+  .menuWrapper {
+    position: relative;
   }
-  
-  .logout-btn {
-    background-color: transparent;
-    font-family: "questrial";
-    font-size: 21px;
+
+  .closeButton {
+    display: flex;
+    background-color: red;
+    color: white;
     border: none;
-    color: rgb(255, 255, 255);
+    border-radius: 50%;
+    align-items: center;
+    padding: 0.2rem;
     cursor: pointer;
   }
-  
-  @media screen and (max-width: 600px) {
-    .nav-links {
-      display: none;
-    }
-  
-    .logout-btn {
-      margin-left: auto;
-    }
-  
-    .navbar {
-      flex-direction: column;
-    }
-  }
+}
