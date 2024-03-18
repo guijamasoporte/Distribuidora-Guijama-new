@@ -44,6 +44,14 @@
   background-color: #9ec5ca67;
 }
 
+.adressTable {
+  min-width: 200px;
+}
+
+.nameTable {
+  min-width: 150px;
+}
+
 .buttonEdit,
 .buttonDelete,
 .buttonSee {
@@ -95,4 +103,110 @@
   cursor: pointer;
   box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
     rgba(0, 0, 0, 0.22) 0px 10px 10px;
+}
+
+@media only screen and (max-width: 1100px) {
+  .filters {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 0.5rem;
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .table {
+    border-radius: 10px;
+    width: 100%;
+    border-collapse: collapse;
+    font-family: "noto sans";
+    overflow-x: scroll;
+  }
+
+  .tableWrapper {
+    overflow-x: auto;
+  }
+
+  .buttonsFooter {
+    display: flex;
+    gap: 0.5rem;
+    width: 100%;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  .buttonAdd,
+  .buttonModify {
+    background-color: #b69b84;
+    color: white;
+    padding: 0.5rem 2rem;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "questrial";
+    font-size: 24px;
+    border: none;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+      rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  }
+}
+
+@media only screen and (max-width: 680px) {
+  .tableContainer {
+    margin-top: 20px;
+    padding-inline: 0.5rem;
+  }
+
+  .title {
+    background-color: #9ec5ca;
+    color: white;
+    padding: 0.5rem 2rem;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "questrial";
+    font-size: 19px;
+  }
+
+  .autocomplete {
+    width: 100% !important;
+  }
+
+  .tableWrapper {
+    overflow-x: auto;
+  }
+
+  .table {
+    border-radius: 10px;
+    width: 100%;
+    border-collapse: collapse;
+    font-family: "noto sans";
+    overflow-x: scroll;
+  }
+
+  .buttonsFooter {
+    display: flex;
+    width: 100%;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    gap: 0.5rem;
+  }
+
+  .buttonAdd {
+    background-color: #b69b84;
+    color: white;
+    padding: 0.5rem 2rem;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "questrial";
+    font-size: 18px;
+    border: none;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+      rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  }
 }

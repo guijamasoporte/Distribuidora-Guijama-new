@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./clients.module.css";
-import { Autocomplete,TextField } from "@mui/material";
+import { Autocomplete, TextField } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import SearchIcon from "@mui/icons-material/Search";
@@ -12,7 +12,7 @@ import CreateClientModal from "../../components/modals/modalClient/modalAddClien
 import EditClientModal from "../../components/modals/modalClient/modalEditClient/modalEditClient";
 import PurchaseModal from "../../components/modals/modalClient/modalBuysClient/modalBuysClient";
 import { GetDecodedCookie } from "../../utils/DecodedCookie";
-import { Client} from "../../interfaces/interfaces";
+import { Client } from "../../interfaces/interfaces";
 
 const ClientsPage: React.FC = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -38,7 +38,6 @@ const ClientsPage: React.FC = () => {
   const [dataSale, setDataSale] = useState<Client[]>([]);
   const [filteredClients, setFilteredClients] = useState<Client[]>([]);
   const [clientSelect, setClientSelect] = useState<Client | null>(null);
- 
 
   useEffect(() => {
     const fetchClient = async () => {
@@ -116,14 +115,15 @@ const ClientsPage: React.FC = () => {
             : true
         ) &&
         (searchTerm === "" ||
-          Object.values(client).some((value) =>
-            typeof value === 'string' && value.toLowerCase().includes(searchTerm.toLowerCase())
+          Object.values(client).some(
+            (value) =>
+              typeof value === "string" &&
+              value.toLowerCase().includes(searchTerm.toLowerCase())
           ))
       );
     });
     setFilteredClients(filteredData);
   }, [dataSale, filters, searchTerm]);
-  
 
   const indexOfLastClient = currentPage * clientsPerPage;
   const indexOfFirstClient = indexOfLastClient - clientsPerPage;
@@ -139,6 +139,7 @@ const ClientsPage: React.FC = () => {
       <h1 className={styles.title}>Listado de clientes</h1>
       <div className={styles.filters}>
         <Autocomplete
+          className={styles.autocomplete}
           disablePortal
           id="combo-box-id"
           options={Array.from(
@@ -156,6 +157,7 @@ const ClientsPage: React.FC = () => {
         />
 
         <Autocomplete
+          className={styles.autocomplete}
           disablePortal
           id="combo-box-nombre"
           options={Array.from(
@@ -169,6 +171,7 @@ const ClientsPage: React.FC = () => {
         />
 
         <Autocomplete
+          className={styles.autocomplete}
           disablePortal
           id="combo-box-apellido"
           options={Array.from(
@@ -187,64 +190,66 @@ const ClientsPage: React.FC = () => {
 
         <SearchBar onSearch={handleSearch} />
       </div>
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>Teléfono</th>
-            <th>E-mail</th>
-            <th>Dirección</th>
-            <th>Compras</th>
-            <th>Editar</th>
-            <th>Borrar</th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentClients.map((client, index) => (
-            <tr key={index}>
-              <td>{client.idClient}</td>
-              <td>{client.name}</td>
-              <td>{client.lastName}</td>
-              <td>{client.phone}</td>
-              <td>{client.email}</td>
-              <td>{client.adress}</td>
-              <td>
-                <button
-                  className={styles.buttonSee}
-                  onClick={() => {
-                    // handleViewBuys(client);
-                    setOpenPurchaseModal(true);
-                    setClientSelect(client);
-                  }}
-                >
-                  <SearchIcon />
-                </button>
-              </td>
-              <td>
-                <button
-                  className={styles.buttonEdit}
-                  onClick={() => {
-                    setOpenModalEdit(true);
-                    setClientSelect(client);
-                  }}
-                >
-                  <EditIcon />
-                </button>
-              </td>
-              <td>
-                <button
-                  className={styles.buttonDelete}
-                  onClick={() => handleDelete(`${client._id}`)}
-                >
-                  <DeleteIcon />
-                </button>
-              </td>
+      <div className={styles.tableWrapper}>
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th className={styles.nameTable}>Nombre</th>
+              <th>Apellido</th>
+              <th>Teléfono</th>
+              <th>E-mail</th>
+              <th className={styles.adressTable}>Dirección</th>
+              <th>Compras</th>
+              <th>Editar</th>
+              <th>Borrar</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {currentClients.map((client, index) => (
+              <tr key={index}>
+                <td>{client.idClient}</td>
+                <td className={styles.nameTable}>{client.name}</td>
+                <td>{client.lastName}</td>
+                <td>{client.phone}</td>
+                <td>{client.email}</td>
+                <td className={styles.adressTable}>{client.adress}</td>
+                <td>
+                  <button
+                    className={styles.buttonSee}
+                    onClick={() => {
+                      // handleViewBuys(client);
+                      setOpenPurchaseModal(true);
+                      setClientSelect(client);
+                    }}
+                  >
+                    <SearchIcon />
+                  </button>
+                </td>
+                <td>
+                  <button
+                    className={styles.buttonEdit}
+                    onClick={() => {
+                      setOpenModalEdit(true);
+                      setClientSelect(client);
+                    }}
+                  >
+                    <EditIcon />
+                  </button>
+                </td>
+                <td>
+                  <button
+                    className={styles.buttonDelete}
+                    onClick={() => handleDelete(`${client._id}`)}
+                  >
+                    <DeleteIcon />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       <Pagination
         totalItems={filteredClients.length}
         itemsPerPage={clientsPerPage}
