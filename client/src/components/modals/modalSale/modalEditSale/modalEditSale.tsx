@@ -18,6 +18,7 @@ const EditSaleComponent: React.FC<EditSaleProps> = ({
   onClose,
   setSalesSelected,
 }) => {
+  const [saleData, setSaleData] = useState<any>(null);
   const [editedDues, setEditedDues] = useState<number | null>(
     salesSelected.dues.payd.length
   );
@@ -28,10 +29,32 @@ const EditSaleComponent: React.FC<EditSaleProps> = ({
 
   useEffect(() => {
     if (salesSelected.priceTotal && editedDues) {
-      const pricePerDue = salesSelected.priceTotal / editedDues;
+      const pricePerDue = Math.round(salesSelected.priceTotal / editedDues); // Redondea el resultado
       setPricePerDue(pricePerDue);
     }
   }, [salesSelected.priceTotal, editedDues]);
+
+  const initializeCheckboxStates = (duesCount: number) => {
+    const initialCheckboxStates = Array.from(
+      { length: duesCount },
+      () => false
+    );
+    setCheckboxStates(initialCheckboxStates);
+  };
+
+  const handleDuesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(event.target.value);
+    if (!isNaN(value) && value >= 1 && value <= 6) {
+      setEditedDues(value);
+    } else if (event.target.value === "") {
+      setEditedDues(null);
+    } else {
+      return;
+    }
+
+    setEditedDues(value);
+    initializeCheckboxStates(value);
+  };
 
   const handleCheckboxChange = (index: number) => {
     setCheckboxStates((prevStates) => {
@@ -78,6 +101,7 @@ const EditSaleComponent: React.FC<EditSaleProps> = ({
               type="number"
               value={editedDues !== null ? editedDues : ""}
               min="1"
+              onChange={handleDuesChange}
             />
           </div>
 
@@ -96,8 +120,7 @@ const EditSaleComponent: React.FC<EditSaleProps> = ({
                   onChange={() => handleCheckboxChange(index)}
                 />
                 <span>
-                  Cuota {index + 1} - Monto de cuota: $
-                  {formatNumberWithCommas(pricePerDue)}
+                  Cuota {index + 1} - Monto de cuota: ${formatNumberWithCommas(pricePerDue)}
                 </span>
               </div>
             ))}
