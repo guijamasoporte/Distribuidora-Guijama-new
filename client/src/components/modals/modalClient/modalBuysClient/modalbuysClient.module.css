@@ -4,7 +4,7 @@
   align-items: center;
   justify-content: center;
   background-color: #ffffff;
-  padding: 20px;
+  padding: 10px;
   border-radius: 8px;
   max-width: 40rem;
   width: 100%;
@@ -30,6 +30,7 @@
   position: relative;
   top: 10px;
   right: 5px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
 .buttonClose:hover {
@@ -109,10 +110,24 @@
     align-items: center;
     justify-content: center;
     background-color: #ffffff;
-    padding: 20px;
+    padding-inline: 0px;
     border-radius: 8px;
-    max-width: 40rem;
+    width: 95%;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .idNameContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     width: 100%;
-    margin: 5rem auto;
+    font-family: "questrial";
+    margin-bottom: 10px;
+    font-size: 1rem;
+  }
+  .idNameContainer p {
+    font-size: 18px;
+    height: 1rem;
   }
 }
