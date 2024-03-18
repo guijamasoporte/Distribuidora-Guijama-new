@@ -126,8 +126,7 @@
   .formInputs {
     display: flex;
     width: 100%;
-    padding: 0.5rem;
-    gap: 0.5rem;
+    gap: 1rem;
   }
 
   .formField {
@@ -157,7 +156,7 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    gap: 0;
+    gap: 1rem;
   }
 
   .customImageButton {
