@@ -5,11 +5,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import styles from "./modalAddSale.module.css";
 import Swal from "sweetalert2";
 import InstanceOfAxios from "../../../../utils/intanceAxios";
-import {
-  Client,
-  Filters,
-  Product,
-} from "../../../../interfaces/interfaces";
+import { Client, Filters, Product } from "../../../../interfaces/interfaces";
 import { GetDecodedCookie } from "../../../../utils/DecodedCookie";
 
 interface ApiError {
@@ -254,138 +250,150 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
               <h2 className={styles.titleNewSale}>Nueva Venta</h2>
             </div>
           </div>
-          <Autocomplete
-            className={styles.clientSelect}
-            fullWidth={true}
-            options={dataClients}
-            getOptionLabel={(option) =>
-              `N° ${option.idClient} - ${option.name} ${option.lastName}`
-            }
-            value={selectedClient}
-            onChange={(event, newValue) => {
-              if (newValue) {
-                setSelectedClient(newValue);
+          <div className={styles.autocompleteAddSale}>
+            <Autocomplete
+              className={styles.clientSelect}
+              fullWidth={true}
+              options={dataClients}
+              getOptionLabel={(option) =>
+                `N° ${option.idClient} - ${option.name} ${option.lastName}`
               }
-            }}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Seleccionar cliente"
-                variant="outlined"
-              />
-            )}
-          />
+              value={selectedClient}
+              onChange={(event, newValue) => {
+                if (newValue) {
+                  setSelectedClient(newValue);
+                }
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Seleccionar cliente"
+                  variant="outlined"
+                />
+              )}
+            />
+          </div>
           <div className={styles.tablesContainer}>
             <div className={styles.inputContainer}>
-              <label>Código</label>
-              <input
-                type="text"
-                placeholder="Código de producto"
-                onChange={(e) => handleChangeFilter("code", e.target.value)}
-                className={styles.inputAddCode}
-                value={filter.code}
-              />
-
-              <label>Título</label>
-              <input
-                type="text"
-                placeholder="Buscar por título"
-                onChange={(e) => handleChangeFilter("title", e.target.value)}
-                className={styles.inputAddCode}
-                value={filter.title}
-              />
-
-              <label>Cantidad</label>
-              <input
-                type="number"
-                placeholder="Cantidad"
-                onChange={(e) => handleChangeFilter("cant", e.target.value)}
-                className={styles.inputAddCode}
-                value={filter.cant}
-              />
-
-              <label>Importe $</label>
-              <input
-                type="number"
-                placeholder="Importe"
-                onChange={(e) => handleChangeFilter("importe", e.target.value)}
-                className={styles.inputAddCode}
-                value={filter.importe}
-              />
+              <div className={styles.labelInputContainer}>
+                <label className={styles.labels}>Código</label>
+                <input
+                  type="text"
+                  placeholder="Código de producto"
+                  onChange={(e) => handleChangeFilter("code", e.target.value)}
+                  className={styles.inputAddCode}
+                  value={filter.code}
+                />
+              </div>
+              <div className={styles.labelInputContainer}>
+                <label className={styles.labels}>Título</label>
+                <input
+                  type="text"
+                  placeholder="Buscar por título"
+                  onChange={(e) => handleChangeFilter("title", e.target.value)}
+                  className={styles.inputAddCode}
+                  value={filter.title}
+                />
+              </div>
+              <div className={styles.labelInputContainer}>
+                <label className={styles.labels}>Cantidad</label>
+                <input
+                  type="number"
+                  placeholder="Cantidad"
+                  onChange={(e) => handleChangeFilter("cant", e.target.value)}
+                  className={styles.inputAddCode}
+                  value={filter.cant}
+                />
+              </div>
+              <div className={styles.labelInputContainer}>
+                <label className={styles.labels}>Importe $</label>
+                <input
+                  type="number"
+                  placeholder="Importe"
+                  onChange={(e) =>
+                    handleChangeFilter("importe", e.target.value)
+                  }
+                  className={styles.inputAddCode}
+                  value={filter.importe}
+                />
+              </div>
             </div>
-
-            <table className={styles.table}>
-              <thead>
-                <tr>
-                  <th>Código</th>
-                  <th>Título</th>
-                  <th>U.</th>
-                  <th>Precio Compra</th>
-                  <th>Precio Venta</th>
-                  <th>Sub-Total</th>
-                  <th>Borrar</th>
-                </tr>
-              </thead>
-              <tbody>
-                {List.map((product: Product, index) => (
-                  <tr key={index}>
-                    <td>{product.code}</td>
-                    <td>
-                      {product.generic ? (
-                        <input
-                          type="text"
-                          id=""
-                          value={product.title}
-                          maxLength={20}
-                          onChange={handlerEditTitle(index)}
-                          className={`${styles.inputAddCode} ${styles.inputAddGeneric}`}
-                        />
-                      ) : (
-                        product.title
-                      )}
-                    </td>
-                    <td className={styles.quantityInputSale}>
-                      <input
-                        type="number"
-                        value={product.unity}
-                        onChange={handlerEditUnity(product, index)}
-                        className={styles.input}
-                        name="cant"
-                      />
-                    </td>
-                    <td>
-                      $
-                      {product.priceCost
-                        ? product.priceCost.toLocaleString().replace(",", ".")
-                        : "-"}
-                    </td>
-                    <td>
-                      {product.generic ? (
+            <div className={styles.tableWrapper}>
+              <table className={styles.table}>
+                <thead>
+                  <tr>
+                    <th className={styles.titleCode}>Código</th>
+                    <th className={styles.titleTable}>Título</th>
+                    <th>U.</th>
+                    <th>Precio Compra</th>
+                    <th>Precio Venta</th>
+                    <th>Sub-Total</th>
+                    <th>Borrar</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {List.map((product: Product, index) => (
+                    <tr key={index}>
+                      <td className={styles.titleCode}>{product.code}</td>
+                      <td className={styles.titleTable}>
+                        {product.generic ? (
+                          <input
+                            type="text"
+                            id=""
+                            value={product.title}
+                            maxLength={20}
+                            onChange={handlerEditTitle(index)}
+                            className={`${styles.inputAddCode} ${styles.inputAddGeneric}`}
+                          />
+                        ) : (
+                          product.title
+                        )}
+                      </td>
+                      <td className={styles.quantityInputSale}>
                         <input
                           type="number"
-                          value={product.priceList}
-                          onChange={handlerEditPrice(product, index)}
-                          className={styles.inputEditPriceGeneric}
+                          value={product.unity}
+                          onChange={handlerEditUnity(product, index)}
+                          className={styles.input}
+                          name="cant"
                         />
-                      ) : (
-                        `$ ${product.priceList
-                          .toLocaleString()
-                          .replace(",", ".")}`
-                      )}
-                    </td>
-                    <td>$ {handlerSubPrice(product)}</td>
-                    <td>
-                      <button
-                        className={styles.buttonDelete}
-                        onClick={() => handleDeleteProduct(index)}
-                      >
-                        <DeleteIcon />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                      </td>
+                      <td className={styles.prices}>
+                        $
+                        {product.priceCost
+                          ? product.priceCost.toLocaleString().replace(",", ".")
+                          : "-"}
+                      </td>
+                      <td className={styles.prices}>
+                        {product.generic ? (
+                          <input
+                            type="number"
+                            value={product.priceList}
+                            onChange={handlerEditPrice(product, index)}
+                            className={styles.inputEditPriceGeneric}
+                          />
+                        ) : (
+                          `$ ${product.priceList
+                            .toLocaleString()
+                            .replace(",", ".")}`
+                        )}
+                      </td>
+                      <td className={styles.prices}>
+                        $ {handlerSubPrice(product)}
+                      </td>
+                      <td>
+                        <button
+                          className={styles.buttonDelete}
+                          onClick={() => handleDeleteProduct(index)}
+                        >
+                          <DeleteIcon />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
           <div className={styles.totalSaleButtonAddContainer}>
             <button
@@ -394,6 +402,9 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
             >
               Agregar Genérico
             </button>
+            <div className={styles.totalSaleContainer}>
+              <p className={styles.totalSale}>Total: $ {total}</p>
+            </div>
             <div className={styles.buttonContainerSale}>
               <button
                 className={`${styles.buttonFinishSale} ${
@@ -404,9 +415,6 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
               >
                 Cargar Venta
               </button>
-            </div>
-            <div className={styles.totalSaleContainer}>
-              <p className={styles.totalSale}>Total: $ {total}</p>
             </div>
           </div>
         </div>
@@ -419,8 +427,16 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
             </p>
           </div>
           <div className={styles.gridContainer}>
+            <div className={styles.titleContainerVariant}>
+              {matchProduct.length > 0 && (
+                <div className={styles.IdNameProduct}>
+                  <p>Producto: {matchProduct[0].title}</p>
+                </div>
+              )}
+            </div>
             {matchProduct.map((product: Product, index: number) => (
               <div
+                key={index}
                 className={styles.gridItem}
                 onClick={() => {
                   let productIndex = List.findIndex(
@@ -433,9 +449,11 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
                       Number(List[productIndex].unity) + Number(filter.cant);
                     setList([...List]);
                   } else {
-                    setList([...List, { ...product, unity: Number(filter.cant) }]);
+                    setList([
+                      ...List,
+                      { ...product, unity: Number(filter.cant) },
+                    ]);
                   }
-
                   closeModal();
                 }}
               >

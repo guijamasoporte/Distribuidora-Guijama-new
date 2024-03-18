@@ -96,11 +96,12 @@
 
 .buttonAdd {
   height: 3rem;
-  margin: 10px;
+  margin: 1rem;
+  padding: 1rem;
   border-radius: 5px;
   border: none;
   font-family: "questrial";
-  font-size: 20px;
+  font-size: 21px;
   color: white;
   background-color: #b69b84;
 }

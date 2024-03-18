@@ -127,6 +127,7 @@ const SalesPage: React.FC = () => {
       <h1 className={styles.title}>Listado de ventas</h1>
       <div className={styles.filters}>
         <Autocomplete
+          className={styles.autocomplete}
           disablePortal
           id="combo-box-id"
           options={Array.from(
@@ -137,6 +138,7 @@ const SalesPage: React.FC = () => {
           onChange={(event, value) => handleChange(value, "idSale")}
         />
         <Autocomplete
+          className={styles.autocomplete}
           disablePortal
           id="combo-box-nombre"
           options={Array.from(
@@ -147,6 +149,7 @@ const SalesPage: React.FC = () => {
           onChange={(event, value) => handleChange(value, "client")}
         />
         <Autocomplete
+          className={styles.autocomplete}
           disablePortal
           id="combo-box-estado"
           options={["Cerrada", "Pendiente"]}
@@ -157,78 +160,86 @@ const SalesPage: React.FC = () => {
 
         <SearchBar onSearch={handleSearch} />
       </div>
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>Fecha</th>
-            <th>Total</th>
-            <th>Cuotas</th>
-            <th>Remito</th>
-            <th>Estado</th>
-            <th>Editar</th>
-          </tr>
-        </thead>
+      <div className={styles.tableWrapper}>
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Apellido</th>
+              <th className={styles.dateTable}>Fecha</th>
+              <th>Total</th>
+              <th>Cuotas</th>
+              <th>Remito</th>
+              <th>Estado</th>
+              <th>Editar</th>
+            </tr>
+          </thead>
 
-        <tbody>
-          {filteredSales.map((sale, index) => (
-            <tr key={index}>
-              <td>{sale.idSale}</td>
-              <td>{sale.client.name}</td>
-              <td>{sale.client.lastName}</td>
-              <td>{formatDateModal(sale.date)}</td>
-              <td>$ {formatNumberWithCommas(sale.priceTotal)}</td>
-              <td>
-                {sale.dues.payd.filter((state) => state === true).length} /{" "}
-                {sale.dues.cant}
-              </td>
-              <td>
-                <PDFDownloadLink
-                  document={<Pdfinvoice sales={sale} id={index} saleClient={""}/>}
-                  fileName="invoice.pdf"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className={styles.svgremito}
+          <tbody>
+            {filteredSales.map((sale, index) => (
+              <tr key={index}>
+                <td>{sale.idSale}</td>
+                <td>{sale.client.name}</td>
+                <td>{sale.client.lastName}</td>
+                <td className={styles.dateTable}>
+                  {formatDateModal(sale.date)}
+                </td>
+                <td className={styles.amountTable}>
+                  $ {formatNumberWithCommas(sale.priceTotal)}
+                </td>
+                <td>
+                  {sale.dues.payd.filter((state) => state === true).length} /{" "}
+                  {sale.dues.cant}
+                </td>
+                <td>
+                  <PDFDownloadLink
+                    document={
+                      <Pdfinvoice sales={sale} id={index} saleClient={""} />
+                    }
+                    fileName="invoice.pdf"
                   >
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                    <path d="M14 3v4a1 1 0 0 0 1 1h4" />
-                    <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
-                    <path d="M9 9l1 0" />
-                    <path d="M9 13l6 0" />
-                    <path d="M9 17l6 0" />
-                  </svg>
-                </PDFDownloadLink>
-                {/* <PDFViewer>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className={styles.svgremito}
+                    >
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                      <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                      <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
+                      <path d="M9 9l1 0" />
+                      <path d="M9 13l6 0" />
+                      <path d="M9 17l6 0" />
+                    </svg>
+                  </PDFDownloadLink>
+                  {/* <PDFViewer>
                  <Pdfinvoice sales={sale} />
                 </PDFViewer> */}
-              </td>
-              <td>{sale.state ? "Cerrada" : "Pendiente"}</td>
-              <td>
-                <button
-                  className={styles.buttonEdit}
-                  onClick={() => {
-                    setEditModalOpen(true);
-                    setSalesSelected(sale);
-                  }}
-                >
-                  <EditIcon />
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                </td>
+                <td>{sale.state ? "Cerrada" : "Pendiente"}</td>
+                <td>
+                  <button
+                    className={styles.buttonEdit}
+                    onClick={() => {
+                      setEditModalOpen(true);
+                      setSalesSelected(sale);
+                    }}
+                  >
+                    <EditIcon />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       <Pagination
         totalItems={currentSales.length}
         itemsPerPage={salesPerPage}
