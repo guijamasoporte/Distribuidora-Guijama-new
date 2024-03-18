@@ -8,7 +8,7 @@ import InstanceOfAxios from "../../utils/intanceAxios";
 import Pagination from "../../components/pagination/pagination";
 import ModalComponent from "../../components/modals/modalSale/modalAddSale/modalAddSale";
 import { Sales } from "../../interfaces/interfaces";
-import { PDFDownloadLink } from "@react-pdf/renderer";
+import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
 
 import Modal from "@mui/material/Modal";
 import EditSaleComponent from "../../components/modals/modalSale/modalEditSale/modalEditSale";
@@ -25,6 +25,7 @@ const SalesPage: React.FC = () => {
   const [stateFilter, setStateFilter] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
+  const [loadingpdf, setLoadingpdf] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -50,7 +51,7 @@ const SalesPage: React.FC = () => {
     setSearchTerm(searchTerm);
   };
 
-  const filteredSales = dataSales.filter((sale) => {
+  const filteredSales: any = dataSales.filter((sale) => {
     const clientName = sale.client ? sale.client.name.toLowerCase() : "";
     const clientLastName = sale.client
       ? sale.client.lastName.toLowerCase()
@@ -176,51 +177,53 @@ const SalesPage: React.FC = () => {
             </tr>
           </thead>
 
-          <tbody>
-            {filteredSales.map((sale, index) => (
-              <tr key={index}>
-                <td>{sale.idSale}</td>
-                <td>{sale.client.name}</td>
-                <td>{sale.client.lastName}</td>
-                <td className={styles.dateTable}>
-                  {formatDateModal(sale.date)}
-                </td>
-                <td className={styles.amountTable}>
-                  $ {formatNumberWithCommas(sale.priceTotal)}
-                </td>
-                <td>
-                  {sale.dues.payd.filter((state) => state === true).length} /{" "}
-                  {sale.dues.cant}
-                </td>
-                <td>
-                  <PDFDownloadLink
-                    document={
-                      <Pdfinvoice sales={sale} id={index} saleClient={""} />
-                    }
-                    fileName="invoice.pdf"
+        <tbody>
+          {filteredSales.map((sale: Sales, index: number) => (
+            <tr key={index}>
+              <td>{sale.idSale}</td>
+              <td>{sale.client.name}</td>
+              <td>{sale.client.lastName}</td>
+              <td>{formatDateModal(sale.date)}</td>
+              <td>$ {formatNumberWithCommas(sale.priceTotal)}</td>
+              <td>
+                {sale.dues.payd.filter((state) => state === true).length} /{" "}
+                {sale.dues.cant}
+              </td>
+              <td>
+                <PDFDownloadLink
+                  document={
+                    <Pdfinvoice
+                      sales={sale}
+                      id={index}
+                      saleClient={""}
+                      setLoadingpdf={setLoadingpdf}
+                      loadingpdf={loadingpdf}
+                    />
+                  }
+                  fileName="invoice.pdf"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className={styles.svgremito}
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className={styles.svgremito}
-                    >
-                      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                      <path d="M14 3v4a1 1 0 0 0 1 1h4" />
-                      <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
-                      <path d="M9 9l1 0" />
-                      <path d="M9 13l6 0" />
-                      <path d="M9 17l6 0" />
-                    </svg>
-                  </PDFDownloadLink>
-                  {/* <PDFViewer>
-                 <Pdfinvoice sales={sale} />
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                    <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
+                    <path d="M9 9l1 0" />
+                    <path d="M9 13l6 0" />
+                    <path d="M9 17l6 0" />
+                  </svg>
+                </PDFDownloadLink>
+                {/* <PDFViewer>
+                 <Pdfinvoice sales={sale} id={index} saleClient={""} />
                 </PDFViewer> */}
                 </td>
                 <td>{sale.state ? "Cerrada" : "Pendiente"}</td>
