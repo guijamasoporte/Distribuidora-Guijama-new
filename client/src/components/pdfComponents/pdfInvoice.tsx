@@ -147,7 +147,7 @@ const Pdfinvoice: React.FC<{
                 </Text>
               </View>
 
-              <View>
+              <View style={styles.HeaderPresupuesto}>
                 <Text style={styles.strong}>PRESUPUESTO</Text>
                 <Text>Documento no válido como factura</Text>
                 <Text>N° {dataInvoice.idSale}</Text>
