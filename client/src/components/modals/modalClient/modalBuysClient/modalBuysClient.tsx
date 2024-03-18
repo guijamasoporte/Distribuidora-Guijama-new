@@ -18,8 +18,6 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
   onClose,
   dataSale,
 }) => {
-  const [loadingpdf, setLoadingpdf] = useState(false);
-
   return (
     <Modal open={open} onClose={onClose}>
       <div className={styles.purchaseModal}>
@@ -69,8 +67,6 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
                           sales={""}
                           id={purchaseIndex}
                           saleClient={dataSale}
-                          setLoadingpdf={setLoadingpdf}
-                          loadingpdf={loadingpdf}
                         />
                       }
                       fileName="invoice.pdf"

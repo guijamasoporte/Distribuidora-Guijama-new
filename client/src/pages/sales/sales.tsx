@@ -25,7 +25,7 @@ const SalesPage: React.FC = () => {
   const [stateFilter, setStateFilter] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
-  const [loadingpdf, setLoadingpdf] = useState(true);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -198,8 +198,7 @@ const SalesPage: React.FC = () => {
                         sales={sale}
                         id={index}
                         saleClient={""}
-                        setLoadingpdf={setLoadingpdf}
-                        loadingpdf={loadingpdf}
+                       
                       />
                     }
                     fileName="invoice.pdf"
@@ -224,9 +223,9 @@ const SalesPage: React.FC = () => {
                       <path d="M9 17l6 0" />
                     </svg>
                   </PDFDownloadLink>
-                  {/* <PDFViewer>
+                  <PDFViewer>
                  <Pdfinvoice sales={sale} id={index} saleClient={""} />
-                </PDFViewer> */}
+                </PDFViewer>
                 </td>
                 <td>{sale.state ? "Cerrada" : "Pendiente"}</td>
                 <td>

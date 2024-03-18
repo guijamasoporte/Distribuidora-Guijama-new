@@ -27,9 +27,7 @@ const Pdfinvoice: React.FC<{
   sales: Sales | string;
   id: number;
   saleClient: Client | string;
-  setLoadingpdf: Dispatch<SetStateAction<boolean>>;
-  loadingpdf: boolean;
-}> = ({ sales, id, saleClient, setLoadingpdf, loadingpdf }) => {
+}> = ({ sales, id, saleClient }) => {
   function obtenerFechaSinHora(fechaConHora: string) {
     const fecha = new Date(fechaConHora);
     const dia = fecha.getDate();
