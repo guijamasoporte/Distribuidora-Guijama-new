@@ -186,7 +186,7 @@ const SalesPage: React.FC = () => {
               </td>
               <td>
                 <PDFDownloadLink
-                  document={<Pdfinvoice sales={sale} />}
+                  document={<Pdfinvoice sales={sale} id={index} saleClient={""}/>}
                   fileName="invoice.pdf"
                 >
                   <svg

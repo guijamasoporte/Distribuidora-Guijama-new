@@ -57,7 +57,7 @@ export const UpdateProductById = async (req, res) => {
       id,
       {
         ...req.body.product,
-        title: title[0]?.toUpperCase() + title?.slice(1),
+        title: title[0]?.toString().toUpperCase() + title?.toString().slice(1),
         category:
           category[0].toString().toUpperCase() + category.toString().slice(1),
         brand: brand[0].toString().toUpperCase() + brand.toString().slice(1),
@@ -69,7 +69,6 @@ export const UpdateProductById = async (req, res) => {
     );
     return res.status(200).json({ product });
   } catch (error) {
-    //cuando vendo, baja el stock y aumenta depende el mes con getMonth() a sales si existe el mes sino agrega y suma la cant vendida
     console.log(error);
     res.status(400).json(formatError(error.message));
   }

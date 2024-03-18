@@ -78,18 +78,17 @@ export const createSale = async (req, res) => {
 
     //--------edit Client--------
     let id = client.id;
-    let dataSale = {
-      date: currentDate,
-      products: List,
-      priceTotal: pricetotalFunction(),
-    };
+   
 
     await Client.findOneAndUpdate(
       { _id: id },
       {
         $push: {
           buys: {
-            dataSale,
+            date: currentDate,
+            products: List,
+            priceTotal: pricetotalFunction(),
+            idSale:sale.idSale
           },
         },
       }

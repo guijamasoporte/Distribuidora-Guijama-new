@@ -2,9 +2,10 @@ import React from "react";
 import { Modal, Button } from "@mui/material";
 import { Client } from "../../../../interfaces/interfaces";
 import styles from "./modalbuysClient.module.css";
-import { PDFDownloadLink } from "@react-pdf/renderer";
+import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
 import DescriptionIcon from "@mui/icons-material/Description";
 import CloseIcon from "@mui/icons-material/Close";
+import Pdfinvoice from "../../../pdfComponents/pdfInvoice";
 
 interface PurchaseModalProps {
   open: boolean;
@@ -17,6 +18,8 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
   onClose,
   dataSale,
 }) => {
+  console.log(dataSale);
+
   return (
     <Modal open={open} onClose={onClose}>
       <div className={styles.purchaseModal}>
@@ -51,19 +54,30 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
             {dataSale &&
               dataSale.buys.map((purchase: any, purchaseIndex: number) => (
                 <tr key={purchaseIndex}>
-                  <td>{purchase.dataSale.idSale}</td>
+                  <td>{purchase.idSale}</td>
                   <td>
-                    {purchase.dataSale.date
-                      ? new Date(purchase.dataSale.date)
-                          .toISOString()
-                          .split("T")[0]
+                    {purchase.date
+                      ? new Date(purchase.date).toISOString().split("T")[0]
                       : ""}
                   </td>
 
-                  <td>${purchase.dataSale.priceTotal}</td>
+                  <td>${purchase.priceTotal}</td>
                   <td>
                     <button className={styles.iconPDF}>
-                      <DescriptionIcon />
+                      {/* <PDFDownloadLink
+                        document={<Pdfinvoice sales={""} id={purchaseIndex} saleClient={dataSale}/>}
+                        fileName="invoice.pdf"
+                      >
+                        <DescriptionIcon />
+                      </PDFDownloadLink> */}
+
+                      <PDFViewer>
+                        <Pdfinvoice
+                          sales={""}
+                          id={purchaseIndex}
+                          saleClient={dataSale}
+                        />
+                      </PDFViewer>
                     </button>
                   </td>
                 </tr>

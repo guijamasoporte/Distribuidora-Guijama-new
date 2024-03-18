@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Document,
   Text,
@@ -9,42 +9,26 @@ import {
 } from "@react-pdf/renderer";
 
 import guijama from "../../assets/guijamapdf.png";
-import { Product } from "../../interfaces/interfaces"; // Importa la interfaz Sale
+import { Client, Product, Sales } from "../../interfaces/interfaces"; // Importa la interfaz Sale
 
 interface SalesPdf {
-  [x: string]: any;
-  date: ReactNode;
-  client: any;
-
+  idSale: Sales;
+  idClient: Client;
+  name: string;
+  lastName: string;
+  adress: string;
+  email: string;
+  products: Product[];
+  priceTotal: number;
+  date: string;
+  buys: Sales;
 }
 
-const Pdfinvoice: React.FC<{ sales: SalesPdf }> = ({ sales }) => {
-
-
-  function obtenerFechaSinHora(fechaConHora: any) {
-    const fecha = new Date(fechaConHora);
-    const dia = fecha.getDate();
-    const mes = fecha.getMonth() + 1; // ¡Recuerda que los meses van de 0 a 11!
-    const año = fecha.getFullYear();
-
-    // Formatea el día y el mes para que tengan dos dígitos
-    const diaFormateado = dia < 10 ? "0" + dia : dia;
-    const mesFormateado = mes < 10 ? "0" + mes : mes;
-
-    return `${diaFormateado}-${mesFormateado}-${año}`;
-  }
-
-  function formatNumberWithCommas(number: number) {
-    let numberString = String(number);
-    let parts = [];
-    while (numberString.length > 3) {
-      parts.unshift(numberString.slice(-3));
-      numberString = numberString.slice(0, -3);
-    }
-    parts.unshift(numberString);
-    return parts.join(".");
-  }
-
+const Pdfinvoice: React.FC<{
+  sales: Sales | any;
+  id: number;
+  saleClient: SalesPdf | any;
+}> = ({ sales, id, saleClient }) => {
   const styles = StyleSheet.create({
     page: {
       display: "flex",
@@ -108,36 +92,91 @@ const Pdfinvoice: React.FC<{ sales: SalesPdf }> = ({ sales }) => {
     },
   });
 
+  const [dataInvoice, setDataInvoice] = useState<SalesPdf | null | any | Sales>(
+    null
+  );
+
+  function obtenerFechaSinHora(fechaConHora: any) {
+    const fecha = new Date(fechaConHora);
+    const dia = fecha.getDate();
+    const mes = fecha.getMonth() + 1; // ¡Recuerda que los meses van de 0 a 11!
+    const año = fecha.getFullYear();
+
+    // Formatea el día y el mes para que tengan dos dígitos
+    const diaFormateado = dia < 10 ? "0" + dia : dia;
+    const mesFormateado = mes < 10 ? "0" + mes : mes;
+
+    return `${diaFormateado}-${mesFormateado}-${año}`;
+  }
+
+  function formatNumberWithCommas(number: number) {
+    let numberString = String(number);
+    let parts = [];
+    while (numberString.length > 3) {
+      parts.unshift(numberString.slice(-3));
+      numberString = numberString.slice(0, -3);
+    }
+    parts.unshift(numberString);
+    return parts.join(".");
+  }
+
+  useEffect(() => {
+    if (sales === "") {
+      setDataInvoice({
+        idSale: saleClient.buys[id].idSale,
+        idClient: saleClient.idClient,
+        name: saleClient.name,
+        lastName: saleClient.lastName,
+        adress: saleClient.adress,
+        email: saleClient.email,
+        products: saleClient.buys[id].products,
+        priceTotal: saleClient.buys[id].priceTotal,
+        date: saleClient.buys[id].date,
+      });
+    } else {
+      setDataInvoice({
+        idSale: sales.buys[id].idSale,
+        idClient: sales.idClient,
+        name: sales.name,
+        lastName: sales.lastName,
+        adress: sales.adress,
+        email: sales.email,
+        products: sales.buys[id].products,
+        priceTotal: sales.priceTotal,
+        date: sales.buys[id].date,
+      });
+    }
+  }, [sales, saleClient, id]);
+
   return (
     <Document>
       <Page size="A4" style={styles.page}>
         <View style={styles.Header}>
-          <View style={styles.HeaderPresupuesto}>
+          <View>
             <Image src={guijama} style={styles.image} />
             <Text style={{ fontSize: 15 }}>
               Tel: 221 591-6564 / 221 673-2423
             </Text>
           </View>
 
-          <View style={styles.HeaderPresupuesto}>
+          <View>
             <Text style={styles.strong}>PRESUPUESTO</Text>
             <Text>Documento no valido como factura</Text>
-            <Text>N° {sales.idSale}</Text>
+            <Text>N° {dataInvoice?.idSale}</Text>
           </View>
         </View>
 
         <View style={styles.infoClientContain}>
           <View>
-            <Text>Cliente N°: {sales.client.idClient}</Text>
+            <Text>Cliente N°: {dataInvoice?.idClient}</Text>
             <Text>
-              Nombre: {sales.client.name + " " + sales.client.lastName}
+              Nombre: {dataInvoice?.name} {dataInvoice?.lastName}
             </Text>
           </View>
 
           <View>
-            <Text>Direccion: {sales.client.adress}</Text>
-            {/* <Text>Email: {sales.client.email}</Text> */}
-            <Text>Fecha: {obtenerFechaSinHora(sales.date)}</Text>
+            <Text>Direccion: {dataInvoice?.address}</Text>
+            <Text>Fecha: {obtenerFechaSinHora(dataInvoice?.date || "")}</Text>
           </View>
         </View>
 
@@ -149,25 +188,25 @@ const Pdfinvoice: React.FC<{ sales: SalesPdf }> = ({ sales }) => {
             <Text style={styles.productsContainTitle}>Total</Text>
           </View>
 
-          {sales.products.map((el: Product) => (
-            <View style={styles.productsContainTable}>
-              <Text style={styles.productsContainTitle}>{el.unity}</Text>
-              <Text style={styles.productsContainTitle}>{el.title}</Text>
+          {dataInvoice?.products.map((product: any, index: number) => (
+            <View key={index} style={styles.productsContainTable}>
+              <Text style={styles.productsContainTitle}>{product.unity}</Text>
+              <Text style={styles.productsContainTitle}>{product.title}</Text>
               <Text style={styles.productsContainTitle}>
-                ${formatNumberWithCommas(el.priceList)}
+                ${formatNumberWithCommas(product.priceList)}
               </Text>
               <Text style={styles.productsContainTitle}>
-                ${formatNumberWithCommas(el.priceList * el.unity)}
+                ${formatNumberWithCommas(product.priceList * product.unity)}
               </Text>
             </View>
           ))}
-          <View style={styles.productsContainTotal}>
-            <Text style={styles.productsContainTitle}> </Text>
-            <Text style={styles.productsContainTitle}> </Text>
-            <Text style={styles.productsContainTitle}> </Text>
 
+          <View style={styles.productsContainTotal}>
+            <Text style={styles.productsContainTitle}></Text>
+            <Text style={styles.productsContainTitle}></Text>
+            <Text style={styles.productsContainTitle}>Total:</Text>
             <Text style={styles.productsContainTotaltext}>
-              ${formatNumberWithCommas(sales.priceTotal)}
+              ${formatNumberWithCommas(dataInvoice?.priceTotal || 0)}
             </Text>
           </View>
         </View>
@@ -175,15 +214,13 @@ const Pdfinvoice: React.FC<{ sales: SalesPdf }> = ({ sales }) => {
     </Document>
   );
 };
-
 export default Pdfinvoice;
 
 //  <PDFViewer>
 //  <PDF />
 // </PDFViewer>
 
-
-  /* <PDFDownloadLink document={<PDF />} fileName="myfirstpdf.pdf">
+/* <PDFDownloadLink document={<PDF />} fileName="myfirstpdf.pdf">
 {({ loading, url, error, blob }) =>
 loading ? (
   <button>Loading Document ...</button>
