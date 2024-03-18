@@ -13,7 +13,7 @@ import salesRoute from "./src/routes/sales.routes.js";
 
 const app = express();
 
-const whiteList = [process.env.DEPLOY_CLIENT_URL, "http://localhost:3000"];
+const whiteList = [process.env.DEPLOY_CLIENT_URL, "http://localhost:3001"];
 
 app.use(
   cors({
