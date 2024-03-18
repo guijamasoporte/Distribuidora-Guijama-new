@@ -119,6 +119,7 @@ const Pdfinvoice: React.FC<{
     parts.unshift(numberString);
     return parts.join(".");
   }
+  console.log(sales);
 
   useEffect(() => {
     if (sales === "") {
@@ -135,15 +136,15 @@ const Pdfinvoice: React.FC<{
       });
     } else {
       setDataInvoice({
-        idSale: sales.buys[id].idSale,
-        idClient: sales.idClient,
-        name: sales.name,
-        lastName: sales.lastName,
-        adress: sales.adress,
-        email: sales.email,
-        products: sales.buys[id].products,
+        idSale: sales.idSale ? sales.idSale : "",
+        idClient: sales.client.idClient,
+        name: sales.client.name,
+        lastName: sales.client.lastName,
+        adress: sales.client.adress,
+        email: sales.client.email,
+        products: sales.products,
         priceTotal: sales.priceTotal,
-        date: sales.buys[id].date,
+        date: sales.date,
       });
     }
   }, [sales, saleClient, id]);
