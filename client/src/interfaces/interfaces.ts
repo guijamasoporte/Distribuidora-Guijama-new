@@ -7,7 +7,7 @@ export interface Client {
   phone: string;
   email: string;
   adress: string;
-  buys: [];
+  buys:any;
 }
 
 export interface Product {
@@ -30,6 +30,8 @@ export interface ProductsProps {
 }
 
 export interface Sales {
+  address: any;
+  buys: any;
   _id: string;
   saleId: string;
   idSale: string;
@@ -39,6 +41,7 @@ export interface Sales {
   client:Client;
   dues: Dues;
   state: boolean;
+
 }
 
 export interface Dues {
@@ -51,6 +54,8 @@ export interface DataLogin {
   email: string;
   password: string;
 }
+
+
 
 export interface propsModals {
   open: boolean;

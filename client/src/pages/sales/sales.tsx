@@ -8,7 +8,7 @@ import InstanceOfAxios from "../../utils/intanceAxios";
 import Pagination from "../../components/pagination/pagination";
 import ModalComponent from "../../components/modals/modalSale/modalAddSale/modalAddSale";
 import { Sales } from "../../interfaces/interfaces";
-import { PDFDownloadLink } from "@react-pdf/renderer";
+import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
 
 import Modal from "@mui/material/Modal";
 import EditSaleComponent from "../../components/modals/modalSale/modalEditSale/modalEditSale";
@@ -25,6 +25,7 @@ const SalesPage: React.FC = () => {
   const [stateFilter, setStateFilter] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
+  const [loadingpdf, setLoadingpdf] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -50,7 +51,7 @@ const SalesPage: React.FC = () => {
     setSearchTerm(searchTerm);
   };
 
-  const filteredSales = dataSales.filter((sale) => {
+  const filteredSales: any = dataSales.filter((sale) => {
     const clientName = sale.client ? sale.client.name.toLowerCase() : "";
     const clientLastName = sale.client
       ? sale.client.lastName.toLowerCase()
@@ -173,7 +174,7 @@ const SalesPage: React.FC = () => {
         </thead>
 
         <tbody>
-          {filteredSales.map((sale, index) => (
+          {filteredSales.map((sale: Sales, index: number) => (
             <tr key={index}>
               <td>{sale.idSale}</td>
               <td>{sale.client.name}</td>
@@ -186,7 +187,15 @@ const SalesPage: React.FC = () => {
               </td>
               <td>
                 <PDFDownloadLink
-                  document={<Pdfinvoice sales={sale} id={index} saleClient={""}/>}
+                  document={
+                    <Pdfinvoice
+                      sales={sale}
+                      id={index}
+                      saleClient={""}
+                      setLoadingpdf={setLoadingpdf}
+                      loadingpdf={loadingpdf}
+                    />
+                  }
                   fileName="invoice.pdf"
                 >
                   <svg
@@ -210,7 +219,7 @@ const SalesPage: React.FC = () => {
                   </svg>
                 </PDFDownloadLink>
                 {/* <PDFViewer>
-                 <Pdfinvoice sales={sale} />
+                 <Pdfinvoice sales={sale} id={index} saleClient={""} />
                 </PDFViewer> */}
               </td>
               <td>{sale.state ? "Cerrada" : "Pendiente"}</td>
