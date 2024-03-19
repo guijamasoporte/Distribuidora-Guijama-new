@@ -3,6 +3,8 @@ import { DecodedToken } from "../../utils/DecodedToken";
 import { GetDecodedCookie } from "../../utils/DecodedCookie";
 import React, { useEffect, useRef, useState } from "react";
 import InstanceOfAxios from "../../utils/intanceAxios";
+import styles from "./ProtectedRoutes.module.css";
+import FadeLoader from "react-spinners/FadeLoader";
 
 interface Props {
   children: React.ReactNode;
@@ -18,7 +20,7 @@ export const ProtectedRoute: React.FC<Props> = ({ children }) => {
     "/admin/sales",
   ];
 
-  const rolRef = useRef<{} | null>(null);
+  const rolRef = useRef<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const token = GetDecodedCookie("cookieToken");
 
@@ -30,7 +32,7 @@ export const ProtectedRoute: React.FC<Props> = ({ children }) => {
           if (success && id) {
             const data: any = await InstanceOfAxios(`/admin/${id}`, "GET");
             if (data && data.Rol) {
-              rolRef.current = data.Rol; // Declara el rol
+              rolRef.current = data.Rol;
             } else {
               console.error("Error: Data or data.Rol is undefined");
             }
@@ -41,7 +43,7 @@ export const ProtectedRoute: React.FC<Props> = ({ children }) => {
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
-        setIsLoading(false); // Finaliza la promesa y pone el loading en false
+        setIsLoading(false);
       }
     };
 
@@ -49,11 +51,20 @@ export const ProtectedRoute: React.FC<Props> = ({ children }) => {
   }, [token]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className={styles.loaderContainer}>
+        <FadeLoader
+          color="#603e20"
+          height={23}
+          width={5}
+          aria-label="Loading Spinner"
+          data-testid="loader"
+        />
+      </div>
+    );
   }
 
   if (!token || !rolRef.current) {
-    // Si no hay token o no se obtuvo el rol, redirige al usuario a la página de inicio o de inicio de sesión
     return <Navigate to={"/login"} />;
   }
 

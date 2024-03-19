@@ -416,7 +416,9 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
               Agregar Genérico
             </button>
             <div className={styles.totalSaleContainer}>
-              <p className={styles.totalSale}>Total: $ {formatNumberWithCommas(total)}</p>
+              <p className={styles.totalSale}>
+                Total: $ {formatNumberWithCommas(total)}
+              </p>
             </div>
             <div className={styles.buttonContainerSale}>
               <button
@@ -453,13 +455,6 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
             </p>
           </div>
           <div className={styles.gridContainer}>
-            <div className={styles.titleContainerVariant}>
-              {matchProduct.length > 0 && (
-                <div className={styles.IdNameProduct}>
-                  <p>Producto: {matchProduct[0].title}</p>
-                </div>
-              )}
-            </div>
             {matchProduct.map((product: Product, index: number) => (
               <div
                 key={index}
@@ -483,7 +478,9 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
                   closeModal();
                 }}
               >
-                <p className={styles.titleVariant}>{product.code + product.title + product.variant}</p>
+                <p className={styles.titleVariant}>
+                  {product.code} - {product.title} - {product.variant}
+                </p>
               </div>
             ))}
           </div>

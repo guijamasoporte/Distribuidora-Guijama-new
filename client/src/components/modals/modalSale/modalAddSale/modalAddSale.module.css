@@ -347,7 +347,7 @@
   display: flex;
   justify-content: center;
   text-align: center;
-  width: 40rem;
+  width: 60rem;
   font-family: "questrial";
   font-size: 22px;
   color: #ffffff;
@@ -376,15 +376,19 @@
 }
 
 .gridContainer {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  grid-gap: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 90%;
+  gap: 1rem;
 }
 
 .gridItem {
   display: flex;
   justify-content: center;
-  width: 15rem;
+  width: 100%;
   border-radius: 5px;
   cursor: pointer;
   color: #603e20;
@@ -396,9 +400,8 @@
 
 .gridItem:hover {
   background-color: #b69b84;
-  border: none;
+  border: 2px solid #b69b84;
   color: white;
-  transform: scale(1.1);
   box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
     rgba(0, 0, 0, 0.22) 0px 10px 10px;
 }
@@ -411,12 +414,12 @@
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 9999; 
+  z-index: 9999;
   backdrop-filter: blur(3px);
-  background-color: rgba(0, 0, 0, 0.8); 
+  background-color: rgba(0, 0, 0, 0.8);
 }
 
-.openCameraStyle{
+.openCameraStyle {
   display: flex;
   position: absolute;
   padding-top: 10rem;
@@ -424,9 +427,9 @@
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 9999; 
+  z-index: 9999;
   backdrop-filter: blur(3px);
-  background-color: rgba(0, 0, 0, 0.8); 
+  background-color: rgba(0, 0, 0, 0.8);
 }
 
 @media only screen and (max-width: 1070px) {
