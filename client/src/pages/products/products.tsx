@@ -352,7 +352,6 @@ const ProductsPage: React.FC = () => {
         open={showModifyPriceModal}
         handleClose={() => setShowModifyPriceModal(false)}
         categories={categories}
-        brands={brands}
       />
       <div
         className={`${styles.scannerCode} ${

@@ -9,6 +9,7 @@ import InstanceOfAxios from "../../../../utils/intanceAxios";
 import { Client, Filters, Product } from "../../../../interfaces/interfaces";
 import { GetDecodedCookie } from "../../../../utils/DecodedCookie";
 import BarcodeScanner from "../../../scannerCode/barcodeScanner";
+import { formatNumberWithCommas } from "../../../../utils/formatNumberwithCommas";
 
 interface ModalProps {
   open: boolean;
@@ -228,7 +229,14 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
     HandlerAddProduct();
     Calculartotal();
     HandlerAddProductWithTitle();
-  }, [filters.code, , filters.title, List]);
+  }, [
+    filters.code,
+    filters.title,
+    List,
+    Calculartotal,
+    HandlerAddProduct,
+    HandlerAddProductWithTitle,
+  ]);
 
   const closeModal = () => {
     setOpenModalSelectProduct(false);
@@ -366,7 +374,7 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
                       <td className={styles.prices}>
                         $
                         {product.priceCost
-                          ? product.priceCost.toLocaleString().replace(",", ".")
+                          ? formatNumberWithCommas(product.priceCost)
                           : "-"}
                       </td>
                       <td className={styles.prices}>
@@ -408,7 +416,7 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
               Agregar Genérico
             </button>
             <div className={styles.totalSaleContainer}>
-              <p className={styles.totalSale}>Total: $ {total}</p>
+              <p className={styles.totalSale}>Total: $ {formatNumberWithCommas(total)}</p>
             </div>
             <div className={styles.buttonContainerSale}>
               <button

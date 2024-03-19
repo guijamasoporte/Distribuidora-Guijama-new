@@ -54,7 +54,7 @@ import React, {
   
     useEffect(() => {
       setSelectedImages(initialProduct.image);
-    }, []);
+    }, [initialProduct.image]);
   
     const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
       const files = event.target.files;

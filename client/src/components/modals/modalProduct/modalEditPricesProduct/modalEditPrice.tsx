@@ -11,17 +11,14 @@ interface editPriceCategoryModalProps {
   open: boolean;
   handleClose: () => void;
   categories: string[];
-  brands: string[];
 }
 
 const ModalEditPrices: React.FC<editPriceCategoryModalProps> = ({
   open,
   handleClose,
   categories,
-  brands,
 }) => {
-  
-  const [priceModifier, setPriceModifier] = useState<number>(0);
+ 
   const [inputs, setInputs] = useState ({
     priceModifier: null,
     category: "",

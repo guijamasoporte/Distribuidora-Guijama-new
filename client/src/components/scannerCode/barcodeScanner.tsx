@@ -59,7 +59,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
     return () => {
       Quagga.stop();
     };
-  }, [setOpenCameraReadCode]);
+  }, [setOpenCameraReadCode,filters,setFilters]);
 
   return (
     <div>

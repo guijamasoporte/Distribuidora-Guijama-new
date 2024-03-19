@@ -3,7 +3,6 @@ import { Modal } from "@mui/material";
 import { Client } from "../../../../interfaces/interfaces";
 import styles from "./modalbuysClient.module.css";
 import { PDFDownloadLink } from "@react-pdf/renderer";
-import DescriptionIcon from "@mui/icons-material/Description";
 import CloseIcon from "@mui/icons-material/Close";
 import Pdfinvoice from "../../../pdfComponents/pdfInvoice";
 import { formatNumberWithCommas } from "../../../../utils/formatNumberwithCommas";
