@@ -2,20 +2,24 @@ import React, { useState } from "react";
 import { TextField, Dialog } from "@mui/material";
 import styles from "./modalAddClient.module.css";
 import Swal from "sweetalert2";
-import { propsModals } from "../../../../interfaces/interfaces";
+import { Client, propsModals } from "../../../../interfaces/interfaces";
 
 const CreateClientModal: React.FC<propsModals> = ({
   open,
   onClose,
   onCreate,
 }) => {
-  const [newClient, setNewClient] = useState<any>({
+  const [newClient, setNewClient] = useState<Client>({
     name: "",
     lastName: "",
     phone: "",
     email: "",
     adress: "",
-    buys: [],
+    // no se usan ↓
+    date: "",
+    _id: "",
+    idClient: "",
+    buys: "",
   });
 
   const handleChange = (
@@ -37,6 +41,17 @@ const CreateClientModal: React.FC<propsModals> = ({
       "success"
     );
     onClose();
+    setNewClient({
+      name: "",
+      lastName: "",
+      phone: "",
+      email: "",
+      adress: "",
+      date: "",
+      _id: "",
+      idClient: "",
+      buys: "",
+    });
   };
 
   return (
