@@ -67,7 +67,7 @@
     font-family: "questrial";
     font-size: 24px;
     display: flex;
-    padding-inline: 1rem;
+    padding-inline: 3rem;
     text-align: center;
     justify-content: center;
     color: #603e20;
@@ -107,7 +107,7 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    gap: 0;
+    gap: 0.5;
   }
 
   .customImageButton {

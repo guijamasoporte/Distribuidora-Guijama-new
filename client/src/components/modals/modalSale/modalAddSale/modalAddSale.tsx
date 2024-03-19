@@ -244,7 +244,7 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
       <Modal open={open} onClose={onClose}>
         <div className={styles.modal}>
           <div className={styles.closeButtonTitle}>
-            <div>
+            <div className={styles.closeButtonContainer}>
               <button className={styles.closeButton} onClick={onClose}>
                 <CloseIcon />
               </button>
