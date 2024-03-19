@@ -1,5 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import Quagga from "quagga";
+import CloseIcon from "@mui/icons-material/Close";
+import styles from "./barcodeScanner.module.css"
 import Webcam from "react-webcam";
 import { Filters, Product } from "../../interfaces/interfaces";
 
@@ -65,14 +67,17 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
 
   return (
     <div>
+      <div   className={styles.closeButtonContainer}>
       <button
+      className={styles.closeButton}
         onClick={() => {
           Quagga.stop();
           setOpenCameraReadCode(false);
         }}
       >
-        X
+       <CloseIcon/>
       </button>
+      </div>
       <Webcam
         audio={false}
         ref={webcamRef}

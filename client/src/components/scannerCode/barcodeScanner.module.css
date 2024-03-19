@@ -1,0 +1,20 @@
+.closeButtonContainer {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.closeButton {
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  margin-right: 15px;
+  padding: 0.2rem;
+  cursor: pointer;
+  top: 30px;
+  right: 30px;
+}

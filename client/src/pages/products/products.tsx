@@ -45,7 +45,6 @@ const ProductsPage: React.FC = () => {
   const [brands, setBrands] = useState<string[]>([]);
   const [variant, setVariant] = useState<string[]>([]);
   const [openCameraReadCode, setOpenCameraReadCode] = useState<boolean>(false);
- 
 
   useEffect(() => {
     const fetchData = async () => {
@@ -355,15 +354,19 @@ const ProductsPage: React.FC = () => {
         categories={categories}
         brands={brands}
       />
-      {openCameraReadCode ? (
-        <BarcodeScanner
-          setOpenCameraReadCode={setOpenCameraReadCode}
-          setFilters={setFilters}
-          filters={filters}
-        />
-      ) : (
-        ""
-      )}
+      <div
+        className={`${styles.scannerCode} ${
+          openCameraReadCode ? styles.openCameraStyle : ""
+        }`}
+      >
+        {openCameraReadCode && (
+          <BarcodeScanner
+            setOpenCameraReadCode={setOpenCameraReadCode}
+            setFilters={setFilters}
+            filters={filters}
+          />
+        )}
+      </div>
     </div>
   );
 };

@@ -426,15 +426,19 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
               </button>
             </div>
           </div>
-          {openCameraReadCode ? (
-            <BarcodeScanner
-              setOpenCameraReadCode={setOpenCameraReadCode}
-              setFilters={setFilters}
-              filters={filters}
-            />
-          ) : (
-            ""
-          )}
+          <div
+            className={`${styles.scannerCode} ${
+              openCameraReadCode ? styles.openCameraStyle : ""
+            }`}
+          >
+            {openCameraReadCode && (
+              <BarcodeScanner
+                setOpenCameraReadCode={setOpenCameraReadCode}
+                setFilters={setFilters}
+                filters={filters}
+              />
+            )}
+          </div>
         </div>
       </Modal>
       <Modal open={openModalSelectProduct} onClose={closeModal}>
