@@ -70,6 +70,19 @@
   border-radius: 5px;
 }
 
+.cameraIconScann {
+  display: none;
+  position: absolute;
+  top: 50%;
+  right: 50px;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: #603e20;
+  cursor: pointer;
+}
+
 .autocompleteAddSale {
   display: flex;
   justify-content: center;
@@ -416,8 +429,30 @@
     font-size: 19px;
   }
 
+  .labelInputContainer {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 2rem;
+  }
+
   .autocomplete {
     width: 100% !important;
+  }
+
+  .cameraIconScann {
+    display: flex;
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    padding: 0;
+    color: #603e20;
+    cursor: pointer;
   }
 
   .tableWrapper {
@@ -440,7 +475,7 @@
     border-radius: 4px;
     box-sizing: border-box;
     font-family: "noto sans";
-    min-width: 150px;
+    min-width: 180px;
   }
 
   .inputEditPriceGeneric {

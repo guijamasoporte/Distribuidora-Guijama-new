@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Autocomplete, Modal, TextField } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
+import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import styles from "./modalAddSale.module.css";
 import Swal from "sweetalert2";
 import InstanceOfAxios from "../../../../utils/intanceAxios";
@@ -284,6 +285,12 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
                   className={styles.inputAddCode}
                   value={filter.code}
                 />
+                <button
+                  className={styles.cameraIconScann}
+                  // onClick={() => setOpenCameraReadCode(true)}
+                >
+                  <CameraAltIcon />
+                </button>
               </div>
               <div className={styles.labelInputContainer}>
                 <label className={styles.labels}>Título</label>
