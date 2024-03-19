@@ -145,3 +145,17 @@
       rgba(0, 0, 0, 0.22) 0px 10px 10px;
   }
 }
+
+@media screen and (min-width: 600px) {
+  .logoToggleMenu {
+    display: none;
+    background-color: #603e20d2;
+    border-radius: 50%;
+    width: 15rem;
+    height: 5rem;
+    padding: 1rem;
+    margin-bottom: 3rem;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
+      rgba(0, 0, 0, 0.22) 0px 10px 10px;
+  }
+}
