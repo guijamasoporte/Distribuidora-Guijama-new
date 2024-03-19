@@ -52,6 +52,10 @@ export default function Header() {
     });
   };
 
+  const closeMenu = () => {
+    setShowMenu(false);
+  };
+
   const toggleMenu = () => {
     setShowMenu(!showMenu);
   };
@@ -63,23 +67,26 @@ export default function Header() {
         <div
           className={`${styles["nav-links"]} ${showMenu ? styles.active : ""}`}
         >
-          <NavLink to="/">
+          <img src={Logo} alt="Logo" className={styles.logoToggleMenu} />
+          <NavLink to="/" onClick={closeMenu}>
             <button className={styles["logout-btn"]}>Catálogo</button>
           </NavLink>
 
           {login && rol === "ROL_Admin" && (
-            <NavLink to="/admin/products">
+            <NavLink to="/admin/products" onClick={closeMenu}>
               <button className={styles["logout-btn"]}>Admin</button>
             </NavLink>
           )}
 
           {login ? (
+
+
             <button className={styles["logout-btn"]} onClick={handleLogout}>
               Cerrar sesión
             </button>
           ) : (
-            <NavLink to="/login">
-              <button className={styles["logout-btn"]}>Iniciar sesion</button>
+            <NavLink to="/login" onClick={closeMenu}>
+              <button className={styles["logout-btn"]}>Iniciar sesión</button>
             </NavLink>
           )}
           <button className={styles.closeButton} onClick={toggleMenu}>
