@@ -70,9 +70,10 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
         ref={webcamRef}
         style={{ width: "100%" }}
         screenshotFormat="image/jpeg"
-        onUserMedia={(err: MediaStream) =>
-          console.error("Error al acceder a la cámara:", err)
-        }
+        videoConstraints={{ facingMode: "environment" }} // Configura la cámara trasera
+        // onUserMediaError={(err: MediaStreamError) =>
+        //   console.error("Error al acceder a la cámara:", err)
+        // }
       />
       {scannedBarcode && (
         <p>Último código de barras escaneado: {scannedBarcode}</p>
