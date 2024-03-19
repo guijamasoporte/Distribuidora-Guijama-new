@@ -19,7 +19,7 @@ const AddProductModal: React.FC<propsModals> = ({
   const initialProduct: Product = {
     code: "",
     title: "",
-    category: categories[0] || "",
+    category: "",
     brand: "",
     stock: 0,
     priceCost: 0,
@@ -99,7 +99,14 @@ const AddProductModal: React.FC<propsModals> = ({
   };
 
   return (
-    <Dialog className={styles.containerForm} open={open} onClose={handleClose}>
+    <Dialog
+      className={styles.containerForm}
+      open={open}
+      onClose={() => {
+        handleClose();
+        setProduct(initialProduct);
+      }}
+    >
       <p className={styles.titleForm}>Agregar nuevo producto</p>
       <div className={styles.formInputs}>
         <TextField
