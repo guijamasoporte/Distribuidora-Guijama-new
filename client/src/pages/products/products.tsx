@@ -13,6 +13,7 @@ import { GetDecodedCookie } from "../../utils/DecodedCookie";
 import { Client, Product } from "../../interfaces/interfaces";
 import { formatNumberWithCommas } from "../../utils/formatNumberwithCommas";
 import ModalEditPrices from "../../components/modals/modalProduct/modalEditPricesProduct/modalEditPrice";
+import BarcodeScanner from "../../components/scannerCode/barcodeScanner";
 
 const ProductsPage: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
@@ -42,6 +43,8 @@ const ProductsPage: React.FC = () => {
   const [categories, setCategories] = useState<string[]>([]);
   const [brands, setBrands] = useState<string[]>([]);
   const [variant, setVariant] = useState<string[]>([]);
+  const [openCameraReadCode, setOpenCameraReadCode] = useState<boolean>(false);
+console.log(openCameraReadCode);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -182,17 +185,37 @@ const ProductsPage: React.FC = () => {
     <div className={styles.tableContainer}>
       <h1 className={styles.title}>Listado de productos</h1>
       <div className={styles.filters}>
-        <Autocomplete
-          className={styles.autocomplete}
-          disablePortal
-          id="combo-box-codigo"
-          options={Array.from(
-            new Set(currentProducts.map((product) => product.code))
-          )}
-          sx={{ width: 200 }}
-          renderInput={(params) => <TextField {...params} label="Código" />}
-          onChange={(event, value) => handleFilterChange(event, value, "code")}
-        />
+        <div>
+          <Autocomplete
+            className={styles.autocomplete}
+            disablePortal
+            id="combo-box-codigo"
+            options={Array.from(
+              new Set(currentProducts.map((product) => product.code))
+            )}
+            sx={{ width: 200 }}
+            renderInput={(params) => <TextField {...params} label="Código" />}
+            onChange={(event, value) =>
+              handleFilterChange(event, value, "code")
+            }
+          />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            onClick={() => setOpenCameraReadCode(true)}
+          >
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <path d="M5 7h1a2 2 0 0 0 2 -2a1 1 0 0 1 1 -1h6a1 1 0 0 1 1 1a2 2 0 0 0 2 2h1a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-9a2 2 0 0 1 2 -2" />
+            <path d="M9 13a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+          </svg>
+        </div>
         <Autocomplete
           className={styles.autocomplete}
           disablePortal
@@ -341,6 +364,15 @@ const ProductsPage: React.FC = () => {
         categories={categories}
         brands={brands}
       />
+      {openCameraReadCode ? (
+        <BarcodeScanner
+          setOpenCameraReadCode={setOpenCameraReadCode}
+          setFilters={setFilters}
+          filters={filters}
+        />
+      ) : (
+        ""
+      )}
     </div>
   );
 };
