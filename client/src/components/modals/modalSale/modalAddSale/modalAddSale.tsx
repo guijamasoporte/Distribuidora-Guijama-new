@@ -483,7 +483,7 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
                   closeModal();
                 }}
               >
-                <p className={styles.titleVariant}>{product.variant}</p>
+                <p className={styles.titleVariant}>{product.code + product.title + product.variant}</p>
               </div>
             ))}
           </div>
