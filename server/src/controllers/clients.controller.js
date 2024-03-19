@@ -2,15 +2,19 @@ import { formatError } from "../utils/formatError.js";
 import { Client } from "../models/clients.js";
 
 export const createClient = async (req, res) => {
-  const { name, lastName } = req.body;
   try {
-    let client = new Client({
-      name: name[0].toString().toUpperCase() + name.slice(1),
-      lastName: lastName[0].toString().toUpperCase() + lastName.slice(1),
-      ...req.body,
+    const { name, lastName, ...rest } = req.body; // extrae name y lastName del body
+    const formattedName = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+    const formattedLastName = lastName.charAt(0).toUpperCase() + lastName.slice(1).toLowerCase();
+
+    const client = new Client({
+      name: formattedName,
+      lastName: formattedLastName,
+      ...rest, // incluye el resto de las propiedades del body
     });
+
     await client.save();
-    return res.status(200).json({ msg: "client creado" });
+    return res.status(200).json({ msg: "Cliente creado" });
   } catch (error) {
     res.status(400).json(formatError(error.message));
   }
