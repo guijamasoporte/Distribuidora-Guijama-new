@@ -6,6 +6,7 @@ import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
 import DescriptionIcon from "@mui/icons-material/Description";
 import CloseIcon from "@mui/icons-material/Close";
 import Pdfinvoice from "../../../pdfComponents/pdfInvoice";
+import { formatNumberWithCommas } from "../../../../utils/formatNumberwithCommas";
 
 interface PurchaseModalProps {
   open: boolean;
@@ -59,7 +60,7 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
                       : ""}
                   </td>
 
-                  <td>${purchase.priceTotal}</td>
+                  <td>${formatNumberWithCommas(purchase.priceTotal)}</td>
                   <td>
                     <PDFDownloadLink
                       document={
