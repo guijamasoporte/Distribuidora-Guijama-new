@@ -6,7 +6,7 @@ import { Filters, Product } from "../../interfaces/interfaces";
 interface BarcodeScannerProps {
   setOpenCameraReadCode: React.Dispatch<React.SetStateAction<boolean>>;
   setFilters: React.Dispatch<React.SetStateAction<any>>;
-  filters: Record<keyof Product, string>|Filters;
+  filters: Record<keyof Product, string> | Filters;
 }
 
 const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
@@ -65,15 +65,20 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
 
   return (
     <div>
+      <button
+        onClick={() => {
+          Quagga.stop();
+          setOpenCameraReadCode(false);
+        }}
+      >
+        X
+      </button>
       <Webcam
         audio={false}
         ref={webcamRef}
         style={{ width: "100%" }}
         screenshotFormat="image/jpeg"
         videoConstraints={{ facingMode: "environment" }} // Configura la cámara trasera
-        // onUserMediaError={(err: MediaStreamError) =>
-        //   console.error("Error al acceder a la cámara:", err)
-        // }
       />
       {scannedBarcode && (
         <p>Último código de barras escaneado: {scannedBarcode}</p>
