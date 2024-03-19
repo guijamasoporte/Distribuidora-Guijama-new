@@ -12,7 +12,7 @@
 }
 
 .titleCatalogue {
-  width: 60%;
+  width: 80%;
   font-family: "noto sans";
   font-size: 30px;
   color: white;
@@ -22,7 +22,7 @@
 }
 
 .descriptionCatalogue {
-  width: 60%;
+  width: 80%;
   font-family: "noto sans";
   font-size: 20px;
   background-color: #b69b8462;
@@ -172,4 +172,37 @@
   color: #ffffff;
   border: none;
   box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+}
+
+
+@media only screen and (max-width: 600px) {
+  .titleCatalogue {
+    width: 95%;
+    font-family: "noto sans";
+    font-size: 30px;
+    color: white;
+    background-color: #603e20;
+    padding: 1rem;
+    border-radius: 10px;
+  }
+  
+  .descriptionCatalogue {
+    width: 95%;
+    font-family: "noto sans";
+    font-size: 20px;
+    background-color: #b69b8462;
+    color: #603e20;
+    padding: 1rem;
+    border-radius: 10px;
+    margin-top: 1rem;
+  }
+
+  .listContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border-radius: 10px;
+  }
 }

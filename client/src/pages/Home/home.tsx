@@ -76,7 +76,7 @@ const Home: React.FC = () => {
         Acá encontrarás una amplia selección de los mejores productos
         relacionados con tabaco, puros, accesorios y más.
         <br />
-        ¡Explorá nuestros productos y encontrá todo lo que necesitas!
+        ¡Explorá nuestro catalogo y encontrá todo lo que necesitas!
       </p>
 
       {productsByCategory.map((categoryObj) => (
