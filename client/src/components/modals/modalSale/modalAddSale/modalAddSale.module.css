@@ -29,8 +29,7 @@
 .table td {
   border: 1px solid #ddd;
   padding: 5px;
-  max-width: 5rem;
-  min-width: 150px;
+  max-width: 150px;
   text-align: center;
 }
 
