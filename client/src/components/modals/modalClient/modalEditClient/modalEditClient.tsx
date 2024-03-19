@@ -10,7 +10,7 @@ interface CreateClientModalProps {
   open: boolean;
   onClose: () => void;
   onCreate: (newClient: any) => void;
-  client: any;
+  client: Client;
   setClientSelect: Dispatch<SetStateAction<Client | null>>;
 }
 

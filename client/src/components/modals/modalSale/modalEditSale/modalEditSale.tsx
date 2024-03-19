@@ -18,7 +18,6 @@ const EditSaleComponent: React.FC<EditSaleProps> = ({
   onClose,
   setSalesSelected,
 }) => {
-  const [saleData, setSaleData] = useState<any>(null);
   const [editedDues, setEditedDues] = useState<number | null>(
     salesSelected.dues.payd.length
   );

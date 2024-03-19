@@ -3,14 +3,19 @@ import { Client } from "../models/clients.js";
 
 export const createClient = async (req, res) => {
   try {
-    const { name, lastName, ...rest } = req.body; // extrae name y lastName del body
-    const formattedName = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
-    const formattedLastName = lastName.charAt(0).toUpperCase() + lastName.slice(1).toLowerCase();
+    console.log(req.body);
+    const { name, lastName, phone, adress, email } = req.body; // extrae name y lastName del body
+    const formattedName =
+      name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+    const formattedLastName =
+      lastName.charAt(0).toUpperCase() + lastName.slice(1).toLowerCase();
 
     const client = new Client({
       name: formattedName,
       lastName: formattedLastName,
-      ...rest, // incluye el resto de las propiedades del body
+      phone,
+      adress,
+      email, // incluye el resto de las propiedades del body
     });
 
     await client.save();

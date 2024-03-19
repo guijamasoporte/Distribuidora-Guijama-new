@@ -61,10 +61,6 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
     };
   }, [setOpenCameraReadCode]);
 
-  useEffect(() => {
-    // setFilters({ ...filters, code: scannedBarcode });
-  }, [scannedBarcode]);
-
   return (
     <div>
       <div   className={styles.closeButtonContainer}>

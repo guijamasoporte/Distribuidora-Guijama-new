@@ -9,10 +9,10 @@ import { DecodedToken } from "../../utils/DecodedToken";
 import InstanceOfAxios from "../../utils/intanceAxios";
 import CloseIcon from "@mui/icons-material/Close";
 
-export default function Header() {
-  const [login, setLogin] = useState(false);
-  const [rol, setRol] = useState(null);
-  const [showMenu, setShowMenu] = useState(false);
+const Header: React.FC = () => {
+  const [login, setLogin] = useState<boolean>(false);
+  const [rol, setRol] = useState<string | null>(null);
+  const [showMenu, setShowMenu] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchAdmin = async (token: string) => {
@@ -79,8 +79,6 @@ export default function Header() {
           )}
 
           {login ? (
-
-
             <button className={styles["logout-btn"]} onClick={handleLogout}>
               Cerrar sesión
             </button>
@@ -101,4 +99,5 @@ export default function Header() {
       </div>
     </header>
   );
-}
+};
+export default Header;

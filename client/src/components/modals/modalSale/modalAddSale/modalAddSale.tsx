@@ -10,10 +10,6 @@ import { Client, Filters, Product } from "../../../../interfaces/interfaces";
 import { GetDecodedCookie } from "../../../../utils/DecodedCookie";
 import BarcodeScanner from "../../../scannerCode/barcodeScanner";
 
-interface ApiError {
-  message: string;
-}
-
 interface ModalProps {
   open: boolean;
   onClose: () => void;

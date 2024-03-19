@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import styles from "./navbar.module.css";
 
 const NavBar: React.FC = () => {
-  const [selectedButton, setSelectedButton] = useState("");
+  const [selectedButton, setSelectedButton] = useState<string>("");
 
   const handleButtonClick = (buttonName: string) => {
     setSelectedButton(buttonName);
