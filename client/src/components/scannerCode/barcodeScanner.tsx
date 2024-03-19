@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import Quagga from "quagga";
+import Webcam from "react-webcam";
 import { Product } from "../../interfaces/interfaces";
 
 interface BarcodeScannerProps {
@@ -13,7 +14,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
   setFilters,
   filters,
 }) => {
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const webcamRef = useRef<Webcam>(null);
   const [scannedBarcode, setScannedBarcode] = useState<string>("");
 
   useEffect(() => {
@@ -22,7 +23,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
         inputStream: {
           name: "Live",
           type: "LiveStream",
-          target: videoRef.current as HTMLElement,
+          target: webcamRef.current!.video as HTMLElement, // Utilizamos el elemento de video de react-webcam como destino
           constraints: {
             facingMode: "environment", // Usa la cámara trasera del dispositivo
           },
@@ -46,10 +47,10 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
         console.log("Código de barras detectado:", barcode);
         setScannedBarcode(barcode);
         setOpenCameraReadCode(true);
+        setFilters({ ...filters, code: barcode });
         Quagga.stop();
         setOpenCameraReadCode(false);
         setScannedBarcode("");
-        setFilters({ ...filters, code: barcode });
       }
     });
 
@@ -59,12 +60,20 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
   }, [setOpenCameraReadCode]);
 
   useEffect(() => {
-    setFilters({ ...filters, code: scannedBarcode });
+    // setFilters({ ...filters, code: scannedBarcode });
   }, [scannedBarcode]);
 
   return (
     <div>
-      <video ref={videoRef} style={{ width: "100%" }} autoPlay></video>
+      <Webcam
+        audio={false}
+        ref={webcamRef}
+        style={{ width: "100%" }}
+        screenshotFormat="image/jpeg"
+        onUserMedia={(err: MediaStream) =>
+          console.error("Error al acceder a la cámara:", err)
+        }
+      />
       {scannedBarcode && (
         <p>Último código de barras escaneado: {scannedBarcode}</p>
       )}

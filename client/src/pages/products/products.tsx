@@ -45,7 +45,7 @@ const ProductsPage: React.FC = () => {
   const [brands, setBrands] = useState<string[]>([]);
   const [variant, setVariant] = useState<string[]>([]);
   const [openCameraReadCode, setOpenCameraReadCode] = useState<boolean>(false);
-  console.log(openCameraReadCode);
+ 
 
   useEffect(() => {
     const fetchData = async () => {
