@@ -44,7 +44,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
     Quagga.onDetected((data: any) => {
       const barcode = data?.codeResult?.code;
       if (barcode) {
-        console.log("Código de barras detectado:", barcode);
+        // console.log("Código de barras detectado:", barcode);
         setScannedBarcode(barcode);
         setOpenCameraReadCode(true);
         setFilters({ ...filters, code: barcode });
