@@ -8,6 +8,7 @@ import Swal from "sweetalert2";
 import InstanceOfAxios from "../../../../utils/intanceAxios";
 import { Client, Filters, Product } from "../../../../interfaces/interfaces";
 import { GetDecodedCookie } from "../../../../utils/DecodedCookie";
+import BarcodeScanner from "../../../scannerCode/barcodeScanner";
 
 interface ApiError {
   message: string;
@@ -28,13 +29,14 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
 
   const [matchProduct, setMatchProduct] = useState<Product[]>([]);
 
-  const [filter, setFilter] = useState<Filters>({
+  const [filters, setFilters] = useState<Filters>({
     code: "",
     cant: 1,
     importe: 1,
     title: "",
   });
   const [total, setTotal] = useState<number>(0);
+  const [openCameraReadCode, setOpenCameraReadCode] = useState<boolean>(false);
 
   const fetchData = async () => {
     const resProducts: any = await InstanceOfAxios("/products", "GET");
@@ -44,8 +46,8 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
   };
 
   const handleChangeFilter = (prop: string, value: any) => {
-    setFilter({
-      ...filter,
+    setFilters({
+      ...filters,
       [prop]: value,
     });
   };
@@ -53,7 +55,7 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
   const HandlerAddProduct = () => {
     try {
       let filteredData: Product[] = dataProducts.filter(
-        (el: Product) => String(el.code) === String(filter.code)
+        (el: Product) => String(el.code) === String(filters.code)
       );
 
       if (filteredData && filteredData.length > 1) {
@@ -62,7 +64,7 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
       } else if (filteredData && filteredData.length === 1) {
         filteredData = filteredData.map((item) => ({
           ...item,
-          unity: filter.cant,
+          unity: filters.cant,
         }));
 
         let productIndex = List.findIndex(
@@ -71,12 +73,12 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
 
         if (productIndex >= 0) {
           List[productIndex].unity =
-            Number(List[productIndex].unity) + Number(filter.cant);
+            Number(List[productIndex].unity) + Number(filters.cant);
           setList([...List]);
         } else {
           setList([...List, ...filteredData]);
         }
-        setFilter({ ...filter, code: "" });
+        setFilters({ ...filters, code: "" });
       }
     } catch (error) {
       console.error("Error handling facturation:", error);
@@ -87,13 +89,13 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
     try {
       let filteredData: Product[] = dataProducts.filter(
         (el: Product) =>
-          String(el.title).toLowerCase() === String(filter.title).toLowerCase()
+          String(el.title).toLowerCase() === String(filters.title).toLowerCase()
       );
 
       if (filteredData.length > 0) {
         filteredData = filteredData.map((item) => ({
           ...item,
-          unity: filter.cant,
+          unity: filters.cant,
         }));
 
         let productIndex = List.findIndex(
@@ -102,12 +104,12 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
 
         if (productIndex >= 0) {
           List[productIndex].unity =
-            Number(List[productIndex].unity) + Number(filter.cant);
+            Number(List[productIndex].unity) + Number(filters.cant);
           setList([...List]);
         } else {
           setList([...List, ...filteredData]);
         }
-        setFilter({ ...filter, title: "" });
+        setFilters({ ...filters, title: "" });
       }
     } catch (error) {
       console.error("Error handling facturation:", error);
@@ -131,8 +133,8 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
         code: "",
         title: "Titulo",
         priceCost: null,
-        priceList: filter.importe,
-        unity: filter.cant,
+        priceList: filters.importe,
+        unity: filters.cant,
         generic: true,
         stock: 0,
         category: "",
@@ -230,11 +232,11 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
     HandlerAddProduct();
     Calculartotal();
     HandlerAddProductWithTitle();
-  }, [filter.code, , filter.title, List]);
+  }, [filters.code, , filters.title, List]);
 
   const closeModal = () => {
     setOpenModalSelectProduct(false);
-    setFilter({ ...filter, code: "" });
+    setFilters({ ...filters, code: "" });
   };
 
   return (
@@ -283,11 +285,11 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
                   placeholder="Código de producto"
                   onChange={(e) => handleChangeFilter("code", e.target.value)}
                   className={styles.inputAddCode}
-                  value={filter.code}
+                  value={filters.code}
                 />
                 <button
                   className={styles.cameraIconScann}
-                  // onClick={() => setOpenCameraReadCode(true)}
+                  onClick={() => setOpenCameraReadCode(true)}
                 >
                   <CameraAltIcon />
                 </button>
@@ -299,7 +301,7 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
                   placeholder="Buscar por título"
                   onChange={(e) => handleChangeFilter("title", e.target.value)}
                   className={styles.inputAddCode}
-                  value={filter.title}
+                  value={filters.title}
                 />
               </div>
               <div className={styles.labelInputContainer}>
@@ -309,7 +311,7 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
                   placeholder="Cantidad"
                   onChange={(e) => handleChangeFilter("cant", e.target.value)}
                   className={styles.inputAddCode}
-                  value={filter.cant}
+                  value={filters.cant}
                 />
               </div>
               <div className={styles.labelInputContainer}>
@@ -321,7 +323,7 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
                     handleChangeFilter("importe", e.target.value)
                   }
                   className={styles.inputAddCode}
-                  value={filter.importe}
+                  value={filters.importe}
                 />
               </div>
             </div>
@@ -424,6 +426,15 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
               </button>
             </div>
           </div>
+          {openCameraReadCode ? (
+            <BarcodeScanner
+              setOpenCameraReadCode={setOpenCameraReadCode}
+              setFilters={setFilters}
+              filters={filters}
+            />
+          ) : (
+            ""
+          )}
         </div>
       </Modal>
       <Modal open={openModalSelectProduct} onClose={closeModal}>
@@ -453,12 +464,12 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
                   );
                   if (productIndex >= 0) {
                     List[productIndex].unity =
-                      Number(List[productIndex].unity) + Number(filter.cant);
+                      Number(List[productIndex].unity) + Number(filters.cant);
                     setList([...List]);
                   } else {
                     setList([
                       ...List,
-                      { ...product, unity: Number(filter.cant) },
+                      { ...product, unity: Number(filters.cant) },
                     ]);
                   }
                   closeModal();

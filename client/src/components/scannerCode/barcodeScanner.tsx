@@ -1,12 +1,12 @@
 import React, { useRef, useState, useEffect } from "react";
 import Quagga from "quagga";
 import Webcam from "react-webcam";
-import { Product } from "../../interfaces/interfaces";
+import { Filters, Product } from "../../interfaces/interfaces";
 
 interface BarcodeScannerProps {
   setOpenCameraReadCode: React.Dispatch<React.SetStateAction<boolean>>;
   setFilters: React.Dispatch<React.SetStateAction<any>>;
-  filters: Record<keyof Product, string>;
+  filters: Record<keyof Product, string>|Filters;
 }
 
 const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
