@@ -209,21 +209,22 @@
   }
 
   .autocompleteCameraIcon {
-    position: relative;
     display: flex;
-    justify-content: space-between;
-    width: 100%;
+    flex-direction: column;
+    position: relative;
+    width: 100% !important;
   }
 
-  .autocomplete {
-    width: 100%;
+  .autocomplete{
+    width: 100% !important;
   }
 
   .cameraIconScann {
     display: flex;
+    flex-direction: column;
     position: absolute;
     top: 50%;
-    right: 50px;
+    right: 80px;
     transform: translateY(-50%);
     background: transparent;
     border: none;
