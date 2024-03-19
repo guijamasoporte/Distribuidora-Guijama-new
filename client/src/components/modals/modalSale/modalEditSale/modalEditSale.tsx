@@ -44,7 +44,7 @@ const EditSaleComponent: React.FC<EditSaleProps> = ({
 
   const handleDuesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(event.target.value);
-    if (!isNaN(value) && value >= 1 && value <= 6) {
+    if (!isNaN(value) && value >= 1 && value <= 12) {
       setEditedDues(value);
     } else if (event.target.value === "") {
       setEditedDues(null);
