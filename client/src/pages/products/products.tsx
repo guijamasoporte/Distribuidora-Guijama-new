@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Autocomplete, TextField } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import styles from "./products.module.css";
 import SearchBar from "../../components/searchBar/searchBar";
 import Pagination from "../../components/pagination/pagination";
@@ -44,7 +45,7 @@ const ProductsPage: React.FC = () => {
   const [brands, setBrands] = useState<string[]>([]);
   const [variant, setVariant] = useState<string[]>([]);
   const [openCameraReadCode, setOpenCameraReadCode] = useState<boolean>(false);
-console.log(openCameraReadCode);
+  console.log(openCameraReadCode);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -185,7 +186,7 @@ console.log(openCameraReadCode);
     <div className={styles.tableContainer}>
       <h1 className={styles.title}>Listado de productos</h1>
       <div className={styles.filters}>
-        <div>
+        <div className={styles.autocompleteCameraIcon}>
           <Autocomplete
             className={styles.autocomplete}
             disablePortal
@@ -199,22 +200,12 @@ console.log(openCameraReadCode);
               handleFilterChange(event, value, "code")
             }
           />
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+          <button
+            className={styles.cameraIconScann}
             onClick={() => setOpenCameraReadCode(true)}
           >
-            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-            <path d="M5 7h1a2 2 0 0 0 2 -2a1 1 0 0 1 1 -1h6a1 1 0 0 1 1 1a2 2 0 0 0 2 2h1a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-9a2 2 0 0 1 2 -2" />
-            <path d="M9 13a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
-          </svg>
+            <CameraAltIcon />
+          </button>
         </div>
         <Autocomplete
           className={styles.autocomplete}
