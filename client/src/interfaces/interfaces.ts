@@ -30,6 +30,7 @@ export interface ProductsProps {
 }
 
 export interface Sales {
+  createdBy: any;
   address: any;
   buys: any;
   _id: string;
@@ -41,7 +42,7 @@ export interface Sales {
   client:Client;
   dues: Dues;
   state: boolean;
-
+  createBy:string
 }
 
 export interface Dues {

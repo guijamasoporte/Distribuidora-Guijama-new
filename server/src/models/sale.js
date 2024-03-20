@@ -21,14 +21,18 @@ const SaleSchema = new mongoose.Schema({
     type: Object,
     default: {
       payd: [true],
-      cant:1 ,
+      cant: 1,
     },
   },
-  
-  state:{
-    type:Boolean,
-    default:false //sale open
-  }
+  createdBy: {
+    type: String,
+    default: "",
+  },
+
+  state: {
+    type: Boolean,
+    default: false, //sale open
+  },
 });
 
 SaleSchema.pre("save", async function (next) {
@@ -60,5 +64,3 @@ SaleSchema.pre("save", async function (next) {
 });
 
 export const Sale = mongoose.model("Sale", SaleSchema);
-
-

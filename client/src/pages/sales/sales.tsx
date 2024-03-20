@@ -8,7 +8,7 @@ import InstanceOfAxios from "../../utils/intanceAxios";
 import Pagination from "../../components/pagination/pagination";
 import ModalComponent from "../../components/modals/modalSale/modalAddSale/modalAddSale";
 import { Sales } from "../../interfaces/interfaces";
-import { PDFDownloadLink} from "@react-pdf/renderer";
+import { PDFDownloadLink } from "@react-pdf/renderer";
 
 import Modal from "@mui/material/Modal";
 import EditSaleComponent from "../../components/modals/modalSale/modalEditSale/modalEditSale";
@@ -25,7 +25,6 @@ const SalesPage: React.FC = () => {
   const [stateFilter, setStateFilter] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -50,7 +49,6 @@ const SalesPage: React.FC = () => {
   const handleSearch = (searchTerm: string) => {
     setSearchTerm(searchTerm);
   };
-
   const filteredSales: any = dataSales.filter((sale) => {
     const clientName = sale.client ? sale.client.name.toLowerCase() : "";
     const clientLastName = sale.client
@@ -63,6 +61,9 @@ const SalesPage: React.FC = () => {
       : "";
     const duesPayd = sale.dues ? sale.dues.payd.toString().toLowerCase() : "";
     const duesCant = sale.dues ? sale.dues.cant.toString().toLowerCase() : "";
+    const createdBy = sale.createdBy
+      ? sale.createdBy.toString().toLowerCase()
+      : ""; // Añade esta línea
 
     const searchTermLower = searchTerm.toLowerCase();
     const state = sale.state ? "Cerrada" : "Pendiente";
@@ -74,7 +75,8 @@ const SalesPage: React.FC = () => {
         date.includes(searchTermLower) ||
         priceTotal.includes(searchTermLower) ||
         duesPayd.includes(searchTermLower) ||
-        duesCant.includes(searchTermLower)) &&
+        duesCant.includes(searchTermLower) ||
+        createdBy.includes(searchTermLower)) && // Añade esta línea
       (stateFilter
         ? state.toLowerCase().includes(stateFilter.toLowerCase())
         : true) &&
@@ -83,6 +85,9 @@ const SalesPage: React.FC = () => {
         : true) &&
       (filters.client
         ? clientName.includes(filters.client.toString().toLowerCase())
+        : true) &&
+      (filters.createBy
+        ? createdBy.includes(filters.createBy.toString().toLowerCase())
         : true)
     );
   });
@@ -122,6 +127,7 @@ const SalesPage: React.FC = () => {
   const closeEditModal = () => {
     setEditModalOpen(false);
   };
+  console.log(dataSales);
 
   return (
     <div className={styles.tableContainer}>
@@ -160,6 +166,15 @@ const SalesPage: React.FC = () => {
         />
 
         <SearchBar onSearch={handleSearch} />
+        <Autocomplete
+          className={styles.autocomplete}
+          disablePortal
+          id="combo-box-creador"
+          options={Array.from(new Set(dataSales.map((sale) => sale.createdBy)))}
+          sx={{ width: 200 }}
+          renderInput={(params) => <TextField {...params} label="Creador" />}
+          onChange={(event, value) => handleChange(value, "createBy")} // Cambia "createBy" a "createdBy"
+        />
       </div>
       <div className={styles.tableWrapper}>
         <table className={styles.table}>
@@ -194,12 +209,7 @@ const SalesPage: React.FC = () => {
                 <td>
                   <PDFDownloadLink
                     document={
-                      <Pdfinvoice
-                        sales={sale}
-                        id={index}
-                        saleClient={""}
-                       
-                      />
+                      <Pdfinvoice sales={sale} id={index} saleClient={""} />
                     }
                     fileName="invoice.pdf"
                   >

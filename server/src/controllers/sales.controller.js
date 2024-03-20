@@ -1,6 +1,8 @@
+import { Admin } from "../models/admin.js";
 import { Client } from "../models/clients.js";
 import { Product } from "../models/products.js";
 import { Sale } from "../models/sale.js";
+import { DecodedToken } from "../utils/DecodedToken.js";
 import { formatError } from "../utils/formatError.js";
 
 function getMonthName(monthNumber) {
@@ -21,7 +23,8 @@ function getMonthName(monthNumber) {
   return months[monthNumber];
 }
 export const createSale = async (req, res) => {
-  const { List, client } = req.body;
+  const { List, client, token } = req.body;
+
   try {
     let currentDate = new Date();
 
@@ -35,12 +38,16 @@ export const createSale = async (req, res) => {
       return total;
     };
 
+    const iduser = DecodedToken(token);
+    let user = await Admin.findById(iduser.id);
+
     // --------new sale--------
     let sale = new Sale({
       date: currentDate,
       products: List,
       priceTotal: pricetotalFunction(),
       client: client,
+      createdBy: user.email,
     });
 
     await sale.save();
@@ -78,7 +85,6 @@ export const createSale = async (req, res) => {
 
     //--------edit Client--------
     let id = client.id;
-   
 
     await Client.findOneAndUpdate(
       { _id: id },
@@ -88,7 +94,7 @@ export const createSale = async (req, res) => {
             date: currentDate,
             products: List,
             priceTotal: pricetotalFunction(),
-            idSale:sale.idSale
+            idSale: sale.idSale,
           },
         },
       }

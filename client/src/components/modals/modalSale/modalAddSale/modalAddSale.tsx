@@ -198,7 +198,7 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
         await InstanceOfAxios(
           "/sales",
           "POST",
-          { List, client: dataClient },
+          { List, client: dataClient,token:token },
           token
         );
         onClose();
