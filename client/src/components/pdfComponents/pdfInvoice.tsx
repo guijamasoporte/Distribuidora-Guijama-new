@@ -1,4 +1,4 @@
-import React, {useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Document,
   Page,
@@ -78,10 +78,16 @@ const Pdfinvoice: React.FC<{
       border: "1px solid black",
     },
     productsContainTitle: {
-      padding: 3,
-      borderRight: "1px solid black",
       flex: 1,
+      padding: 3,
+      border: "1px solid black",
     },
+
+    productsContainText: {
+      flex: 1,
+      border: "1px solid black",
+    },
+
     productsContainTotal: {
       display: "flex",
       flexDirection: "row",
@@ -92,9 +98,10 @@ const Pdfinvoice: React.FC<{
 
     productsContainTotaltext: {
       flex: 1,
+      border: "1px solid black",
       padding: 3,
-      borderRight: "1px solid black",
     },
+
     strong: {
       fontSize: 20,
     },
@@ -178,20 +185,20 @@ const Pdfinvoice: React.FC<{
 
               {dataInvoice.products.map((el: any) => (
                 <View style={styles.productsContainTable}>
-                  <Text style={styles.productsContainTitle}>{el.unity}</Text>
-                  <Text style={styles.productsContainTitle}>{el.title}</Text>
-                  <Text style={styles.productsContainTitle}>
+                  <Text style={styles.productsContainText}>{el.unity}</Text>
+                  <Text style={styles.productsContainText}>{el.title}</Text>
+                  <Text style={styles.productsContainText}>
                     ${formatNumberWithCommas(el.priceList)}
                   </Text>
-                  <Text style={styles.productsContainTitle}>
+                  <Text style={styles.productsContainText}>
                     ${formatNumberWithCommas(el.priceList * el.unity)}
                   </Text>
                 </View>
               ))}
               <View style={styles.productsContainTotal}>
-                <Text style={styles.productsContainTitle}> </Text>
-                <Text style={styles.productsContainTitle}> </Text>
-                <Text style={styles.productsContainTitle}> </Text>
+                <Text style={styles.productsContainTotaltext}> </Text>
+                <Text style={styles.productsContainTotaltext}> </Text>
+                <Text style={styles.productsContainTotaltext}> </Text>
 
                 <Text style={styles.productsContainTotaltext}>
                   ${formatNumberWithCommas(dataInvoice.priceTotal)}
