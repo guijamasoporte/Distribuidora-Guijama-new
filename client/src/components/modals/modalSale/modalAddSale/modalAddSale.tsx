@@ -476,6 +476,7 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
                     ]);
                   }
                   closeModal();
+                  setMatchProduct([])
                 }}
               >
                 <p className={styles.titleVariant}>

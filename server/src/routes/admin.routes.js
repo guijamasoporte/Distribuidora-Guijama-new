@@ -10,7 +10,7 @@ import { isAdmin, verifyToken } from "../middlewares/VerifyToken.js";
 
 const router = express.Router();
 
-router.post("/create", [verifyToken, isAdmin], createAdmin);
+router.post("/create", createAdmin);
 router.get("/", [verifyToken, isAdmin], getAllAdmin);
 router.get("/:id", getAdminById);
 router.put("/:id", [verifyToken, isAdmin], updateAdminById);

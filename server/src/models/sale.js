@@ -20,7 +20,7 @@ const SaleSchema = new mongoose.Schema({
   dues: {
     type: Object,
     default: {
-      payd: [true],
+      payd: [false],
       cant: 1,
     },
   },
