@@ -233,9 +233,9 @@ const SalesPage: React.FC = () => {
                       <path d="M9 17l6 0" />
                     </svg>
                   </PDFDownloadLink>
-                  {/* <PDFViewer>
+                  <PDFViewer>
                  <Pdfinvoice sales={sale} id={index} saleClient={""} />
-                </PDFViewer> */}
+                </PDFViewer>
                 </td>
                 <td>{sale.state ? "Cerrada" : "Pendiente"}</td>
                 <td>

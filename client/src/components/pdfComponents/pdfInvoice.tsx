@@ -8,7 +8,8 @@ import {
   Text,
 } from "@react-pdf/renderer";
 
-import guijama from "../../assets/guijamapdf.png";
+// import guijama from "../../assets/guijamapdf.png";
+import guijama from "../../assets/guijamaLogo.png";
 import { Client, Sales } from "../../interfaces/interfaces";
 import { formatNumberWithCommas } from "../../utils/formatNumberwithCommas";
 
@@ -80,12 +81,15 @@ const Pdfinvoice: React.FC<{
     productsContainTitle: {
       flex: 1,
       padding: 3,
-      border: "1px solid black",
+      borderLeft: "1px solid black",
+      borderRight: "1px solid black",
     },
 
     productsContainText: {
       flex: 1,
-      border: "1px solid black",
+      borderLeft: "1px solid black",
+      borderRight: "1px solid black",
+      fontSize: 15,
     },
 
     productsContainTotal: {
@@ -98,7 +102,8 @@ const Pdfinvoice: React.FC<{
 
     productsContainTotaltext: {
       flex: 1,
-      border: "1px solid black",
+      borderLeft: "1px solid black",
+      borderRight: "1px solid black",
       padding: 3,
     },
 
@@ -155,7 +160,7 @@ const Pdfinvoice: React.FC<{
               </View>
 
               <View style={styles.HeaderPresupuesto}>
-                <Text style={styles.strong}>PRESUPUESTO</Text>
+                <Text style={styles.strong}>PRESUPUESTO X</Text>
                 <Text>Documento no válido como factura</Text>
                 <Text>N° {dataInvoice.idSale}</Text>
               </View>
@@ -183,26 +188,28 @@ const Pdfinvoice: React.FC<{
                 <Text style={styles.productsContainTitle}>Total</Text>
               </View>
 
-              {dataInvoice.products.map((el: any) => (
-                <View style={styles.productsContainTable}>
-                  <Text style={styles.productsContainText}>{el.unity}</Text>
-                  <Text style={styles.productsContainText}>{el.title}</Text>
-                  <Text style={styles.productsContainText}>
-                    ${formatNumberWithCommas(el.priceList)}
-                  </Text>
-                  <Text style={styles.productsContainText}>
-                    ${formatNumberWithCommas(el.priceList * el.unity)}
+              <View>
+                {dataInvoice.products.map((el: any) => (
+                  <View style={styles.productsContainTable}>
+                    <Text style={styles.productsContainText}>{el.unity}</Text>
+                    <Text style={styles.productsContainText}>{el.title}</Text>
+                    <Text style={styles.productsContainText}>
+                      ${formatNumberWithCommas(el.priceList)}
+                    </Text>
+                    <Text style={styles.productsContainText}>
+                      ${formatNumberWithCommas(el.priceList * el.unity)}
+                    </Text>
+                  </View>
+                ))}
+
+                <View style={styles.productsContainTotal}>
+                  <Text style={styles.productsContainTotaltext}> </Text>
+                  <Text style={styles.productsContainTotaltext}> </Text>
+                  <Text style={styles.productsContainTotaltext}> </Text>
+                  <Text style={styles.productsContainTotaltext}>
+                    ${formatNumberWithCommas(dataInvoice.priceTotal)}
                   </Text>
                 </View>
-              ))}
-              <View style={styles.productsContainTotal}>
-                <Text style={styles.productsContainTotaltext}> </Text>
-                <Text style={styles.productsContainTotaltext}> </Text>
-                <Text style={styles.productsContainTotaltext}> </Text>
-
-                <Text style={styles.productsContainTotaltext}>
-                  ${formatNumberWithCommas(dataInvoice.priceTotal)}
-                </Text>
               </View>
             </View>
           </Page>
