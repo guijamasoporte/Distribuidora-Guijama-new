@@ -3,8 +3,6 @@ import { formatError } from "../utils/formatError.js";
 import { generateRefreshToken, generateToken } from "../utils/tokenManager.js";
 import { Admin } from "../models/admin.js";
 
-
-
 // export const register = async (req, res) => {
 //   const { email, password } = req.body;
 
@@ -37,11 +35,11 @@ import { Admin } from "../models/admin.js";
 export const login = async (req, res) => {
   const { email, password } = req.body;
   let user;
-let emaillower=email.toLowerCase();
+  let emaillower = email.toLowerCase();
   try {
     // user = await User.findOne({ email });
     if (!user) {
-      user = await Admin.findOne({ email:emaillower });
+      user = await Admin.findOne({ email: emaillower });
     }
     if (!user) {
       return res.status(404).json({ error: "No existe este usuario" });
@@ -54,9 +52,7 @@ let emaillower=email.toLowerCase();
 
     const { token, expiresIn } = generateToken(user.id);
     generateRefreshToken(user.id, res);
-    return res
-      .status(200)
-      .json({ token, expiresIn, rol: user.Rol });
+    return res.status(200).json({ token, expiresIn, rol: user.Rol });
   } catch (error) {
     res.status(400).json(formatError(error.message));
   }

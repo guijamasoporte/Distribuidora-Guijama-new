@@ -11,7 +11,6 @@ import LoginPage from "./pages/login/login";
 import { ProtectedRoute } from "./pages/ProtectedRoutes/ProtectedRoute";
 import Header from "./components/header/header";
 
-
 const App: React.FC = () => {
   return (
     <div className="App">
@@ -21,6 +20,7 @@ const App: React.FC = () => {
         {/* Rutas sin NavBar */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<LoginPage />} />
+     
 
         {/* Rutas con NavBar */}
         <Route
@@ -35,7 +35,7 @@ const App: React.FC = () => {
                     path="products"
                     element={
                       <ProtectedRoute>
-                        <ProductsPage/>
+                        <ProductsPage />
                       </ProtectedRoute>
                     }
                   />
