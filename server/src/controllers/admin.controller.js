@@ -11,7 +11,7 @@ export const createAdmin = async (req, res) => {
     }
 
     admin = new Admin({
-      email,
+      email:email.toLowerCase(),
       password,
       admission: Date.now(),
     });

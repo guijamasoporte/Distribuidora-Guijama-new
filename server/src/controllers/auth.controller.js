@@ -37,11 +37,11 @@ import { Admin } from "../models/admin.js";
 export const login = async (req, res) => {
   const { email, password } = req.body;
   let user;
-
+let emaillower=email.toLowerCase();
   try {
     // user = await User.findOne({ email });
     if (!user) {
-      user = await Admin.findOne({ email });
+      user = await Admin.findOne({ email:emaillower });
     }
     if (!user) {
       return res.status(404).json({ error: "No existe este usuario" });
