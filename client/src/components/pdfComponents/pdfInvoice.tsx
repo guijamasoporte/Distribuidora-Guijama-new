@@ -10,6 +10,7 @@ import {
 
 // import guijama from "../../assets/guijamapdf.png";
 import guijama from "../../assets/guijamaLogo.png";
+import guijamaFondo from "../../assets/fondoInvoice.png";
 import { Client, Sales } from "../../interfaces/interfaces";
 import { formatNumberWithCommas } from "../../utils/formatNumberwithCommas";
 
@@ -43,6 +44,14 @@ const Pdfinvoice: React.FC<{
   }
 
   const styles = StyleSheet.create({
+    documentImage: {
+      position: "absolute",
+      width: "100%",
+      height: "auto",
+      left: "5%",
+      zIndex: -1,
+      opacity: 0.12,
+    },
     page: {
       display: "flex",
       padding: "1cm",
@@ -151,6 +160,7 @@ const Pdfinvoice: React.FC<{
       {dataInvoice && (
         <Document>
           <Page size="A4" style={styles.page}>
+            <Image src={guijamaFondo} style={styles.documentImage} />
             <View style={styles.Header}>
               <View style={styles.HeaderPresupuesto}>
                 <Image src={guijama} style={styles.image} />
