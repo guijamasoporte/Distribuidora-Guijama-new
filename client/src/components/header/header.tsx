@@ -8,6 +8,7 @@ import { NavLink } from "react-router-dom";
 import { DecodedToken } from "../../utils/DecodedToken";
 import InstanceOfAxios from "../../utils/intanceAxios";
 import CloseIcon from "@mui/icons-material/Close";
+import { setTimeout } from "timers/promises";
 
 const Header: React.FC = () => {
   const [login, setLogin] = useState<boolean>(false);
@@ -17,22 +18,30 @@ const Header: React.FC = () => {
   useEffect(() => {
     const fetchAdmin = async (token: string) => {
       const { id } = DecodedToken(token);
+
       const data: any = await InstanceOfAxios(`/admin/${id}`, "GET");
       if (data && data.Rol) {
         setRol(data.Rol);
+        setLogin(true);
       } else {
-        console.error("Error: Data or data.Rol is undefined");
+        
+        setLogin(false);
+        Swal.fire({
+          title: "Error de inicio de sesión",
+          text: "¡Algunos datos están incorrectos!",
+          icon: "warning",
+        })
+        
+        Cookies.remove("cookieToken");
       }
     };
-
+    
     const token = GetDecodedCookie("cookieToken");
-    if (token!==undefined) {
+    if (token) {
       fetchAdmin(token);
-      setLogin(true);
     } else {
-      setLogin(false);
     }
-  }, []);
+  }, [rol]);
 
   const handleLogout = () => {
     Swal.fire({
