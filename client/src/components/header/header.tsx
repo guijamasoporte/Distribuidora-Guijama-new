@@ -26,7 +26,7 @@ const Header: React.FC = () => {
     };
 
     const token = GetDecodedCookie("cookieToken");
-    if (token) {
+    if (token!==undefined) {
       fetchAdmin(token);
       setLogin(true);
     } else {

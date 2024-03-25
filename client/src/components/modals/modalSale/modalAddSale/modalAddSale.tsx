@@ -198,7 +198,7 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
         await InstanceOfAxios(
           "/sales",
           "POST",
-          { List, client: dataClient,token:token },
+          { List, client: dataClient, token: token },
           token
         );
         onClose();
@@ -239,6 +239,7 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
   ]);
 
   const closeModal = () => {
+    setMatchProduct([]);
     setOpenModalSelectProduct(false);
     setFilters({ ...filters, code: "" });
   };
@@ -475,8 +476,8 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
                       { ...product, unity: Number(filters.cant) },
                     ]);
                   }
+
                   closeModal();
-                  setMatchProduct([])
                 }}
               >
                 <p className={styles.titleVariant}>
