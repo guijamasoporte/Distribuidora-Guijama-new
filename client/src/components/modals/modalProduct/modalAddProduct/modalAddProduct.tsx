@@ -125,7 +125,7 @@ const AddProductModal: React.FC<propsModals> = ({
           value={product.title}
           onChange={(e) => handleChange("title", e.target.value)}
           fullWidth
-          inputProps={{ maxLength: 20 }}
+          inputProps={{ maxLength: 30 }}
         />
         <Autocomplete
           className={styles.formAutocomplete}

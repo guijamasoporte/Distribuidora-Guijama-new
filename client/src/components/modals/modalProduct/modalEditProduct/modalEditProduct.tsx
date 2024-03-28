@@ -126,7 +126,7 @@ import React, {
             value={product.title}
             onChange={(e) => handleChange("title", e.target.value)}
             fullWidth
-            inputProps={{ maxLength: 20 }}
+            inputProps={{ maxLength: 30 }}
           />
           <TextField
             className={styles.formField}
