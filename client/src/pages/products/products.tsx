@@ -179,6 +179,7 @@ const ProductsPage: React.FC = () => {
     };
 
     calculateTotals();
+    setCurrentPage(1)
   }, [currentProducts, applyFilters, searchTerm]);
 
   return (

@@ -123,6 +123,7 @@ const ClientsPage: React.FC = () => {
       );
     });
     setFilteredClients(filteredData);
+    setCurrentPage(1)
   }, [dataSale, filters, searchTerm]);
 
   const indexOfLastClient = currentPage * clientsPerPage;
