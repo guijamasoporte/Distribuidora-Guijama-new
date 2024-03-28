@@ -108,20 +108,6 @@ export const getAllCategoriesBrandsVariants = async (req, res) => {
   }
 };
 
-export const getAllBrands = async (req, res) => {
-  try {
-    let products = await Product.find();
-    const brandsAlls = new Set(products.map((el) => el.brand));
-    const uniqueBrands = Array.from(brandsAlls);
-
-    return res.status(200).json({
-      brands: uniqueBrands,
-    });
-  } catch (error) {
-    res.status(400).json(formatError(error.message));
-  }
-};
-
 export const EditPriceAllProducts = async (req, res) => {
   try {
     const { category, priceModifier } = req.body;

@@ -67,7 +67,7 @@ const EditClientModal: React.FC<CreateClientModalProps> = ({
               label="Nombre"
               value={newClient.name}
               fullWidth
-              inputProps={{ maxLength: 20 }}
+              inputProps={{ maxLength: 25 }}
               onChange={(e) => handleChange("name", e.target.value)}
             />
             <TextField

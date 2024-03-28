@@ -67,7 +67,7 @@ const CreateClientModal: React.FC<propsModals> = ({
               value={newClient.name}
               fullWidth
               onChange={(e) => handleChange(e)}
-              inputProps={{ maxLength: 20 }}
+              inputProps={{ maxLength: 25 }}
             />
             <TextField
               className={styles.formField}
