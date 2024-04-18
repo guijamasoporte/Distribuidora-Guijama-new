@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { TextField } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from '@mui/icons-material/Delete';
 import styles from "./sales.module.css";
 import SearchBar from "../../components/searchBar/searchBar";
 import InstanceOfAxios from "../../utils/intanceAxios";
@@ -9,11 +10,12 @@ import Pagination from "../../components/pagination/pagination";
 import ModalComponent from "../../components/modals/modalSale/modalAddSale/modalAddSale";
 import { Sales } from "../../interfaces/interfaces";
 import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
-
+import Swal from "sweetalert2";
 import Modal from "@mui/material/Modal";
 import EditSaleComponent from "../../components/modals/modalSale/modalEditSale/modalEditSale";
 import { formatNumberWithCommas } from "../../utils/formatNumberwithCommas";
 import Pdfinvoice from "../../components/pdfComponents/pdfInvoice";
+import { GetDecodedCookie } from "../../utils/DecodedCookie";
 
 const SalesPage: React.FC = () => {
   const [dataSales, setDataSales] = useState<Sales[]>([]);
@@ -26,15 +28,15 @@ const SalesPage: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
 
+  const fetchData = async () => {
+    try {
+      const response: any = await InstanceOfAxios("/sales", "GET");
+      setDataSales(response);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response: any = await InstanceOfAxios("/sales", "GET");
-        setDataSales(response);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
 
     fetchData();
   }, [modalOpen, editModalOpen]);
@@ -127,7 +129,30 @@ const SalesPage: React.FC = () => {
   const closeEditModal = () => {
     setEditModalOpen(false);
   };
-  console.log(dataSales);
+  
+
+  const handleDelete = (id: string) => {
+  
+    
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: "¡No podrás revertir esto!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "¡Sí, eliminarlo!",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const token = GetDecodedCookie("cookieToken");
+        InstanceOfAxios(`/sales/${id}`, "DELETE", undefined, token);
+        Swal.fire("¡Eliminado!", "El cliente ha sido eliminado.", "success");
+        fetchData()
+      }
+    });
+
+  };
 
   return (
     <div className={styles.tableContainer}>
@@ -189,6 +214,7 @@ const SalesPage: React.FC = () => {
               <th>Remito</th>
               <th>Estado</th>
               <th>Editar</th>
+              <th>Borrar</th>
             </tr>
           </thead>
 
@@ -247,6 +273,16 @@ const SalesPage: React.FC = () => {
                     }}
                   >
                     <EditIcon />
+                  </button>
+                </td>
+                <td>
+                  <button
+                    className={styles.buttonEdit}
+                   
+                      onClick={() => handleDelete(`${sale._id}`)}
+                 
+                >
+                    <DeleteIcon />
                   </button>
                 </td>
               </tr>
