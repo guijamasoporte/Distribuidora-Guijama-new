@@ -23,7 +23,7 @@ function getMonthName(monthNumber) {
   return months[monthNumber];
 }
 export const createSale = async (req, res) => {
-  const { List, client, token } = req.body;
+  const { List, client, token ,method} = req.body;
 
   try {
     let currentDate = new Date();
@@ -48,6 +48,7 @@ export const createSale = async (req, res) => {
       priceTotal: pricetotalFunction(),
       client: client,
       createdBy: user.email,
+      method:method
     });
 
     await sale.save();

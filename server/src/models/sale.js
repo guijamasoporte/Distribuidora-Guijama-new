@@ -28,7 +28,10 @@ const SaleSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
-
+  method: {
+    type: String,
+    default: "",
+  },
   state: {
     type: Boolean,
     default: false, //sale open

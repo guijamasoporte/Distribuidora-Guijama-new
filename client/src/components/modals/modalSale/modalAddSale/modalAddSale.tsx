@@ -33,6 +33,7 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
     title: "",
   });
   const [total, setTotal] = useState<number>(0);
+  const [method, setMethod] = useState<string | null>(null);
   const [openCameraReadCode, setOpenCameraReadCode] = useState<boolean>(false);
 
   const fetchData = async () => {
@@ -198,7 +199,7 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
         await InstanceOfAxios(
           "/sales",
           "POST",
-          { List, client: dataClient, token: token },
+          { List, client: dataClient, token: token, method },
           token
         );
         onClose();
@@ -279,6 +280,15 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
                   variant="outlined"
                 />
               )}
+            />
+            <Autocomplete
+              id="combo-box-mes"
+              options={["Transferencia", "Efectivo"]} // Opciones de formas de pago como cadenas
+              sx={{ width: 250 }}
+              renderInput={(params) => (
+                <TextField {...params} label="Forma de pago" />
+              )}
+              onChange={(event, value) => setMethod(value)} // Establecer el valor seleccionado en el estado method
             />
           </div>
           <div className={styles.tablesContainer}>

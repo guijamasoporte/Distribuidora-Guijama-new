@@ -29,6 +29,7 @@ const SalesPage: React.FC = () => {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [totalSale, setTotalsale] = useState(0);
   const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
+  const [selectedMethod, setSelectedMethod] = useState<string | null>(null);
 
   const fetchData = async () => {
     try {
@@ -98,7 +99,9 @@ const SalesPage: React.FC = () => {
         : true) &&
       (selectedMonthIndex === -1 ||
         (dateParts.length > 0 &&
-          new Date(dateParts[0]).getMonth() === selectedMonthIndex)) // Comparar con el mes seleccionado
+          new Date(dateParts[0]).getMonth() === selectedMonthIndex)) && // Comparar con el mes seleccionado
+      (selectedMethod ? sale.method === selectedMethod.trim() : true) // Comparación con método de pago seleccionado
+      // Filtrar por método de pago seleccionado
     );
   });
 
@@ -151,11 +154,12 @@ const SalesPage: React.FC = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         const token = GetDecodedCookie("cookieToken");
-        InstanceOfAxios(`/sales/${id}`, "DELETE", undefined, token).then(()=> fetchData());
+        InstanceOfAxios(`/sales/${id}`, "DELETE", undefined, token).then(() =>
+          fetchData()
+        );
         Swal.fire("¡Eliminado!", "El cliente ha sido eliminado.", "success");
       }
     });
-
   };
 
   useEffect(() => {
@@ -240,6 +244,16 @@ const SalesPage: React.FC = () => {
           onChange={(event, value) => setStateFilter(value)}
         />
 
+        <Autocomplete
+          className={styles.autocomplete}
+          disablePortal
+          id="combo-box-metodo"
+          options={["Transferencia", "Efectivo"]}
+          sx={{ width: 200 }}
+          renderInput={(params) => <TextField {...params} label="Método" />}
+          onChange={(event, value) => setSelectedMethod(value)}
+        />
+
         <SearchBar onSearch={handleSearch} />
         <Autocomplete
           className={styles.autocomplete}
@@ -263,6 +277,7 @@ const SalesPage: React.FC = () => {
               <th>Cuotas</th>
               <th>Remito</th>
               <th>Estado</th>
+              <th>Metodo</th>
               <th>Editar</th>
               <th>Borrar</th>
             </tr>
@@ -314,6 +329,7 @@ const SalesPage: React.FC = () => {
                 </PDFViewer> */}
                 </td>
                 <td>{sale.state ? "Cerrada" : "Pendiente"}</td>
+                <td>{sale.method ? sale.method : "-"}</td>
                 <td>
                   <button
                     className={styles.buttonEdit}

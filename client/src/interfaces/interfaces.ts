@@ -30,6 +30,7 @@ export interface ProductsProps {
 }
 
 export interface Sales {
+  [x: string]: any;
   createdBy: any;
   address: any;
   buys: any;

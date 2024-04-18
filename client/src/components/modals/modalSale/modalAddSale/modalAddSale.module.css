@@ -85,8 +85,10 @@
 
 .autocompleteAddSale {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   width: 20rem;
+  gap:1rem;
 }
 
 .clientSelect {
