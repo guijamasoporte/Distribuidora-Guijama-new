@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { TextField } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from "@mui/icons-material/Delete";
 import styles from "./sales.module.css";
 import SearchBar from "../../components/searchBar/searchBar";
 import InstanceOfAxios from "../../utils/intanceAxios";
@@ -27,6 +27,8 @@ const SalesPage: React.FC = () => {
   const [stateFilter, setStateFilter] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
+  const [totalSale, setTotalsale] = useState(0);
+  const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
 
   const fetchData = async () => {
     try {
@@ -36,8 +38,8 @@ const SalesPage: React.FC = () => {
       console.error("Error fetching data:", error);
     }
   };
-  useEffect(() => {
 
+  useEffect(() => {
     fetchData();
   }, [modalOpen, editModalOpen]);
 
@@ -51,13 +53,15 @@ const SalesPage: React.FC = () => {
   const handleSearch = (searchTerm: string) => {
     setSearchTerm(searchTerm);
   };
+
   const filteredSales: any = dataSales.filter((sale) => {
     const clientName = sale.client ? sale.client.name.toLowerCase() : "";
     const clientLastName = sale.client
       ? sale.client.lastName.toLowerCase()
       : "";
     const saleId = sale.idSale ? sale.idSale.toString().toLowerCase() : "";
-    const date = sale.date ? sale.date.toLowerCase() : "";
+    const dateParts = sale.date ? sale.date.split(",") : [];
+    const date = dateParts.length > 0 ? dateParts[0].trim().toLowerCase() : ""; // Extraer la fecha y convertirla a minúsculas
     const priceTotal = sale.priceTotal
       ? sale.priceTotal.toString().toLowerCase()
       : "";
@@ -65,20 +69,21 @@ const SalesPage: React.FC = () => {
     const duesCant = sale.dues ? sale.dues.cant.toString().toLowerCase() : "";
     const createdBy = sale.createdBy
       ? sale.createdBy.toString().toLowerCase()
-      : ""; // Añade esta línea
-
+      : "";
     const searchTermLower = searchTerm.toLowerCase();
     const state = sale.state ? "Cerrada" : "Pendiente";
+
+    const selectedMonthIndex = selectedMonth ? parseInt(selectedMonth) - 1 : -1; // Convertir el mes seleccionado a número
 
     return (
       (clientName.includes(searchTermLower) ||
         clientLastName.includes(searchTermLower) ||
         saleId.includes(searchTermLower) ||
-        date.includes(searchTermLower) ||
+        date.includes(searchTermLower) || // Comprobar si la fecha incluye el término de búsqueda
         priceTotal.includes(searchTermLower) ||
         duesPayd.includes(searchTermLower) ||
         duesCant.includes(searchTermLower) ||
-        createdBy.includes(searchTermLower)) && // Añade esta línea
+        createdBy.includes(searchTermLower)) &&
       (stateFilter
         ? state.toLowerCase().includes(stateFilter.toLowerCase())
         : true) &&
@@ -90,7 +95,10 @@ const SalesPage: React.FC = () => {
         : true) &&
       (filters.createBy
         ? createdBy.includes(filters.createBy.toString().toLowerCase())
-        : true)
+        : true) &&
+      (selectedMonthIndex === -1 ||
+        (dateParts.length > 0 &&
+          new Date(dateParts[0]).getMonth() === selectedMonthIndex)) // Comparar con el mes seleccionado
     );
   });
 
@@ -129,11 +137,8 @@ const SalesPage: React.FC = () => {
   const closeEditModal = () => {
     setEditModalOpen(false);
   };
-  
 
   const handleDelete = (id: string) => {
-  
-    
     Swal.fire({
       title: "¿Estás seguro?",
       text: "¡No podrás revertir esto!",
@@ -146,13 +151,33 @@ const SalesPage: React.FC = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         const token = GetDecodedCookie("cookieToken");
-        InstanceOfAxios(`/sales/${id}`, "DELETE", undefined, token);
+        InstanceOfAxios(`/sales/${id}`, "DELETE", undefined, token).then(()=> fetchData());
         Swal.fire("¡Eliminado!", "El cliente ha sido eliminado.", "success");
-        fetchData()
       }
     });
 
   };
+
+  useEffect(() => {
+    const calculateTotals = () => {
+      const filteredSales = currentSales.filter(
+        (sale: Sales) =>
+          searchTerm === "" ||
+          Object.values(sale).some((value) =>
+            String(value).toLowerCase().includes(searchTerm.toLowerCase())
+          )
+      );
+
+      const saleTotal = filteredSales.reduce(
+        (acc: number, sale: Sales) => acc + sale.priceTotal,
+        0
+      );
+
+      setTotalsale(saleTotal);
+    };
+
+    calculateTotals();
+  }, [currentSales, searchTerm]);
 
   return (
     <div className={styles.tableContainer}>
@@ -180,6 +205,31 @@ const SalesPage: React.FC = () => {
           renderInput={(params) => <TextField {...params} label="Nombre" />}
           onChange={(event, value) => handleChange(value, "client")}
         />
+        <Autocomplete
+          className={styles.autocomplete}
+          disablePortal
+          id="combo-box-mes"
+          options={[
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+          ]} // Opciones de meses como cadenas
+          sx={{ width: 200 }}
+          renderInput={(params) => <TextField {...params} label="Mes" />}
+          onChange={(event, value) =>
+            setSelectedMonth(value ? value.toString() : null)
+          } // Convertir el valor a cadena antes de asignarlo
+        />
+
         <Autocomplete
           className={styles.autocomplete}
           disablePortal
@@ -278,10 +328,8 @@ const SalesPage: React.FC = () => {
                 <td>
                   <button
                     className={styles.buttonEdit}
-                   
-                      onClick={() => handleDelete(`${sale._id}`)}
-                 
-                >
+                    onClick={() => handleDelete(`${sale._id}`)}
+                  >
                     <DeleteIcon />
                   </button>
                 </td>
@@ -290,6 +338,12 @@ const SalesPage: React.FC = () => {
           </tbody>
         </table>
       </div>
+      <div className={styles.totalsData}>
+        <p className={styles.totalCat}>
+          Total de Venta: ${formatNumberWithCommas(totalSale)}
+        </p>
+      </div>
+
       <Pagination
         totalItems={currentSales.length}
         itemsPerPage={salesPerPage}

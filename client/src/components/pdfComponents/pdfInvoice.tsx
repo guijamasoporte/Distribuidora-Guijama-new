@@ -167,6 +167,7 @@ const Pdfinvoice: React.FC<{
                 <Text style={{ fontSize: 15 }}>
                   Tel: 221 591-6564 / 221 673-2423
                 </Text>
+                <Text style={{ fontSize: 15 }}>221 615-5073</Text>
               </View>
 
               <View style={styles.HeaderPresupuesto}>
@@ -217,7 +218,7 @@ const Pdfinvoice: React.FC<{
                   <Text style={styles.productsContainTotaltext}> </Text>
                   <Text style={styles.productsContainTotaltext}> </Text>
                   <Text style={styles.productsContainTotaltext}>
-                    ${formatNumberWithCommas(dataInvoice.priceTotal)}
+                    Total: ${formatNumberWithCommas(dataInvoice.priceTotal)}
                   </Text>
                 </View>
               </View>
