@@ -12,10 +12,11 @@ import { Sales } from "../../interfaces/interfaces";
 import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
 import Swal from "sweetalert2";
 import Modal from "@mui/material/Modal";
-import EditSaleComponent from "../../components/modals/modalSale/modalEditSale/modalEditSale";
+
 import { formatNumberWithCommas } from "../../utils/formatNumberwithCommas";
 import Pdfinvoice from "../../components/pdfComponents/pdfInvoice";
 import { GetDecodedCookie } from "../../utils/DecodedCookie";
+import EditSaleComponent from "../../components/modals/modalSale/modalEditSale/modalEditSale";
 
 const SalesPage: React.FC = () => {
   const [dataSales, setDataSales] = useState<Sales[]>([]);

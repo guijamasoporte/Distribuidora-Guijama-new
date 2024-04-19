@@ -88,7 +88,7 @@
   flex-wrap: wrap;
   justify-content: center;
   width: 20rem;
-  gap:1rem;
+  gap: 1rem;
 }
 
 .clientSelect {
@@ -162,6 +162,24 @@
 
 .inputTitle {
   width: 6rem;
+}
+
+.autocompleteMui {
+  /* padding: 8px; */
+  /* border: 1px solid #cccccc; */
+  /* width: 100%; */
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-family: "noto sans";
+}
+
+.labelautocompleteContainer {
+  display: flex;
+  justify-content: space-between;
+
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
 }
 
 .quantityInputSale {
@@ -514,6 +532,8 @@
     min-width: 180px;
   }
 
+
+
   .inputEditPriceGeneric {
     padding: 8px;
     border: 1px solid #cccccc;
@@ -558,5 +578,23 @@
 
   .closeButton {
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  }
+
+  .autocompleteMui {
+    /* padding: 8px; */
+    /* border: 1px solid #cccccc; */
+    width: 180px;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-family: "noto sans";
+  }
+
+  .labelautocompleteContainer {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 2rem;
   }
 }
