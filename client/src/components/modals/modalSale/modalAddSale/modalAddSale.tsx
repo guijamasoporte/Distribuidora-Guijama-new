@@ -295,12 +295,25 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
             <div className={styles.inputContainer}>
               <div className={styles.labelInputContainer}>
                 <label className={styles.labels}>Código</label>
-                <input
+                {/* <input
                   type="text"
                   placeholder="Código de producto"
                   onChange={(e) => handleChangeFilter("code", e.target.value)}
                   className={styles.inputAddCode}
                   value={filters.code}
+                /> */}
+                <Autocomplete
+                  className={styles.autocompleteMui}
+                  disablePortal
+                  id="combo-box-codigo"
+                  options={Array.from(
+                    new Set(dataProducts.map((product) => product.code))
+                  )}
+                  sx={{ width: 200 }}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Código" />
+                  )}
+                  onChange={(event, value) => handleChangeFilter("code", value)}
                 />
                 <button
                   className={styles.cameraIconScann}
