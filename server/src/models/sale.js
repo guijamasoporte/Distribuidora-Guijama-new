@@ -30,7 +30,7 @@ const SaleSchema = new mongoose.Schema({
   },
   method: {
     type: String,
-    default: "",
+    default: "Efectivo",
   },
   state: {
     type: Boolean,

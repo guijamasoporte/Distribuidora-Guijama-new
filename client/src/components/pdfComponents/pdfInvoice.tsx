@@ -47,10 +47,11 @@ const Pdfinvoice: React.FC<{
     documentImage: {
       position: "absolute",
       width: "100%",
-      height: "auto",
+      height: "100%",
       left: "5%",
       zIndex: -1,
       opacity: 0.12,
+      objectFit:"cover"
     },
     page: {
       display: "flex",
@@ -59,9 +60,10 @@ const Pdfinvoice: React.FC<{
     Header: {
       display: "flex",
       flexDirection: "row",
-      marginBottom: 40,
-      paddingBottom: 30,
-      borderBottom: "3px solid black",
+      paddingBottom: 20,
+      justifyContent:"center"
+      // marginBottom: 40,
+      // borderBottom: "3px solid black",
     },
     HeaderPresupuesto: {
       display: "flex",
@@ -85,20 +87,24 @@ const Pdfinvoice: React.FC<{
       flexDirection: "row",
       justifyContent: "space-between",
       textAlign: "center",
-      border: "1px solid black",
+      // borderBottom: "1px solid black",
     },
     productsContainTitle: {
-      flex: 1,
+      // flex: 1,
       padding: 3,
-      borderLeft: "1px solid black",
-      borderRight: "1px solid black",
+      border: "1px solid black",
+      // borderLeft: "1px solid black",
+      // borderRight: "1px solid black",
+      borderTop: "2px solid black",
     },
-
+    
     productsContainText: {
-      flex: 1,
-      borderLeft: "1px solid black",
-      borderRight: "1px solid black",
+      border: "1px solid black",
+      // flex: 1,
+      // borderLeft: "1px solid black",
+      // borderRight: "1px solid black",
       fontSize: 15,
+      paddingVertical: 10,
     },
 
     productsContainTotal: {
@@ -106,14 +112,14 @@ const Pdfinvoice: React.FC<{
       flexDirection: "row",
       justifyContent: "space-between",
       textAlign: "center",
-      border: "1px solid black",
+      // border: "1px solid black",
     },
 
     productsContainTotaltext: {
-      flex: 1,
-      borderLeft: "1px solid black",
-      borderRight: "1px solid black",
-      padding: 3,
+      // flex: 1,
+      // borderLeft: "1px solid black",
+      // borderRight: "1px solid black",
+      padding: 10,
     },
 
     strong: {
@@ -122,6 +128,12 @@ const Pdfinvoice: React.FC<{
     image: {
       width: "5cm",
       marginBottom: 10,
+    },
+    containSize: {
+      flex: 1,
+    },
+    sizePrices: {
+      width: 100,
     },
   });
 
@@ -169,12 +181,6 @@ const Pdfinvoice: React.FC<{
                 </Text>
                 <Text style={{ fontSize: 15 }}>221 615-5073</Text>
               </View>
-
-              <View style={styles.HeaderPresupuesto}>
-                <Text style={styles.strong}>PRESUPUESTO X</Text>
-                <Text>Documento no válido como factura</Text>
-                <Text>N° {dataInvoice.idSale}</Text>
-              </View>
             </View>
             <View style={styles.infoClientContain}>
               <View>
@@ -182,43 +188,89 @@ const Pdfinvoice: React.FC<{
                 <Text>
                   Nombre: {dataInvoice.name + " " + dataInvoice.lastName}
                 </Text>
-              </View>
+                {/* </View> */}
 
-              <View>
+                {/* <View> */}
                 <Text>Direccion: {dataInvoice.address}</Text>
 
                 <Text>Fecha: {obtenerFechaSinHora(dataInvoice.date)}</Text>
+              </View>
+
+              <View style={styles.HeaderPresupuesto}>
+                <Text style={styles.strong}>PRESUPUESTO X</Text>
+                <Text>Documento no válido como factura</Text>
+                <Text>N° {dataInvoice.idSale}</Text>
               </View>
             </View>
 
             <View style={styles.productsContain}>
               <View style={styles.productsContainTable}>
-                <Text style={styles.productsContainTitle}>Cantidad</Text>
-                <Text style={styles.productsContainTitle}>Detalle</Text>
-                <Text style={styles.productsContainTitle}>Precio unitario</Text>
-                <Text style={styles.productsContainTitle}>Total</Text>
+                <Text style={[styles.productsContainTitle, styles.sizePrices]}>
+                  Cantidad
+                </Text>
+                <Text style={[styles.productsContainTitle, styles.containSize]}>
+                  Detalle
+                </Text>
+                <Text style={[styles.productsContainTitle, styles.sizePrices]}>
+                  Precio U.
+                </Text>
+                <Text style={[styles.productsContainTitle, styles.sizePrices]}>
+                  Total
+                </Text>
               </View>
 
               <View>
                 {dataInvoice.products.map((el: any) => (
                   <View style={styles.productsContainTable}>
-                    <Text style={styles.productsContainText}>{el.unity}</Text>
-                    <Text style={styles.productsContainText}>{el.title}</Text>
-                    <Text style={styles.productsContainText}>
+                    <Text
+                      style={[styles.productsContainText, styles.sizePrices]}
+                    >
+                      {el.unity}
+                    </Text>
+                    <Text
+                      style={[styles.productsContainText, styles.containSize]}
+                    >
+                      {el.title}
+                    </Text>
+                    <Text
+                      style={[styles.productsContainText, styles.sizePrices]}
+                    >
                       ${formatNumberWithCommas(el.priceList)}
                     </Text>
-                    <Text style={styles.productsContainText}>
+                    <Text
+                      style={[styles.productsContainText, styles.sizePrices]}
+                    >
                       ${formatNumberWithCommas(el.priceList * el.unity)}
                     </Text>
                   </View>
                 ))}
 
                 <View style={styles.productsContainTotal}>
-                  <Text style={styles.productsContainTotaltext}> </Text>
-                  <Text style={styles.productsContainTotaltext}> </Text>
-                  <Text style={styles.productsContainTotaltext}> </Text>
+                  <Text
+                    style={[
+                      styles.productsContainTotaltext,
+                      styles.containSize,
+                    ]}
+                  >
+                    {" "}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.productsContainTotaltext,
+                      styles.containSize,
+                    ]}
+                  >
+                    {" "}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.productsContainTotaltext,
+                       styles.sizePrices]}
+                  >
+                    Total:
+                  </Text>
                   <Text style={styles.productsContainTotaltext}>
-                    Total: ${formatNumberWithCommas(dataInvoice.priceTotal)}
+                    ${formatNumberWithCommas(dataInvoice.priceTotal)}
                   </Text>
                 </View>
               </View>

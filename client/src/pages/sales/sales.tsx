@@ -303,7 +303,7 @@ const SalesPage: React.FC = () => {
                     document={
                       <Pdfinvoice sales={sale} id={index} saleClient={""} />
                     }
-                    fileName="invoice.pdf"
+                    fileName={sale.client.name + "_" + sale.idSale + ".pdf"}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
