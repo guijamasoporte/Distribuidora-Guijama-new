@@ -6,6 +6,7 @@ import {
   Image,
   View,
   Text,
+  Font,
 } from "@react-pdf/renderer";
 
 // import guijama from "../../assets/guijamapdf.png";
@@ -45,13 +46,14 @@ const Pdfinvoice: React.FC<{
 
   const styles = StyleSheet.create({
     documentImage: {
+      zIndex: -1,
       position: "absolute",
       width: "100%",
       height: "100%",
-      left: "5%",
-      zIndex: -1,
+      left: 0,
+      top: 0,
       opacity: 0.12,
-      objectFit:"cover"
+      objectFit: "cover",
     },
     page: {
       display: "flex",
@@ -61,9 +63,7 @@ const Pdfinvoice: React.FC<{
       display: "flex",
       flexDirection: "row",
       paddingBottom: 20,
-      justifyContent:"center"
-      // marginBottom: 40,
-      // borderBottom: "3px solid black",
+      justifyContent: "center",
     },
     HeaderPresupuesto: {
       display: "flex",
@@ -87,22 +87,16 @@ const Pdfinvoice: React.FC<{
       flexDirection: "row",
       justifyContent: "space-between",
       textAlign: "center",
-      // borderBottom: "1px solid black",
     },
     productsContainTitle: {
-      // flex: 1,
       padding: 3,
       border: "1px solid black",
-      // borderLeft: "1px solid black",
-      // borderRight: "1px solid black",
+
       borderTop: "2px solid black",
     },
-    
+
     productsContainText: {
       border: "1px solid black",
-      // flex: 1,
-      // borderLeft: "1px solid black",
-      // borderRight: "1px solid black",
       fontSize: 15,
       paddingVertical: 10,
     },
@@ -112,13 +106,9 @@ const Pdfinvoice: React.FC<{
       flexDirection: "row",
       justifyContent: "space-between",
       textAlign: "center",
-      // border: "1px solid black",
     },
 
     productsContainTotaltext: {
-      // flex: 1,
-      // borderLeft: "1px solid black",
-      // borderRight: "1px solid black",
       padding: 10,
     },
 
@@ -172,8 +162,8 @@ const Pdfinvoice: React.FC<{
       {dataInvoice && (
         <Document>
           <Page size="A4" style={styles.page}>
-            <Image src={guijamaFondo} style={styles.documentImage} />
             <View style={styles.Header}>
+              <Image src={guijamaFondo} style={styles.documentImage} />
               <View style={styles.HeaderPresupuesto}>
                 <Image src={guijama} style={styles.image} />
                 <Text style={{ fontSize: 15 }}>
@@ -183,14 +173,13 @@ const Pdfinvoice: React.FC<{
               </View>
             </View>
             <View style={styles.infoClientContain}>
+              <Image src={guijamaFondo} style={styles.documentImage} />
               <View>
                 <Text>Cliente N°: {dataInvoice.idClient}</Text>
                 <Text>
                   Nombre: {dataInvoice.name + " " + dataInvoice.lastName}
                 </Text>
-                {/* </View> */}
 
-                {/* <View> */}
                 <Text>Direccion: {dataInvoice.address}</Text>
 
                 <Text>Fecha: {obtenerFechaSinHora(dataInvoice.date)}</Text>
@@ -205,6 +194,7 @@ const Pdfinvoice: React.FC<{
 
             <View style={styles.productsContain}>
               <View style={styles.productsContainTable}>
+                <Image src={guijamaFondo} style={styles.documentImage} />
                 <Text style={[styles.productsContainTitle, styles.sizePrices]}>
                   Cantidad
                 </Text>
@@ -222,6 +212,7 @@ const Pdfinvoice: React.FC<{
               <View>
                 {dataInvoice.products.map((el: any) => (
                   <View style={styles.productsContainTable}>
+                    <Image src={guijamaFondo} style={styles.documentImage} />
                     <Text
                       style={[styles.productsContainText, styles.sizePrices]}
                     >
@@ -246,6 +237,7 @@ const Pdfinvoice: React.FC<{
                 ))}
 
                 <View style={styles.productsContainTotal}>
+                  <Image src={guijamaFondo} style={styles.documentImage} />
                   <Text
                     style={[
                       styles.productsContainTotaltext,
@@ -263,9 +255,7 @@ const Pdfinvoice: React.FC<{
                     {" "}
                   </Text>
                   <Text
-                    style={[
-                      styles.productsContainTotaltext,
-                       styles.sizePrices]}
+                    style={[styles.productsContainTotaltext, styles.sizePrices]}
                   >
                     Total:
                   </Text>
