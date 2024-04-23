@@ -97,7 +97,7 @@ const Pdfinvoice: React.FC<{
 
     productsContainText: {
       border: "1px solid black",
-      fontSize: 10,
+      fontSize: 7,
       paddingVertical: 10,
     },
 
