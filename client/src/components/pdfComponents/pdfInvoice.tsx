@@ -97,8 +97,8 @@ const Pdfinvoice: React.FC<{
 
     productsContainText: {
       border: "1px solid black",
-      fontSize: 7,
-      paddingVertical: 10,
+      fontSize: 10,
+      paddingVertical: 5,
     },
 
     productsContainTotal: {
@@ -106,6 +106,7 @@ const Pdfinvoice: React.FC<{
       flexDirection: "row",
       justifyContent: "space-between",
       textAlign: "center",
+      border: "1px solid black",
     },
 
     productsContainTotaltext: {
