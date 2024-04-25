@@ -3,6 +3,7 @@ import { TextField } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import ReceiptIcon from "@mui/icons-material/Receipt";
 import styles from "./sales.module.css";
 import SearchBar from "../../components/searchBar/searchBar";
 import InstanceOfAxios from "../../utils/intanceAxios";
@@ -16,6 +17,7 @@ import Modal from "@mui/material/Modal";
 import { formatNumberWithCommas } from "../../utils/formatNumberwithCommas";
 import Pdfinvoice from "../../components/pdfComponents/pdfInvoice";
 import { GetDecodedCookie } from "../../utils/DecodedCookie";
+import EditDueSaleComponent from "../../components/modals/modalSale/modalDueEditSale/modalDueEditSale";
 import EditSaleComponent from "../../components/modals/modalSale/modalEditSale/modalEditSale";
 
 const SalesPage: React.FC = () => {
@@ -27,6 +29,7 @@ const SalesPage: React.FC = () => {
   const salesPerPage = 15;
   const [stateFilter, setStateFilter] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [editDueModalOpen, setEditDueModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [totalSale, setTotalsale] = useState(0);
   const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
@@ -43,7 +46,7 @@ const SalesPage: React.FC = () => {
 
   useEffect(() => {
     fetchData();
-  }, [modalOpen, editModalOpen]);
+  }, [modalOpen, editDueModalOpen,editModalOpen]);
 
   const handleChange = (value: string | null, field: keyof Sales) => {
     setFilters({
@@ -138,6 +141,9 @@ const SalesPage: React.FC = () => {
     setModalOpen(false);
   };
 
+  const closeEditDueModal = () => {
+    setEditDueModalOpen(false);
+  };
   const closeEditModal = () => {
     setEditModalOpen(false);
   };
@@ -279,7 +285,8 @@ const SalesPage: React.FC = () => {
               <th>Remito</th>
               <th>Estado</th>
               <th>Metodo</th>
-              <th>Editar</th>
+              <th>Ed.Cuotas</th>
+              <th>Mod. venta</th>
               <th>Borrar</th>
             </tr>
           </thead>
@@ -335,6 +342,17 @@ const SalesPage: React.FC = () => {
                   <button
                     className={styles.buttonEdit}
                     onClick={() => {
+                      setEditDueModalOpen(true);
+                      setSalesSelected(sale);
+                    }}
+                  >
+                    <ReceiptIcon />
+                  </button>
+                </td>
+                <td>
+                  <button
+                    className={styles.buttonEdit}
+                    onClick={() => {
                       setEditModalOpen(true);
                       setSalesSelected(sale);
                     }}
@@ -373,13 +391,24 @@ const SalesPage: React.FC = () => {
         </button>
         <ModalComponent open={modalOpen} onClose={closeModal} />
       </div>
+      <Modal open={editDueModalOpen} onClose={closeEditDueModal}>
+        <div>
+          {salesSelected && (
+            <EditDueSaleComponent
+              salesSelected={salesSelected}
+              onClose={closeEditDueModal}
+              setSalesSelected={setSalesSelected}
+            />
+          )}
+        </div>
+      </Modal>
       <Modal open={editModalOpen} onClose={closeEditModal}>
         <div>
           {salesSelected && (
             <EditSaleComponent
+              open={editModalOpen}
               salesSelected={salesSelected}
               onClose={closeEditModal}
-              setSalesSelected={setSalesSelected}
             />
           )}
         </div>

@@ -23,7 +23,7 @@ function getMonthName(monthNumber) {
   return months[monthNumber];
 }
 export const createSale = async (req, res) => {
-  const { List, client, token ,method} = req.body;
+  const { List, client, token, method } = req.body;
 
   try {
     let currentDate = new Date();
@@ -48,7 +48,7 @@ export const createSale = async (req, res) => {
       priceTotal: pricetotalFunction(),
       client: client,
       createdBy: user.email,
-      method:method
+      method: method,
     });
 
     await sale.save();
@@ -130,19 +130,47 @@ export const GetSaletById = async (req, res) => {
 
 export const UpdateSaleById = async (req, res) => {
   const { id } = req.params;
-  const { checkboxStates } = req.body;
-  try {
-    let statesTrue = checkboxStates.filter((state) => state === true).length;
-    console.log(checkboxStates.length);
+  const { checkboxStates, client, method, List } = req.body;
 
-    let sale = await Sale.findByIdAndUpdate(
-      id,
-      {
-        dues: { cant: checkboxStates.length, payd: checkboxStates },
-        state: statesTrue === checkboxStates.length ? true : false,
-      },
-      { new: true }
-    );
+  const pricetotalFunction = () => {
+    if (List) {
+      const total = List.reduce((acc, el) => {
+        return acc + el.priceList * el.unity;
+      }, 0);
+      return total;
+    }
+    return 0; // Devolver un valor predeterminado si List no está definido
+  };
+
+  const calculateStatesTrue = () => {
+    if (checkboxStates) {
+      return checkboxStates.filter((state) => state === true).length;
+    }
+    return 0; // Devolver un valor predeterminado si checkboxStates no está definido
+  };
+
+  console.log(req.body);
+  try {
+    let updateFields = {
+      products: List,
+      client: client,
+      method: method,
+    };
+
+    // Solo actualizar los campos relacionados con checkboxStates si está presente
+    if (checkboxStates) {
+      updateFields.dues = { cant: checkboxStates.length, payd: checkboxStates };
+      updateFields.state = checkboxStates ? calculateStatesTrue() === checkboxStates.length : false;
+    }
+
+    // Obtener la venta actual
+    let sale = await Sale.findByIdAndUpdate(id, updateFields, { new: true });
+
+    // Actualizar priceTotal si List está presente
+    if (List) {
+      sale.priceTotal = pricetotalFunction();
+      await sale.save();
+    }
 
     return res.status(200).json({ sale });
   } catch (error) {
@@ -150,6 +178,7 @@ export const UpdateSaleById = async (req, res) => {
     res.status(400).json(formatError(error.message));
   }
 };
+
 
 export const DeleteSaleById = async (req, res) => {
   const { id } = req.params;
