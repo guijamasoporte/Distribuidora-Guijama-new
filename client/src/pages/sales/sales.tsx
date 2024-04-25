@@ -286,7 +286,7 @@ const SalesPage: React.FC = () => {
               <th>Estado</th>
               <th>Metodo</th>
               <th>Ed.Cuotas</th>
-              <th>Mod. venta</th>
+              <th>Mod. Venta</th>
               <th>Borrar</th>
             </tr>
           </thead>
