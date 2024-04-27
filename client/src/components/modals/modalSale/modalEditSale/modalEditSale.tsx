@@ -191,7 +191,7 @@ const EditSaleComponent: React.FC<ModalProps> = ({
     newList.splice(index, 1);
     setList(newList);
   };
-console.log(salesSelected);
+
 
   const handleSubmit = async () => {
     const token = GetDecodedCookie("cookieToken");

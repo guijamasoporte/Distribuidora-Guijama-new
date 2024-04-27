@@ -26,7 +26,7 @@ const SalesPage: React.FC = () => {
   const [filters, setFilters] = useState<Partial<Sales>>({});
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const salesPerPage = 15;
+  const salesPerPage = 20;
   const [stateFilter, setStateFilter] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [editDueModalOpen, setEditDueModalOpen] = useState(false);
@@ -112,7 +112,7 @@ const SalesPage: React.FC = () => {
   const indexOfLastSale = currentPage * salesPerPage;
   const indexOfFirstSale = indexOfLastSale - salesPerPage;
   const currentSales = filteredSales.slice(indexOfFirstSale, indexOfLastSale);
-
+ 
   const handlePaginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   const formatDateModal = (isoDate: string): string => {
@@ -144,6 +144,7 @@ const SalesPage: React.FC = () => {
   const closeEditDueModal = () => {
     setEditDueModalOpen(false);
   };
+
   const closeEditModal = () => {
     setEditModalOpen(false);
   };
@@ -167,28 +168,30 @@ const SalesPage: React.FC = () => {
         Swal.fire("¡Eliminado!", "El cliente ha sido eliminado.", "success");
       }
     });
+    fetchData()
   };
 
+  const calculateTotals = () => {
+    const filteredSales = currentSales.filter(
+      (sale: Sales) =>
+        searchTerm === "" ||
+        Object.values(sale).some((value) =>
+          String(value).toLowerCase().includes(searchTerm.toLowerCase())
+        )
+    );
+
+    const saleTotal = filteredSales.reduce(
+      (acc: number, sale: Sales) =>  Number(acc) +  Number(sale.priceTotal),
+      0
+    );
+
+    setTotalsale(saleTotal);
+  };
+  
   useEffect(() => {
-    const calculateTotals = () => {
-      const filteredSales = currentSales.filter(
-        (sale: Sales) =>
-          searchTerm === "" ||
-          Object.values(sale).some((value) =>
-            String(value).toLowerCase().includes(searchTerm.toLowerCase())
-          )
-      );
-
-      const saleTotal = filteredSales.reduce(
-        (acc: number, sale: Sales) => acc + sale.priceTotal,
-        0
-      );
-
-      setTotalsale(saleTotal);
-    };
 
     calculateTotals();
-  }, [currentSales, searchTerm]);
+  }, [currentSales, searchTerm,dataSales,dataSales]);
 
   return (
     <div className={styles.tableContainer}>
