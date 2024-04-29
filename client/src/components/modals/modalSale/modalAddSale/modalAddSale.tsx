@@ -260,36 +260,40 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
             </div>
           </div>
           <div className={styles.autocompleteAddSale}>
-            <Autocomplete
-              className={styles.clientSelect}
-              fullWidth={true}
-              options={dataClients}
-              getOptionLabel={(option) =>
-                `N° ${option.idClient} - ${option.name} ${option.lastName}`
-              }
-              value={selectedClient}
-              onChange={(event, newValue) => {
-                if (newValue) {
-                  setSelectedClient(newValue);
+            <div>
+              <Autocomplete
+                className={styles.clientSelect}
+                fullWidth={true}
+                options={dataClients}
+                getOptionLabel={(option) =>
+                  `N° ${option.idClient} - ${option.name} ${option.lastName}`
                 }
-              }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Seleccionar cliente"
-                  variant="outlined"
-                />
-              )}
-            />
-            <Autocomplete
-              id="combo-box-mes"
-              options={["Transferencia", "Efectivo"]} // Opciones de formas de pago como cadenas
-              sx={{ width: 250 }}
-              renderInput={(params) => (
-                <TextField {...params} label="Forma de pago" />
-              )}
-              onChange={(event, value) => setMethod(value)} // Establecer el valor seleccionado en el estado method
-            />
+                value={selectedClient}
+                onChange={(event, newValue) => {
+                  if (newValue) {
+                    setSelectedClient(newValue);
+                  }
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Seleccionar cliente"
+                    variant="outlined"
+                  />
+                )}
+              />
+            </div>
+            <div>
+              <Autocomplete
+                className={styles.clientSelect}
+                id="combo-box-mes"
+                options={["Transferencia", "Efectivo"]} // Opciones de formas de pago como cadenas
+                renderInput={(params) => (
+                  <TextField {...params} label="Forma de pago" />
+                )}
+                onChange={(event, value) => setMethod(value)} // Establecer el valor seleccionado en el estado method
+              />
+            </div>
           </div>
           <div className={styles.tablesContainer}>
             <div className={styles.inputContainer}>
@@ -297,15 +301,21 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
                 <label className={styles.labels}>Código</label>
                 <Autocomplete
                   className={styles.autocompleteMui}
+                  sx={{
+                    "& .MuiAutocomplete-inputRoot": {
+                      backgroundColor: "#fff",
+                      height: '40px'
+                    },
+                    "& .MuiAutocomplete-listbox": {
+                      backgroundColor: "#fff",
+                    },
+                  }}
                   disablePortal
                   id="combo-box-codigo"
                   options={Array.from(
                     new Set(dataProducts.map((product) => product.code))
                   )}
-                  sx={{ width: 200 }}
-                  renderInput={(params) => (
-                    <TextField {...params} label="" />
-                  )}
+                  renderInput={(params) => <TextField {...params} label="" />}
                   onChange={(event, value) => handleChangeFilter("code", value)}
                 />
                 <button
@@ -319,12 +329,20 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
                 <label className={styles.labels}>titulo</label>
                 <Autocomplete
                   className={styles.autocompleteMui}
+                  sx={{
+                    "& .MuiAutocomplete-inputRoot": {
+                      backgroundColor: "#fff",
+                      height: '40px'
+                    },
+                    "& .MuiAutocomplete-listbox": {
+                      backgroundColor: "#fff",
+                    },
+                  }}
                   disablePortal
                   id="combo-box-titulo"
                   options={Array.from(
                     new Set(dataProducts.map((product) => product.title))
                   )}
-                  sx={{ width: 200 }}
                   renderInput={(params) => <TextField {...params} label="" />}
                   onChange={(event, value) => {
                     handleChangeFilter("title", value);

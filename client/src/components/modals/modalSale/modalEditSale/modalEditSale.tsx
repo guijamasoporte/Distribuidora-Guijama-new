@@ -264,8 +264,10 @@ const EditSaleComponent: React.FC<ModalProps> = ({
             </div>
           </div>
           <div className={styles.autocompleteAddSale}>
+            <div>
             <Autocomplete
               className={styles.clientSelect}
+              sx={{width:320}}
               fullWidth={true}
               options={dataClients}
               getOptionLabel={(option) =>
@@ -285,16 +287,19 @@ const EditSaleComponent: React.FC<ModalProps> = ({
                 />
               )}
             />
+            </div>
+            <div>
             <Autocomplete
+               className={styles.clientSelect}
               id="combo-box-mes"
               options={["Transferencia", "Efectivo"]} // Opciones de formas de pago como cadenas
-              sx={{ width: 250 }}
               renderInput={(params) => (
                 <TextField {...params} label="Forma de pago" />
               )}
               value={method}
               onChange={(event, value) => setMethod(value)} // Establecer el valor seleccionado en el estado method
             />
+            </div>
           </div>
           <div className={styles.tablesContainer}>
             <div className={styles.inputContainer}>
@@ -307,7 +312,15 @@ const EditSaleComponent: React.FC<ModalProps> = ({
                   options={Array.from(
                     new Set(dataProducts.map((product) => product.code))
                   )}
-                  sx={{ width: 200 }}
+                  sx={{
+                    "& .MuiAutocomplete-inputRoot": {
+                      backgroundColor: "#fff",
+                      height: '40px'
+                    },
+                    "& .MuiAutocomplete-listbox": {
+                      backgroundColor: "#fff",
+                    },
+                  }}
                   renderInput={(params) => <TextField {...params} label="" />}
                   onChange={(event, value) => handleChangeFilter("code", value)}
                 />
@@ -322,12 +335,21 @@ const EditSaleComponent: React.FC<ModalProps> = ({
                 <label className={styles.labels}>titulo</label>
                 <Autocomplete
                   className={styles.autocompleteMui}
+                  sx={{
+                    "& .MuiAutocomplete-inputRoot": {
+                      backgroundColor: "#fff",
+                      height: '40px'
+                    },
+                    "& .MuiAutocomplete-listbox": {
+                      backgroundColor: "#fff",
+                    },
+                  }}
                   disablePortal
                   id="combo-box-titulo"
                   options={Array.from(
                     new Set(dataProducts.map((product) => product.title))
                   )}
-                  sx={{ width: 200 }}
+              
                   renderInput={(params) => <TextField {...params} label="" />}
                   onChange={(event, value) => {
                     handleChangeFilter("title", value);
