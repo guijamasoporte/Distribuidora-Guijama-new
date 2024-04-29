@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { TextField } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -109,6 +109,7 @@ const SalesPage: React.FC = () => {
     );
   });
 
+
   const indexOfLastSale = currentPage * salesPerPage;
   const indexOfFirstSale = indexOfLastSale - salesPerPage;
   const currentSales = filteredSales.slice(indexOfFirstSale, indexOfLastSale);
@@ -172,25 +173,26 @@ const SalesPage: React.FC = () => {
   };
 
   const calculateTotals = () => {
-    const filteredSales = dataSales.filter((sale: Sales) =>
+    const filteredSalesFunction = filteredSales.filter((sale: Sales) =>
       Object.values(sale).some((value) =>
         String(value).toLowerCase().includes(searchTerm.toLowerCase())
       )
     );
 
-    const saleTotal = filteredSales.reduce(
+    const saleTotal = filteredSalesFunction.reduce(
       (acc: number, sale: Sales) => acc + Number(sale.priceTotal),
       0
     );
 
     setTotalsale(saleTotal);
   };
-
-  useEffect(() => {
-    calculateTotals();
-  }, [searchTerm, dataSales]);
-
-  return (
+  
+    
+    useEffect(() => {
+      calculateTotals();
+    }, [searchTerm, dataSales,filteredSales]);
+    
+    return (
     <div className={styles.tableContainer}>
       <h1 className={styles.title}>Listado de ventas</h1>
       <div className={styles.filters}>

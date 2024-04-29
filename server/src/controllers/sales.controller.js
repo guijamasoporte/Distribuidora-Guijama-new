@@ -48,7 +48,7 @@ export const createSale = async (req, res) => {
       priceTotal: pricetotalFunction(),
       client: client,
       createdBy: user.email,
-      method: method,
+      method: method ? method : "Efectivo",
     });
 
     await sale.save();
@@ -160,7 +160,9 @@ export const UpdateSaleById = async (req, res) => {
     // Solo actualizar los campos relacionados con checkboxStates si está presente
     if (checkboxStates) {
       updateFields.dues = { cant: checkboxStates.length, payd: checkboxStates };
-      updateFields.state = checkboxStates ? calculateStatesTrue() === checkboxStates.length : false;
+      updateFields.state = checkboxStates
+        ? calculateStatesTrue() === checkboxStates.length
+        : false;
     }
 
     // Obtener la venta actual
@@ -178,7 +180,6 @@ export const UpdateSaleById = async (req, res) => {
     res.status(400).json(formatError(error.message));
   }
 };
-
 
 export const DeleteSaleById = async (req, res) => {
   const { id } = req.params;
