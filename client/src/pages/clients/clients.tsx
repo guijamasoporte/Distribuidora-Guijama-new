@@ -13,6 +13,7 @@ import EditClientModal from "../../components/modals/modalClient/modalEditClient
 import PurchaseModal from "../../components/modals/modalClient/modalBuysClient/modalBuysClient";
 import { GetDecodedCookie } from "../../utils/DecodedCookie";
 import { Client } from "../../interfaces/interfaces";
+import { FadeLoader } from "react-spinners";
 
 const ClientsPage: React.FC = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -38,6 +39,7 @@ const ClientsPage: React.FC = () => {
   const [dataSale, setDataSale] = useState<Client[]>([]);
   const [filteredClients, setFilteredClients] = useState<Client[]>([]);
   const [clientSelect, setClientSelect] = useState<Client | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchClient = async () => {
@@ -45,6 +47,7 @@ const ClientsPage: React.FC = () => {
         const response: any = await InstanceOfAxios("/clients", "GET");
         if (Array.isArray(response.clients)) {
           setDataSale(response.clients);
+          setLoading(false)
         } else {
           console.error(
             "La respuesta no contiene un array de clientes:",
@@ -123,7 +126,7 @@ const ClientsPage: React.FC = () => {
       );
     });
     setFilteredClients(filteredData);
-    setCurrentPage(1)
+    setCurrentPage(1);
   }, [dataSale, filters, searchTerm]);
 
   const indexOfLastClient = currentPage * clientsPerPage;
@@ -138,130 +141,153 @@ const ClientsPage: React.FC = () => {
   return (
     <div className={styles.tableContainer}>
       <h1 className={styles.title}>Listado de clientes</h1>
-      <div className={styles.filters}>
-        <Autocomplete
-          className={styles.autocomplete}
-          disablePortal
-          id="combo-box-id"
-          options={Array.from(
-            new Set(currentClients.map((client, index) => client.idClient))
-          )}
-          sx={{ width: 200 }}
-          renderInput={(params) => <TextField {...params} label="Id" />}
-          onChange={(event, value) =>
-            handleFilterChange(
-              event,
-              value ? value.toString() : null,
-              "idClient"
-            )
-          }
-        />
+      {loading === true ? (
+        <div className={styles.loaderContainer}>
+          <FadeLoader
+            color="#603e20"
+            height={23}
+            width={5}
+            aria-label="Loading Spinner"
+            data-testid="loader"
+          />
+        </div>
+      ) : (
+        <>
+          <div className={styles.filters}>
+            <Autocomplete
+              className={styles.autocomplete}
+              disablePortal
+              id="combo-box-id"
+              options={Array.from(
+                new Set(currentClients.map((client, index) => client.idClient))
+              )}
+              sx={{ width: 200 }}
+              renderInput={(params) => <TextField {...params} label="Id" />}
+              onChange={(event, value) =>
+                handleFilterChange(
+                  event,
+                  value ? value.toString() : null,
+                  "idClient"
+                )
+              }
+            />
 
-        <Autocomplete
-          className={styles.autocomplete}
-          disablePortal
-          id="combo-box-nombre"
-          options={Array.from(
-            new Set(currentClients.map((client, index) => client.name))
-          )}
-          sx={{ width: 200 }}
-          renderInput={(params) => <TextField {...params} label="Nombre" />}
-          onChange={(event, value) =>
-            handleFilterChange(event, value ? value.toString() : null, "name")
-          }
-        />
+            <Autocomplete
+              className={styles.autocomplete}
+              disablePortal
+              id="combo-box-nombre"
+              options={Array.from(
+                new Set(currentClients.map((client, index) => client.name))
+              )}
+              sx={{ width: 200 }}
+              renderInput={(params) => <TextField {...params} label="Nombre" />}
+              onChange={(event, value) =>
+                handleFilterChange(
+                  event,
+                  value ? value.toString() : null,
+                  "name"
+                )
+              }
+            />
 
-        <Autocomplete
-          className={styles.autocomplete}
-          disablePortal
-          id="combo-box-apellido"
-          options={Array.from(
-            new Set(currentClients.map((client, index) => client.lastName))
-          )}
-          sx={{ width: 200 }}
-          renderInput={(params) => <TextField {...params} label="Apellido" />}
-          onChange={(event, value) =>
-            handleFilterChange(
-              event,
-              value ? value.toString() : null,
-              "lastName"
-            )
-          }
-        />
+            <Autocomplete
+              className={styles.autocomplete}
+              disablePortal
+              id="combo-box-apellido"
+              options={Array.from(
+                new Set(currentClients.map((client, index) => client.lastName))
+              )}
+              sx={{ width: 200 }}
+              renderInput={(params) => (
+                <TextField {...params} label="Apellido" />
+              )}
+              onChange={(event, value) =>
+                handleFilterChange(
+                  event,
+                  value ? value.toString() : null,
+                  "lastName"
+                )
+              }
+            />
 
-        <SearchBar onSearch={handleSearch} />
-      </div>
-      <div className={styles.tableWrapper}>
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th className={styles.nameTable}>Nombre</th>
-              <th>Apellido</th>
-              <th>Teléfono</th>
-              <th>E-mail</th>
-              <th className={styles.adressTable}>Dirección</th>
-              <th>Compras</th>
-              <th>Editar</th>
-              <th>Borrar</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentClients.map((client, index) => (
-              <tr key={index}>
-                <td>{client.idClient}</td>
-                <td className={styles.nameTable}>{client.name}</td>
-                <td>{client.lastName}</td>
-                <td>{client.phone}</td>
-                <td>{client.email}</td>
-                <td className={styles.adressTable}>{client.adress}</td>
-                <td>
-                  <button
-                    className={styles.buttonSee}
-                    onClick={() => {
-                      // handleViewBuys(client);
-                      setOpenPurchaseModal(true);
-                      setClientSelect(client);
-                    }}
-                  >
-                    <SearchIcon />
-                  </button>
-                </td>
-                <td>
-                  <button
-                    className={styles.buttonEdit}
-                    onClick={() => {
-                      setOpenModalEdit(true);
-                      setClientSelect(client);
-                    }}
-                  >
-                    <EditIcon />
-                  </button>
-                </td>
-                <td>
-                  <button
-                    className={styles.buttonDelete}
-                    onClick={() => handleDelete(`${client._id}`)}
-                  >
-                    <DeleteIcon />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <Pagination
-        totalItems={filteredClients.length}
-        itemsPerPage={clientsPerPage}
-        currentPage={currentPage}
-        paginate={paginate}
-      />
-      <div className={styles.buttonsFooter}>
-        <button className={styles.buttonAdd} onClick={() => setOpenModal(true)}>
-          Agregar nuevo cliente
-        </button>
-      </div>
+            <SearchBar onSearch={handleSearch} />
+          </div>
+          <div className={styles.tableWrapper}>
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th className={styles.nameTable}>Nombre</th>
+                  <th>Apellido</th>
+                  <th>Teléfono</th>
+                  <th>E-mail</th>
+                  <th className={styles.adressTable}>Dirección</th>
+                  <th>Compras</th>
+                  <th>Editar</th>
+                  <th>Borrar</th>
+                </tr>
+              </thead>
+              <tbody>
+                {currentClients.map((client, index) => (
+                  <tr key={index}>
+                    <td>{client.idClient}</td>
+                    <td className={styles.nameTable}>{client.name}</td>
+                    <td>{client.lastName}</td>
+                    <td>{client.phone}</td>
+                    <td>{client.email}</td>
+                    <td className={styles.adressTable}>{client.adress}</td>
+                    <td>
+                      <button
+                        className={styles.buttonSee}
+                        onClick={() => {
+                          // handleViewBuys(client);
+                          setOpenPurchaseModal(true);
+                          setClientSelect(client);
+                        }}
+                      >
+                        <SearchIcon />
+                      </button>
+                    </td>
+                    <td>
+                      <button
+                        className={styles.buttonEdit}
+                        onClick={() => {
+                          setOpenModalEdit(true);
+                          setClientSelect(client);
+                        }}
+                      >
+                        <EditIcon />
+                      </button>
+                    </td>
+                    <td>
+                      <button
+                        className={styles.buttonDelete}
+                        onClick={() => handleDelete(`${client._id}`)}
+                      >
+                        <DeleteIcon />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <Pagination
+            totalItems={filteredClients.length}
+            itemsPerPage={clientsPerPage}
+            currentPage={currentPage}
+            paginate={paginate}
+          />
+          <div className={styles.buttonsFooter}>
+            <button
+              className={styles.buttonAdd}
+              onClick={() => setOpenModal(true)}
+            >
+              Agregar nuevo cliente
+            </button>
+          </div>
+        </>
+      )}
       <CreateClientModal
         open={openModal}
         onClose={() => setOpenModal(false)}

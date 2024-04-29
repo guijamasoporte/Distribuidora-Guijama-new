@@ -153,6 +153,13 @@
   }
 }
 
+.loaderContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 15rem;
+}
+
 @media only screen and (max-width: 680px) {
   .tableContainer {
     margin-top: 20px;

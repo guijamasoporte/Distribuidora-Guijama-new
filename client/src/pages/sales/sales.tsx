@@ -19,6 +19,7 @@ import Pdfinvoice from "../../components/pdfComponents/pdfInvoice";
 import { GetDecodedCookie } from "../../utils/DecodedCookie";
 import EditDueSaleComponent from "../../components/modals/modalSale/modalDueEditSale/modalDueEditSale";
 import EditSaleComponent from "../../components/modals/modalSale/modalEditSale/modalEditSale";
+import { FadeLoader } from "react-spinners";
 
 const SalesPage: React.FC = () => {
   const [dataSales, setDataSales] = useState<Sales[]>([]);
@@ -34,11 +35,13 @@ const SalesPage: React.FC = () => {
   const [totalSale, setTotalsale] = useState(0);
   const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
   const [selectedMethod, setSelectedMethod] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const fetchData = async () => {
     try {
       const response: any = await InstanceOfAxios("/sales", "GET");
       setDataSales(response);
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -108,7 +111,6 @@ const SalesPage: React.FC = () => {
       // Filtrar por método de pago seleccionado
     );
   });
-
 
   const indexOfLastSale = currentPage * salesPerPage;
   const indexOfFirstSale = indexOfLastSale - salesPerPage;
@@ -186,213 +188,231 @@ const SalesPage: React.FC = () => {
 
     setTotalsale(saleTotal);
   };
-  
-    
-    useEffect(() => {
-      calculateTotals();
-    }, [searchTerm, dataSales,filteredSales]);
-    
-    return (
+
+  useEffect(() => {
+    calculateTotals();
+  }, [searchTerm, dataSales, filteredSales]);
+
+  return (
     <div className={styles.tableContainer}>
       <h1 className={styles.title}>Listado de ventas</h1>
-      <div className={styles.filters}>
-        <Autocomplete
-          className={styles.autocomplete}
-          disablePortal
-          id="combo-box-id"
-          options={Array.from(
-            new Set(dataSales.map((sale) => sale.idSale?.toString() || ""))
-          )}
-          sx={{ width: 200 }}
-          renderInput={(params) => <TextField {...params} label="ID" />}
-          onChange={(event, value) => handleChange(value, "idSale")}
-        />
-        <Autocomplete
-          className={styles.autocomplete}
-          disablePortal
-          id="combo-box-nombre"
-          options={Array.from(
-            new Set(dataSales.map((sale) => sale.client.name))
-          )}
-          sx={{ width: 200 }}
-          renderInput={(params) => <TextField {...params} label="Nombre" />}
-          onChange={(event, value) => handleChange(value, "client")}
-        />
-        <Autocomplete
-          className={styles.autocomplete}
-          disablePortal
-          id="combo-box-mes"
-          options={[
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10",
-            "11",
-            "12",
-          ]} // Opciones de meses como cadenas
-          sx={{ width: 200 }}
-          renderInput={(params) => <TextField {...params} label="Mes" />}
-          onChange={(event, value) =>
-            setSelectedMonth(value ? value.toString() : null)
-          } // Convertir el valor a cadena antes de asignarlo
-        />
+      {loading === true ? (
+        <div className={styles.loaderContainer}>
+          <FadeLoader
+            color="#603e20"
+            height={23}
+            width={5}
+            aria-label="Loading Spinner"
+            data-testid="loader"
+          />
+        </div>
+      ) : (
+        <>
+          <div className={styles.filters}>
+            <Autocomplete
+              className={styles.autocomplete}
+              disablePortal
+              id="combo-box-id"
+              options={Array.from(
+                new Set(dataSales.map((sale) => sale.idSale?.toString() || ""))
+              )}
+              sx={{ width: 200 }}
+              renderInput={(params) => <TextField {...params} label="ID" />}
+              onChange={(event, value) => handleChange(value, "idSale")}
+            />
+            <Autocomplete
+              className={styles.autocomplete}
+              disablePortal
+              id="combo-box-nombre"
+              options={Array.from(
+                new Set(dataSales.map((sale) => sale.client.name))
+              )}
+              sx={{ width: 200 }}
+              renderInput={(params) => <TextField {...params} label="Nombre" />}
+              onChange={(event, value) => handleChange(value, "client")}
+            />
+            <Autocomplete
+              className={styles.autocomplete}
+              disablePortal
+              id="combo-box-mes"
+              options={[
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9",
+                "10",
+                "11",
+                "12",
+              ]} // Opciones de meses como cadenas
+              sx={{ width: 200 }}
+              renderInput={(params) => <TextField {...params} label="Mes" />}
+              onChange={(event, value) =>
+                setSelectedMonth(value ? value.toString() : null)
+              } // Convertir el valor a cadena antes de asignarlo
+            />
 
-        <Autocomplete
-          className={styles.autocomplete}
-          disablePortal
-          id="combo-box-estado"
-          options={["Cerrada", "Pendiente"]}
-          sx={{ width: 200 }}
-          renderInput={(params) => <TextField {...params} label="Estado" />}
-          onChange={(event, value) => setStateFilter(value)}
-        />
+            <Autocomplete
+              className={styles.autocomplete}
+              disablePortal
+              id="combo-box-estado"
+              options={["Cerrada", "Pendiente"]}
+              sx={{ width: 200 }}
+              renderInput={(params) => <TextField {...params} label="Estado" />}
+              onChange={(event, value) => setStateFilter(value)}
+            />
 
-        <Autocomplete
-          className={styles.autocomplete}
-          disablePortal
-          id="combo-box-metodo"
-          options={["Transferencia", "Efectivo"]}
-          sx={{ width: 200 }}
-          renderInput={(params) => <TextField {...params} label="Método" />}
-          onChange={(event, value) => setSelectedMethod(value)}
-        />
+            <Autocomplete
+              className={styles.autocomplete}
+              disablePortal
+              id="combo-box-metodo"
+              options={["Transferencia", "Efectivo"]}
+              sx={{ width: 200 }}
+              renderInput={(params) => <TextField {...params} label="Método" />}
+              onChange={(event, value) => setSelectedMethod(value)}
+            />
 
-        <SearchBar onSearch={handleSearch} />
-        <Autocomplete
-          className={styles.autocomplete}
-          disablePortal
-          id="combo-box-creador"
-          options={Array.from(new Set(dataSales.map((sale) => sale.createdBy)))}
-          sx={{ width: 200 }}
-          renderInput={(params) => <TextField {...params} label="Creador" />}
-          onChange={(event, value) => handleChange(value, "createBy")} // Cambia "createBy" a "createdBy"
-        />
-      </div>
-      <div className={styles.tableWrapper}>
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Nombre</th>
-              <th>Apellido</th>
-              <th className={styles.dateTable}>Fecha</th>
-              <th>Total</th>
-              <th>Cuotas</th>
-              <th>Remito</th>
-              <th>Estado</th>
-              <th>Metodo</th>
-              <th>Ed.Cuotas</th>
-              <th>Mod. Venta</th>
-              <th>Borrar</th>
-            </tr>
-          </thead>
+            <SearchBar onSearch={handleSearch} />
+            <Autocomplete
+              className={styles.autocomplete}
+              disablePortal
+              id="combo-box-creador"
+              options={Array.from(
+                new Set(dataSales.map((sale) => sale.createdBy))
+              )}
+              sx={{ width: 200 }}
+              renderInput={(params) => (
+                <TextField {...params} label="Creador" />
+              )}
+              onChange={(event, value) => handleChange(value, "createBy")} // Cambia "createBy" a "createdBy"
+            />
+          </div>
 
-          <tbody>
-            {currentSales.map((sale: Sales, index: number) => (
-              <tr key={index}>
-                <td>{sale.idSale}</td>
-                <td>{sale.client.name}</td>
-                <td>{sale.client.lastName}</td>
-                <td>{formatDateModal(sale.date)}</td>
-                <td className={styles.amountTable}>
-                  $ {formatNumberWithCommas(sale.priceTotal)}
-                </td>
-                <td>
-                  {sale.dues.payd.filter((state) => state === true).length} /{" "}
-                  {sale.dues.cant}
-                </td>
-                <td>
-                  <PDFDownloadLink
-                    document={
-                      <Pdfinvoice sales={sale} id={index} saleClient={""} />
-                    }
-                    fileName={sale.client.name + "_" + sale.idSale + ".pdf"}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className={styles.iconPDF}
-                    >
-                      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                      <path d="M14 3v4a1 1 0 0 0 1 1h4" />
-                      <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
-                      <path d="M9 9l1 0" />
-                      <path d="M9 13l6 0" />
-                      <path d="M9 17l6 0" />
-                    </svg>
-                  </PDFDownloadLink>
-                  {/* <PDFViewer>
+          <div className={styles.tableWrapper}>
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nombre</th>
+                  <th>Apellido</th>
+                  <th className={styles.dateTable}>Fecha</th>
+                  <th>Total</th>
+                  <th>Cuotas</th>
+                  <th>Remito</th>
+                  <th>Estado</th>
+                  <th>Metodo</th>
+                  <th>Ed.Cuotas</th>
+                  <th>Mod. Venta</th>
+                  <th>Borrar</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {currentSales.map((sale: Sales, index: number) => (
+                  <tr key={index}>
+                    <td>{sale.idSale}</td>
+                    <td>{sale.client.name}</td>
+                    <td>{sale.client.lastName}</td>
+                    <td>{formatDateModal(sale.date)}</td>
+                    <td className={styles.amountTable}>
+                      $ {formatNumberWithCommas(sale.priceTotal)}
+                    </td>
+                    <td>
+                      {sale.dues.payd.filter((state) => state === true).length}{" "}
+                      / {sale.dues.cant}
+                    </td>
+                    <td>
+                      <PDFDownloadLink
+                        document={
+                          <Pdfinvoice sales={sale} id={index} saleClient={""} />
+                        }
+                        fileName={sale.client.name + "_" + sale.idSale + ".pdf"}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className={styles.iconPDF}
+                        >
+                          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                          <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                          <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
+                          <path d="M9 9l1 0" />
+                          <path d="M9 13l6 0" />
+                          <path d="M9 17l6 0" />
+                        </svg>
+                      </PDFDownloadLink>
+                      {/* <PDFViewer>
                  <Pdfinvoice sales={sale} id={index} saleClient={""} />
                 </PDFViewer> */}
-                </td>
-                <td>{sale.state ? "Cerrada" : "Pendiente"}</td>
-                <td>{sale.method ? sale.method : "-"}</td>
-                <td>
-                  <button
-                    className={styles.buttonEdit}
-                    onClick={() => {
-                      setEditDueModalOpen(true);
-                      setSalesSelected(sale);
-                    }}
-                  >
-                    <ReceiptIcon />
-                  </button>
-                </td>
-                <td>
-                  <button
-                    className={styles.buttonEdit}
-                    onClick={() => {
-                      setEditModalOpen(true);
-                      setSalesSelected(sale);
-                    }}
-                  >
-                    <EditIcon />
-                  </button>
-                </td>
-                <td>
-                  <button
-                    className={styles.buttonEdit}
-                    onClick={() => handleDelete(`${sale._id}`)}
-                  >
-                    <DeleteIcon />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <div className={styles.totalsData}>
-        <p className={styles.totalCat}>
-          Total de Ventas: ${formatNumberWithCommas(totalSale)}
-        </p>
-      </div>
+                    </td>
+                    <td>{sale.state ? "Cerrada" : "Pendiente"}</td>
+                    <td>{sale.method ? sale.method : "-"}</td>
+                    <td>
+                      <button
+                        className={styles.buttonEdit}
+                        onClick={() => {
+                          setEditDueModalOpen(true);
+                          setSalesSelected(sale);
+                        }}
+                      >
+                        <ReceiptIcon />
+                      </button>
+                    </td>
+                    <td>
+                      <button
+                        className={styles.buttonEdit}
+                        onClick={() => {
+                          setEditModalOpen(true);
+                          setSalesSelected(sale);
+                        }}
+                      >
+                        <EditIcon />
+                      </button>
+                    </td>
+                    <td>
+                      <button
+                        className={styles.buttonEdit}
+                        onClick={() => handleDelete(`${sale._id}`)}
+                      >
+                        <DeleteIcon />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
-      <Pagination
-        totalItems={filteredSales.length}
-        itemsPerPage={salesPerPage}
-        currentPage={currentPage}
-        paginate={handlePaginate}
-      />
-      <div className={styles.buttonsFooter}>
-        <button className={styles.buttonAdd} onClick={openModal}>
-          Cargar nueva venta
-        </button>
-        <ModalComponent open={modalOpen} onClose={closeModal} />
-      </div>
+          <div className={styles.totalsData}>
+            <p className={styles.totalCat}>
+              Total de Ventas: ${formatNumberWithCommas(totalSale)}
+            </p>
+          </div>
+          <Pagination
+            totalItems={filteredSales.length}
+            itemsPerPage={salesPerPage}
+            currentPage={currentPage}
+            paginate={handlePaginate}
+          />
+          <div className={styles.buttonsFooter}>
+            <button className={styles.buttonAdd} onClick={openModal}>
+              Cargar nueva venta
+            </button>
+            <ModalComponent open={modalOpen} onClose={closeModal} />
+          </div>
+        </>
+      )}
       <Modal open={editDueModalOpen} onClose={closeEditDueModal}>
         <div>
           {salesSelected && (
