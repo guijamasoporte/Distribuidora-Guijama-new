@@ -193,6 +193,11 @@ const SalesPage: React.FC = () => {
     calculateTotals();
   }, [searchTerm, dataSales, filteredSales]);
 
+  const emailToNameMap: Record<string, string> = {
+    "bisogni45@gmail.com": "Juan Pablo",
+    "matee.biso@icloud.com": "Mateo",
+  };
+
   return (
     <div className={styles.tableContainer}>
       <h1 className={styles.title}>Listado de ventas</h1>
@@ -288,7 +293,8 @@ const SalesPage: React.FC = () => {
               renderInput={(params) => (
                 <TextField {...params} label="Creador" />
               )}
-              onChange={(event, value) => handleChange(value, "createBy")} // Cambia "createBy" a "createdBy"
+              onChange={(event, value) => handleChange(value, "createBy")}
+              getOptionLabel={(option) => emailToNameMap[option] || option}
             />
           </div>
 
