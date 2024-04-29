@@ -262,6 +262,7 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
           <div className={styles.autocompleteAddSale}>
             <div>
               <Autocomplete
+              sx={{width: 320}}
                 className={styles.clientSelect}
                 fullWidth={true}
                 options={dataClients}
@@ -304,7 +305,9 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
                   sx={{
                     "& .MuiAutocomplete-inputRoot": {
                       backgroundColor: "#fff",
-                      height: '40px'
+                      height: '40px',
+                      paddingTop: '0px',
+                      paddingBottom: '10px',
                     },
                     "& .MuiAutocomplete-listbox": {
                       backgroundColor: "#fff",
@@ -332,7 +335,9 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose }) => {
                   sx={{
                     "& .MuiAutocomplete-inputRoot": {
                       backgroundColor: "#fff",
-                      height: '40px'
+                      height: '40px',
+                      paddingTop: '0px',
+                      paddingBottom: '10px',
                     },
                     "& .MuiAutocomplete-listbox": {
                       backgroundColor: "#fff",

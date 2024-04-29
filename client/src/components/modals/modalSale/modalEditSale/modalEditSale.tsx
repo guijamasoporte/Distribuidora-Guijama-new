@@ -315,7 +315,9 @@ const EditSaleComponent: React.FC<ModalProps> = ({
                   sx={{
                     "& .MuiAutocomplete-inputRoot": {
                       backgroundColor: "#fff",
-                      height: '40px'
+                      height: '40px',
+                      paddingTop: '0px',
+                      paddingBottom: '10px',
                     },
                     "& .MuiAutocomplete-listbox": {
                       backgroundColor: "#fff",
@@ -338,7 +340,9 @@ const EditSaleComponent: React.FC<ModalProps> = ({
                   sx={{
                     "& .MuiAutocomplete-inputRoot": {
                       backgroundColor: "#fff",
-                      height: '40px'
+                      height: '40px',
+                      paddingTop: '0px',
+                      paddingBottom: '10px',
                     },
                     "& .MuiAutocomplete-listbox": {
                       backgroundColor: "#fff",
