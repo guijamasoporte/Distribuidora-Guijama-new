@@ -63,6 +63,7 @@
   flex-direction: column;
   justify-content: center;
   gap: 1rem;
+  min-height: 10rem;
   width: auto;
   font-family: "noto sans";
   background-color: #ffffff;
@@ -191,7 +192,7 @@
     padding: 1rem;
     border-radius: 10px;
   }
-  
+
   .descriptionCatalogue {
     width: 95%;
     font-family: "noto sans";

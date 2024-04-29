@@ -129,6 +129,7 @@ const ProductsPage: React.FC = () => {
 
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  
   const slicedProducts = currentProducts
     .filter(applyFilters)
     .filter(

@@ -26,7 +26,7 @@ const SalesPage: React.FC = () => {
   const [filters, setFilters] = useState<Partial<Sales>>({});
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const salesPerPage = 20;
+  const salesPerPage = 10;
   const [stateFilter, setStateFilter] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [editDueModalOpen, setEditDueModalOpen] = useState(false);
@@ -46,7 +46,7 @@ const SalesPage: React.FC = () => {
 
   useEffect(() => {
     fetchData();
-  }, [modalOpen, editDueModalOpen,editModalOpen]);
+  }, [modalOpen, editDueModalOpen, editModalOpen]);
 
   const handleChange = (value: string | null, field: keyof Sales) => {
     setFilters({
@@ -112,7 +112,7 @@ const SalesPage: React.FC = () => {
   const indexOfLastSale = currentPage * salesPerPage;
   const indexOfFirstSale = indexOfLastSale - salesPerPage;
   const currentSales = filteredSales.slice(indexOfFirstSale, indexOfLastSale);
- 
+
   const handlePaginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   const formatDateModal = (isoDate: string): string => {
@@ -168,30 +168,27 @@ const SalesPage: React.FC = () => {
         Swal.fire("¡Eliminado!", "El cliente ha sido eliminado.", "success");
       }
     });
-    fetchData()
+    fetchData();
   };
 
   const calculateTotals = () => {
-    const filteredSales = currentSales.filter(
-      (sale: Sales) =>
-        searchTerm === "" ||
-        Object.values(sale).some((value) =>
-          String(value).toLowerCase().includes(searchTerm.toLowerCase())
-        )
+    const filteredSales = dataSales.filter((sale: Sales) =>
+      Object.values(sale).some((value) =>
+        String(value).toLowerCase().includes(searchTerm.toLowerCase())
+      )
     );
 
     const saleTotal = filteredSales.reduce(
-      (acc: number, sale: Sales) =>  Number(acc) +  Number(sale.priceTotal),
+      (acc: number, sale: Sales) => acc + Number(sale.priceTotal),
       0
     );
 
     setTotalsale(saleTotal);
   };
-  
-  useEffect(() => {
 
+  useEffect(() => {
     calculateTotals();
-  }, [currentSales, searchTerm,dataSales,dataSales]);
+  }, [searchTerm, dataSales]);
 
   return (
     <div className={styles.tableContainer}>
@@ -295,7 +292,7 @@ const SalesPage: React.FC = () => {
           </thead>
 
           <tbody>
-            {filteredSales.map((sale: Sales, index: number) => (
+            {currentSales.map((sale: Sales, index: number) => (
               <tr key={index}>
                 <td>{sale.idSale}</td>
                 <td>{sale.client.name}</td>
@@ -378,12 +375,12 @@ const SalesPage: React.FC = () => {
       </div>
       <div className={styles.totalsData}>
         <p className={styles.totalCat}>
-          Total de Venta: ${formatNumberWithCommas(totalSale)}
+          Total de Ventas: ${formatNumberWithCommas(totalSale)}
         </p>
       </div>
 
       <Pagination
-        totalItems={currentSales.length}
+        totalItems={filteredSales.length}
         itemsPerPage={salesPerPage}
         currentPage={currentPage}
         paginate={handlePaginate}
