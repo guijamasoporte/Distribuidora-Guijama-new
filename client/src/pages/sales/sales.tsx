@@ -168,7 +168,7 @@ const SalesPage: React.FC = () => {
         InstanceOfAxios(`/sales/${id}`, "DELETE", undefined, token).then(() =>
           fetchData()
         );
-        Swal.fire("¡Eliminado!", "El cliente ha sido eliminado.", "success");
+        Swal.fire("¡Eliminado!", "la venta ha sido eliminado.", "success");
       }
     });
     fetchData();

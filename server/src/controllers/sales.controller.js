@@ -56,7 +56,7 @@ export const createSale = async (req, res) => {
 
     //--------edit product--------
     for (const product of List) {
-      if (product.generic === false) {
+      if (product.generic === false || !product.generic) {
         const currentDate = new Date();
         const currentMonth = currentDate.getMonth(); // Obtener el mes actual (0 = enero, 1 = febrero, etc.)
         const monthName = getMonthName(currentMonth);
