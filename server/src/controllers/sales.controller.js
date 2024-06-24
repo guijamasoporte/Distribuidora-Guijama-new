@@ -22,6 +22,7 @@ function getMonthName(monthNumber) {
   ];
   return months[monthNumber];
 }
+
 export const createSale = async (req, res) => {
   const { List, client, token, method } = req.body;
 
@@ -57,24 +58,23 @@ export const createSale = async (req, res) => {
     //--------edit product--------
     for (const product of List) {
       if (product.generic === false || !product.generic) {
-        const currentDate = new Date();
         const currentMonth = currentDate.getMonth(); // Obtener el mes actual (0 = enero, 1 = febrero, etc.)
+        const currentYear = currentDate.getFullYear(); // Obtener el año actual
         const monthName = getMonthName(currentMonth);
 
         const existingProduct = await Product.findById(product._id);
         existingProduct.stock -= product.unity;
 
-        const monthIndex = existingProduct.sales.findIndex(
-          (sale) => sale.month === monthName
+        const salesEntry = existingProduct.sales.find(
+          (sale) => sale.month === monthName && sale.year === currentYear
         );
 
-        if (monthIndex !== -1) {
-          const updatedSale = { ...existingProduct.sales[monthIndex] };
-          updatedSale.amount += Number(product.unity);
-          existingProduct.sales[monthIndex] = updatedSale;
+        if (salesEntry) {
+          salesEntry.amount += Number(product.unity);
         } else {
           existingProduct.sales.push({
             month: monthName,
+            year: currentYear,
             amount: Number(product.unity),
           });
         }

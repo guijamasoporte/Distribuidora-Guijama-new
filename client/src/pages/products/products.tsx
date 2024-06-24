@@ -15,11 +15,14 @@ import { Client, Product } from "../../interfaces/interfaces";
 import { formatNumberWithCommas } from "../../utils/formatNumberwithCommas";
 import ModalEditPrices from "../../components/modals/modalProduct/modalEditPricesProduct/modalEditPrice";
 import BarcodeScanner from "../../components/scannerCode/barcodeScanner";
+import ModalViewSales from "../../components/modals/modalProduct/modalViewSales/modalViewSales"; // Importa el nuevo modal
 
 const ProductsPage: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [showModalEdit, setShowModalEdit] = useState(false);
   const [showModifyPriceModal, setShowModifyPriceModal] = useState(false);
+  const [showSalesModal, setShowSalesModal] = useState(false); // Estado para el nuevo modal
+  const [selectedProductForSales, setSelectedProductForSales] = useState<Product & { sales: { month: string; year: number; amount: number }[] } | null>(null); // Producto seleccionado para el nuevo modal
   const initialFilters: Record<keyof Product, string> = {
     code: "",
     title: "",
@@ -257,6 +260,7 @@ const ProductsPage: React.FC = () => {
               <th>Stock</th>
               <th>Costo</th>
               <th>Venta</th>
+              <th>Ventas</th>
               <th>Editar</th>
               <th>Borrar</th>
             </tr>
@@ -272,6 +276,17 @@ const ProductsPage: React.FC = () => {
                 <td>{formatNumberWithCommas(product.stock)}</td>
                 <td>${formatNumberWithCommas(product.priceCost)}</td>
                 <td>${formatNumberWithCommas(product.priceList)}</td>
+                <td>
+                  <button
+                    className={styles.buttonSales}
+                    onClick={() => {
+                      setShowSalesModal(true);
+                      setSelectedProductForSales(product as Product & { sales: { month: string; year: number; amount: number }[] });
+                    }}
+                  >
+                    Ver Ventas
+                  </button>
+                </td>
                 <td>
                   <button
                     className={styles.buttonEdit}
@@ -355,6 +370,13 @@ const ProductsPage: React.FC = () => {
         handleClose={() => setShowModifyPriceModal(false)}
         categories={categories}
       />
+      {selectedProductForSales && (
+        <ModalViewSales
+          open={showSalesModal}
+          handleClose={() => setShowSalesModal(false)}
+          product={selectedProductForSales}
+        />
+      )}
       <div
         className={`${styles.scannerCode} ${
           openCameraReadCode ? styles.openCameraStyle : ""

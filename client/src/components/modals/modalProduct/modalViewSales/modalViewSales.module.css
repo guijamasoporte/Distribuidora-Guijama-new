@@ -1,0 +1,41 @@
+.modalBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20rem;
+  height: 200px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  padding: 16px;
+}
+
+.closeButton {
+  position: absolute !important;
+  top: 5px;
+  right: 5px;
+  color: black;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  margin-top: 5px;
+  margin-right: 5px;
+  padding: 0.1rem;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.closeButton:hover {
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
+    rgba(0, 0, 0, 0.22) 0px 10px 10px;
+  background-color: red !important;
+  color: white;
+  transform: scale(1.1);
+}
