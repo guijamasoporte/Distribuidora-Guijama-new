@@ -62,11 +62,6 @@ export const createSale = async (req, res) => {
         const currentYear = currentDate.getFullYear(); // Obtener el año actual
         const monthName = getMonthName(currentMonth);
     
-      
-     
-   
-        console.log(`Año actual: ${currentYear}`);
-    
         const existingProduct = await Product.findById(product._id);
         existingProduct.stock -= product.unity;
     
