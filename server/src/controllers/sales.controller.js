@@ -73,7 +73,6 @@ export const createSale = async (req, res) => {
             month: monthName,
             amount: Number(product.unity),
           });
-         
         }
         existingProduct.markModified('sales'); // Marcar 'sales' como modificado
         await existingProduct.save();
