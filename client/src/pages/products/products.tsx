@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Autocomplete, TextField } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import SearchIcon from "@mui/icons-material/Search";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import styles from "./products.module.css";
 import SearchBar from "../../components/searchBar/searchBar";
@@ -22,7 +23,10 @@ const ProductsPage: React.FC = () => {
   const [showModalEdit, setShowModalEdit] = useState(false);
   const [showModifyPriceModal, setShowModifyPriceModal] = useState(false);
   const [showSalesModal, setShowSalesModal] = useState(false); // Estado para el nuevo modal
-  const [selectedProductForSales, setSelectedProductForSales] = useState<Product & { sales: { month: string; year: number; amount: number }[] } | null>(null); // Producto seleccionado para el nuevo modal
+  const [selectedProductForSales, setSelectedProductForSales] = useState<
+    | (Product & { sales: { month: string; year: number; amount: number }[] })
+    | null
+  >(null); // Producto seleccionado para el nuevo modal
   const initialFilters: Record<keyof Product, string> = {
     code: "",
     title: "",
@@ -132,7 +136,7 @@ const ProductsPage: React.FC = () => {
 
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  
+
   const slicedProducts = currentProducts
     .filter(applyFilters)
     .filter(
@@ -183,7 +187,7 @@ const ProductsPage: React.FC = () => {
     };
 
     calculateTotals();
-    setCurrentPage(1)
+    setCurrentPage(1);
   }, [currentProducts, applyFilters, searchTerm]);
 
   return (
@@ -278,13 +282,21 @@ const ProductsPage: React.FC = () => {
                 <td>${formatNumberWithCommas(product.priceList)}</td>
                 <td>
                   <button
-                    className={styles.buttonSales}
+                    className={styles.buttonSee}
                     onClick={() => {
                       setShowSalesModal(true);
-                      setSelectedProductForSales(product as Product & { sales: { month: string; year: number; amount: number }[] });
+                      setSelectedProductForSales(
+                        product as Product & {
+                          sales: {
+                            month: string;
+                            year: number;
+                            amount: number;
+                          }[];
+                        }
+                      );
                     }}
                   >
-                    Ver Ventas
+                    <SearchIcon />
                   </button>
                 </td>
                 <td>

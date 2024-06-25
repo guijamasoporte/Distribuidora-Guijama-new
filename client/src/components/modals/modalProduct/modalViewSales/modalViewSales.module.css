@@ -1,19 +1,46 @@
 .modalBox {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   gap: 2rem;
-  width: 20rem;
+  width: 85%;
   height: auto;
+  max-width: 25rem;
+  min-height: 10rem;
   background-color: white;
   border-radius: 10px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  padding: 16px;
+  padding: 1rem;
+}
+
+.selectContainer {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.titleProductModal {
+  font-family: "questrial" !important;
+  text-align: center;
+  font-weight: bold;
+}
+
+.textModalEmpty {
+  font-family: "questrial" !important;
+  text-align: center;
+  font-style: italic;
+}
+
+.textSalesModal {
+  font-family: "questrial" !important;
+  text-align: center;
 }
 
 .closeButton {
@@ -22,12 +49,13 @@
   right: 5px;
   color: black;
   border: none;
+  width: 30px;
+  height: 30px;
+  margin-top: 10px;
+  margin-right: 10px;
   border-radius: 50%;
   display: flex;
   align-items: center;
-  margin-top: 5px;
-  margin-right: 5px;
-  padding: 0.1rem;
   cursor: pointer;
   transition: transform 0.3s ease;
 }
