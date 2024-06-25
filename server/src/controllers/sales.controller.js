@@ -54,33 +54,32 @@ export const createSale = async (req, res) => {
     await sale.save();
     //--------new sale--------
 
-    //--------edit product--------
     for (const product of List) {
       if (product.generic === false || !product.generic) {
-        const currentDate = new Date();
+        const currentDate = new Date(); // Asegurarse de que currentDate esté definido
         const currentMonth = currentDate.getMonth(); // Obtener el mes actual (0 = enero, 1 = febrero, etc.)
         const monthName = getMonthName(currentMonth);
-
+    
         const existingProduct = await Product.findById(product._id);
         existingProduct.stock -= product.unity;
-
-        const monthIndex = existingProduct.sales.findIndex(
-          (sale) => sale.month === monthName
+    
+        const salesEntry = existingProduct.sales.find(
+          (sale) => sale.month === monthName && sale.year === currentYear
         );
-
-        if (monthIndex !== -1) {
-          const updatedSale = { ...existingProduct.sales[monthIndex] };
-          updatedSale.amount += Number(product.unity);
-          existingProduct.sales[monthIndex] = updatedSale;
+        if (salesEntry) {
+          salesEntry.amount += Number(product.unity);  
         } else {
           existingProduct.sales.push({
             month: monthName,
             amount: Number(product.unity),
           });
+         
         }
+        existingProduct.markModified('sales'); // Marcar 'sales' como modificado
         await existingProduct.save();
       }
     }
+    
 
     //--------edit product--------
 
