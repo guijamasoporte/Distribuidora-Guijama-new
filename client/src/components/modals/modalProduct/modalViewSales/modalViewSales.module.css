@@ -7,8 +7,9 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  gap: 2rem;
   width: 20rem;
-  height: 200px;
+  height: auto;
   background-color: white;
   border-radius: 10px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
