@@ -1,0 +1,35 @@
+//  // useEffect(() => {
+  //   const calculateTotals = () => {
+  //     const filteredProducts = currentProducts
+  //       .filter(applyFilters)
+  //       .filter(
+  //         (product) =>
+  //           searchTerm === "" ||
+  //           Object.values(product).some((value) =>
+  //             String(value).toLowerCase().includes(searchTerm.toLowerCase())
+  //           )
+  //       );
+
+  //     const costTotal = filteredProducts.reduce(
+  //       (acc, product: Product) => acc + product.priceCost,
+  //       0
+  //     );
+  //     const saleTotal = filteredProducts.reduce(
+  //       (acc, product: Product) => acc + product.priceList,
+  //       0
+  //     );
+  //     const stockTotal = filteredProducts.reduce(
+  //       (acc, product) => acc + product.stock,
+  //       0
+  //     );
+
+  //     setTotals({
+  //       costTotal,
+  //       saleTotal,
+  //       stockTotal,
+  //     });
+  //   };
+
+  //   calculateTotals();
+  //   setCurrentPage(1);
+  // }, [currentProducts, applyFilters, searchTerm]);

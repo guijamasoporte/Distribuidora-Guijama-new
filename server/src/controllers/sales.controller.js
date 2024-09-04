@@ -62,7 +62,10 @@ export const createSale = async (req, res) => {
         const monthName = getMonthName(currentMonth);
 
         const existingProduct = await Product.findById(product._id);
-        existingProduct.stock -= product.unity;
+        existingProduct.stock = Math.max(
+          0,
+          existingProduct.stock - product.unity
+        );
 
         const salesEntry = existingProduct.sales.find(
           (sale) => sale.month === monthName && sale.year === currentYear
@@ -148,7 +151,6 @@ export const UpdateSaleById = async (req, res) => {
     return 0; // Devolver un valor predeterminado si checkboxStates no está definido
   };
 
-  console.log(req.body);
   try {
     let updateFields = {
       products: List,

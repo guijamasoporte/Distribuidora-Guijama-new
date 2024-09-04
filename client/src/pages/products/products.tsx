@@ -44,7 +44,7 @@ const ProductsPage: React.FC = () => {
 
   const [filters, setFilters] = useState(initialFilters);
   const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState<number>(parseInt(localStorage.getItem('currentPage') || '1', 10));
   const productsPerPage = 15;
   const [currentProducts, setCurrentProducts] = useState<Product[]>([]);
   const [productSelect, setProductSelect] = useState<Product | null>(null);
@@ -166,14 +166,19 @@ const ProductsPage: React.FC = () => {
             )
         );
 
+      // Calcular el total del costo multiplicando priceCost por stock
       const costTotal = filteredProducts.reduce(
-        (acc, product: Product) => acc + product.priceCost,
+        (acc, product) => acc + (product.priceCost * product.stock),
         0
       );
+      
+      // Calcular el total de venta multiplicando priceList por stock
       const saleTotal = filteredProducts.reduce(
-        (acc, product: Product) => acc + product.priceList,
+        (acc, product) => acc + (product.priceList * product.stock),
         0
       );
+
+      // Calcular el total de stock
       const stockTotal = filteredProducts.reduce(
         (acc, product) => acc + product.stock,
         0
@@ -187,8 +192,11 @@ const ProductsPage: React.FC = () => {
     };
 
     calculateTotals();
-    setCurrentPage(1);
   }, [currentProducts, applyFilters, searchTerm]);
+
+  useEffect(() => {
+    localStorage.setItem('currentPage', currentPage.toString());
+  }, [currentPage]);
 
   return (
     <div className={styles.tableContainer}>
@@ -362,12 +370,8 @@ const ProductsPage: React.FC = () => {
         categories={categories}
         brands={brands}
         variant={variant}
-        onClose={function (): void {
-          throw new Error("Function not implemented.");
-        }}
-        onCreate={function (newClient: Client): void {
-          throw new Error("Function not implemented.");
-        }}
+        onClose={() => {}}
+        onCreate={() => {}}
       />
       {productSelect && (
         <EditProductModal
