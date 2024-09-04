@@ -118,7 +118,7 @@ const SalesPage: React.FC = () => {
   const indexOfFirstSale = indexOfLastSale - salesPerPage;
   const currentSales = filteredSales.slice(indexOfFirstSale, indexOfLastSale);
 
-  const handlePaginate = (pageNumber: number) => setCurrentPage(pageNumber);
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   const formatDateModal = (isoDate: string): string => {
     const date = new Date(isoDate);
@@ -203,6 +203,7 @@ const SalesPage: React.FC = () => {
   useEffect(() => {
     localStorage.setItem('currentPageSales', currentPage.toString());
   }, [currentPage]);
+
 
   return (
     <div className={styles.tableContainer}>
@@ -415,8 +416,9 @@ const SalesPage: React.FC = () => {
             totalItems={filteredSales.length}
             itemsPerPage={salesPerPage}
             currentPage={currentPage}
-            paginate={handlePaginate}
+            paginate={paginate}
           />
+           
           <div className={styles.buttonsFooter}>
             <button className={styles.buttonAdd} onClick={openModal}>
               Cargar nueva venta

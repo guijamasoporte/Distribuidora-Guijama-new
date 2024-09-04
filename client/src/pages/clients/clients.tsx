@@ -32,7 +32,6 @@ const ClientsPage: React.FC = () => {
   };
 
   const [filters, setFilters] = useState(initialFilters);
-
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState<number>(parseInt(localStorage.getItem('currentPageClients') || '1', 10));
   const clientsPerPage = 15;
@@ -41,22 +40,16 @@ const ClientsPage: React.FC = () => {
   const [clientSelect, setClientSelect] = useState<Client | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
-  useEffect(() => {
-    localStorage.setItem('currentPageClients', currentPage.toString());
-  }, [currentPage]);
-
+  // Fetch data
   useEffect(() => {
     const fetchClient = async () => {
       try {
         const response: any = await InstanceOfAxios("/clients", "GET");
         if (Array.isArray(response.clients)) {
           setDataSale(response.clients);
-          setLoading(false)
+          setLoading(false);
         } else {
-          console.error(
-            "La respuesta no contiene un array de clientes:",
-            response
-          );
+          console.error("La respuesta no contiene un array de clientes:", response);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -66,51 +59,12 @@ const ClientsPage: React.FC = () => {
     fetchClient();
   }, [openModal, openModalEdit]);
 
-  const handleCreateClient = async (newClient: Client) => {
-    try {
-      await InstanceOfAxios("/clients", "POST", newClient);
-      setDataSale([...dataSale, newClient]);
-      Swal.fire("¡Éxito!", "Cliente creado correctamente.", "success");
-    } catch (error) {
-      console.error("Error creating client:", error);
-      Swal.fire("¡Error!", "Error al crear el cliente.", "error");
-    }
-  };
+  // Save current page to localStorage
+  useEffect(() => {
+    localStorage.setItem('currentPageClients', currentPage.toString());
+  }, [currentPage]);
 
-  const handleFilterChange = (
-    event: React.SyntheticEvent<Element, Event>,
-    value: string | null,
-    field: keyof Client
-  ) => {
-    setFilters({
-      ...filters,
-      [field]: value || "",
-    });
-  };
-
-  const handleSearch = (searchTerm: string) => {
-    setSearchTerm(searchTerm);
-  };
-
-  const handleDelete = (id: string) => {
-    Swal.fire({
-      title: "¿Estás seguro?",
-      text: "¡No podrás revertir esto!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "¡Sí, eliminarlo!",
-      cancelButtonText: "Cancelar",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const token = GetDecodedCookie("cookieToken");
-        InstanceOfAxios(`/clients/${id}`, "DELETE", undefined, token);
-        Swal.fire("¡Eliminado!", "El cliente ha sido eliminado.", "success");
-      }
-    });
-  };
-
+  // Filter clients
   useEffect(() => {
     const filteredData = dataSale.filter((client) => {
       return (
@@ -130,9 +84,61 @@ const ClientsPage: React.FC = () => {
       );
     });
     setFilteredClients(filteredData);
-    setCurrentPage(1);
+    setCurrentPage(1); // Reset to page 1 when filters or search term change
   }, [dataSale, filters, searchTerm]);
 
+  // Handle client creation
+  const handleCreateClient = async (newClient: Client) => {
+    try {
+      await InstanceOfAxios("/clients", "POST", newClient);
+      setDataSale([...dataSale, newClient]);
+      Swal.fire("¡Éxito!", "Cliente creado correctamente.", "success");
+    } catch (error) {
+      console.error("Error creating client:", error);
+      Swal.fire("¡Error!", "Error al crear el cliente.", "error");
+    }
+  };
+
+  // Handle filter change
+  const handleFilterChange = (
+    event: React.SyntheticEvent<Element, Event>,
+    value: string | null,
+    field: keyof Client
+  ) => {
+    setFilters({
+      ...filters,
+      [field]: value || "",
+    });
+  };
+
+  // Handle search term change
+  const handleSearch = (searchTerm: string) => {
+    setSearchTerm(searchTerm);
+  };
+
+  // Handle client deletion
+  const handleDelete = (id: string) => {
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: "¡No podrás revertir esto!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "¡Sí, eliminarlo!",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const token = GetDecodedCookie("cookieToken");
+        InstanceOfAxios(`/clients/${id}`, "DELETE", undefined, token);
+        Swal.fire("¡Eliminado!", "El cliente ha sido eliminado.", "success");
+        // Fetch the updated list of clients after deletion
+     
+      }
+    });
+  };
+
+  // Paginate clients
   const indexOfLastClient = currentPage * clientsPerPage;
   const indexOfFirstClient = indexOfLastClient - clientsPerPage;
   const currentClients = filteredClients.slice(
@@ -163,7 +169,7 @@ const ClientsPage: React.FC = () => {
               disablePortal
               id="combo-box-id"
               options={Array.from(
-                new Set(currentClients.map((client, index) => client.idClient))
+                new Set(currentClients.map((client) => client.idClient))
               )}
               sx={{ width: 200 }}
               renderInput={(params) => <TextField {...params} label="Id" />}
@@ -181,7 +187,7 @@ const ClientsPage: React.FC = () => {
               disablePortal
               id="combo-box-nombre"
               options={Array.from(
-                new Set(currentClients.map((client, index) => client.name))
+                new Set(currentClients.map((client) => client.name))
               )}
               sx={{ width: 200 }}
               renderInput={(params) => <TextField {...params} label="Nombre" />}
@@ -199,7 +205,7 @@ const ClientsPage: React.FC = () => {
               disablePortal
               id="combo-box-apellido"
               options={Array.from(
-                new Set(currentClients.map((client, index) => client.lastName))
+                new Set(currentClients.map((client) => client.lastName))
               )}
               sx={{ width: 200 }}
               renderInput={(params) => (
@@ -244,7 +250,6 @@ const ClientsPage: React.FC = () => {
                       <button
                         className={styles.buttonSee}
                         onClick={() => {
-                          // handleViewBuys(client);
                           setOpenPurchaseModal(true);
                           setClientSelect(client);
                         }}
@@ -296,9 +301,7 @@ const ClientsPage: React.FC = () => {
         open={openModal}
         onClose={() => setOpenModal(false)}
         onCreate={handleCreateClient}
-        handleClose={function (): void {
-          throw new Error("Function not implemented.");
-        }}
+        handleClose={() => setOpenModal(false)}
         categories={[]}
         brands={[]}
         variant={[]}
@@ -307,7 +310,7 @@ const ClientsPage: React.FC = () => {
         <EditClientModal
           open={openModalEdit}
           onClose={() => setOpenModalEdit(false)}
-          onCreate={setOpenModalEdit}
+          onCreate={() => {}}
           client={clientSelect}
           setClientSelect={setClientSelect}
         />
