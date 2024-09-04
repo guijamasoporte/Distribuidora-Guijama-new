@@ -34,12 +34,16 @@ const ClientsPage: React.FC = () => {
   const [filters, setFilters] = useState(initialFilters);
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState<number>(parseInt(localStorage.getItem('currentPageClients') || '1', 10));
   const clientsPerPage = 15;
   const [dataSale, setDataSale] = useState<Client[]>([]);
   const [filteredClients, setFilteredClients] = useState<Client[]>([]);
   const [clientSelect, setClientSelect] = useState<Client | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    localStorage.setItem('currentPageClients', currentPage.toString());
+  }, [currentPage]);
 
   useEffect(() => {
     const fetchClient = async () => {

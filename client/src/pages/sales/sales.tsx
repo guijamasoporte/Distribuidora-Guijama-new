@@ -26,7 +26,7 @@ const SalesPage: React.FC = () => {
   const [salesSelected, setSalesSelected] = useState<Sales | null>(null);
   const [filters, setFilters] = useState<Partial<Sales>>({});
   const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState<number>(parseInt(localStorage.getItem('currentPageSales') || '1', 10));
   const salesPerPage = 10;
   const [stateFilter, setStateFilter] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -37,6 +37,8 @@ const SalesPage: React.FC = () => {
   const [selectedMethod, setSelectedMethod] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
+
+ 
   const fetchData = async () => {
     try {
       const response: any = await InstanceOfAxios("/sales", "GET");
@@ -197,6 +199,10 @@ const SalesPage: React.FC = () => {
     "bisogni45@gmail.com": "Juan Pablo",
     "matee.biso@icloud.com": "Mateo",
   };
+
+  useEffect(() => {
+    localStorage.setItem('currentPageSales', currentPage.toString());
+  }, [currentPage]);
 
   return (
     <div className={styles.tableContainer}>

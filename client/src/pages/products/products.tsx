@@ -44,7 +44,7 @@ const ProductsPage: React.FC = () => {
 
   const [filters, setFilters] = useState(initialFilters);
   const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState<number>(parseInt(localStorage.getItem('currentPage') || '1', 10));
+  const [currentPage, setCurrentPage] = useState<number>(parseInt(localStorage.getItem('currentPageProducts') || '1', 10));
   const productsPerPage = 15;
   const [currentProducts, setCurrentProducts] = useState<Product[]>([]);
   const [productSelect, setProductSelect] = useState<Product | null>(null);
@@ -195,7 +195,7 @@ const ProductsPage: React.FC = () => {
   }, [currentProducts, applyFilters, searchTerm]);
 
   useEffect(() => {
-    localStorage.setItem('currentPage', currentPage.toString());
+    localStorage.setItem('currentPageProducts', currentPage.toString());
   }, [currentPage]);
 
   return (
