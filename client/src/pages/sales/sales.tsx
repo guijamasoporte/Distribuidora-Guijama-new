@@ -26,7 +26,9 @@ const SalesPage: React.FC = () => {
   const [salesSelected, setSalesSelected] = useState<Sales | null>(null);
   const [filters, setFilters] = useState<Partial<Sales>>({});
   const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState<number>(parseInt(localStorage.getItem('currentPageSales') || '1', 10));
+  const [currentPage, setCurrentPage] = useState<number>(
+    parseInt(localStorage.getItem("currentPageSales") || "1", 10)
+  );
   const salesPerPage = 10;
   const [stateFilter, setStateFilter] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -37,8 +39,6 @@ const SalesPage: React.FC = () => {
   const [selectedMethod, setSelectedMethod] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
-
- 
   const fetchData = async () => {
     try {
       const response: any = await InstanceOfAxios("/sales", "GET");
@@ -66,25 +66,20 @@ const SalesPage: React.FC = () => {
 
   const filteredSales: any = dataSales.filter((sale) => {
     const clientName = sale.client ? sale.client.name.toLowerCase() : "";
-    const clientLastName = sale.client
-      ? sale.client.lastName.toLowerCase()
-      : "";
+    const clientLastName = sale.client ? sale.client.lastName.toLowerCase() : "";
     const saleId = sale.idSale ? sale.idSale.toString().toLowerCase() : "";
-    const dateParts = sale.date ? sale.date.split(",") : [];
-    const date = dateParts.length > 0 ? dateParts[0].trim().toLowerCase() : ""; // Extraer la fecha y convertirla a minúsculas
-    const priceTotal = sale.priceTotal
-      ? sale.priceTotal.toString().toLowerCase()
-      : "";
+    const dateObj = sale.date ? new Date(sale.date) : null;
+    const date = dateObj ? dateObj.toISOString().split("T")[0] : ""; // Extraer solo la fecha sin la hora
+    const year = dateObj ? dateObj.getFullYear().toString() : ""; // Extraer el año
+    const priceTotal = sale.priceTotal ? sale.priceTotal.toString().toLowerCase() : "";
     const duesPayd = sale.dues ? sale.dues.payd.toString().toLowerCase() : "";
     const duesCant = sale.dues ? sale.dues.cant.toString().toLowerCase() : "";
-    const createdBy = sale.createdBy
-      ? sale.createdBy.toString().toLowerCase()
-      : "";
+    const createdBy = sale.createdBy ? sale.createdBy.toString().toLowerCase() : "";
     const searchTermLower = searchTerm.toLowerCase();
     const state = sale.state ? "Cerrada" : "Pendiente";
-
+  
     const selectedMonthIndex = selectedMonth ? parseInt(selectedMonth) - 1 : -1; // Convertir el mes seleccionado a número
-
+  
     return (
       (clientName.includes(searchTermLower) ||
         clientLastName.includes(searchTermLower) ||
@@ -94,25 +89,15 @@ const SalesPage: React.FC = () => {
         duesPayd.includes(searchTermLower) ||
         duesCant.includes(searchTermLower) ||
         createdBy.includes(searchTermLower)) &&
-      (stateFilter
-        ? state.toLowerCase().includes(stateFilter.toLowerCase())
-        : true) &&
-      (filters.idSale
-        ? saleId.includes(filters.idSale.toString().toLowerCase())
-        : true) &&
-      (filters.client
-        ? clientName.includes(filters.client.toString().toLowerCase())
-        : true) &&
-      (filters.createBy
-        ? createdBy.includes(filters.createBy.toString().toLowerCase())
-        : true) &&
-      (selectedMonthIndex === -1 ||
-        (dateParts.length > 0 &&
-          new Date(dateParts[0]).getMonth() === selectedMonthIndex)) && // Comparar con el mes seleccionado
+      (stateFilter ? year === stateFilter : true) && // Filtrar por año seleccionado
+      (filters.idSale ? saleId.includes(filters.idSale.toString().toLowerCase()) : true) &&
+      (filters.client ? clientName.includes(filters.client.toString().toLowerCase()) : true) &&
+      (filters.createBy ? createdBy.includes(filters.createBy.toString().toLowerCase()) : true) &&
+      (selectedMonthIndex === -1 || (dateObj && dateObj.getMonth() === selectedMonthIndex)) && // Comparar con el mes seleccionado
       (selectedMethod ? sale.method === selectedMethod.trim() : true) // Comparación con método de pago seleccionado
-      // Filtrar por método de pago seleccionado
     );
   });
+  
 
   const indexOfLastSale = currentPage * salesPerPage;
   const indexOfFirstSale = indexOfLastSale - salesPerPage;
@@ -131,10 +116,7 @@ const SalesPage: React.FC = () => {
       timeZone: "UTC",
     };
 
-    const formattedDate: string = new Intl.DateTimeFormat(
-      "es-AR",
-      options
-    ).format(date);
+    const formattedDate: string = new Intl.DateTimeFormat("es-AR", options).format(date);
     return formattedDate;
   };
 
@@ -167,9 +149,7 @@ const SalesPage: React.FC = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         const token = GetDecodedCookie("cookieToken");
-        InstanceOfAxios(`/sales/${id}`, "DELETE", undefined, token).then(() =>
-          fetchData()
-        );
+        InstanceOfAxios(`/sales/${id}`, "DELETE", undefined, token).then(() => fetchData());
         Swal.fire("¡Eliminado!", "la venta ha sido eliminado.", "success");
       }
     });
@@ -201,9 +181,8 @@ const SalesPage: React.FC = () => {
   };
 
   useEffect(() => {
-    localStorage.setItem('currentPageSales', currentPage.toString());
+    localStorage.setItem("currentPageSales", currentPage.toString());
   }, [currentPage]);
-
 
   return (
     <div className={styles.tableContainer}>
@@ -225,9 +204,7 @@ const SalesPage: React.FC = () => {
               className={styles.autocomplete}
               disablePortal
               id="combo-box-id"
-              options={Array.from(
-                new Set(dataSales.map((sale) => sale.idSale?.toString() || ""))
-              )}
+              options={Array.from(new Set(dataSales.map((sale) => sale.idSale?.toString() || "")))}
               sx={{ width: 200 }}
               renderInput={(params) => <TextField {...params} label="ID" />}
               onChange={(event, value) => handleChange(value, "idSale")}
@@ -236,9 +213,7 @@ const SalesPage: React.FC = () => {
               className={styles.autocomplete}
               disablePortal
               id="combo-box-nombre"
-              options={Array.from(
-                new Set(dataSales.map((sale) => sale.client.name))
-              )}
+              options={Array.from(new Set(dataSales.map((sale) => sale.client.name)))}
               sx={{ width: 200 }}
               renderInput={(params) => <TextField {...params} label="Nombre" />}
               onChange={(event, value) => handleChange(value, "client")}
@@ -247,25 +222,22 @@ const SalesPage: React.FC = () => {
               className={styles.autocomplete}
               disablePortal
               id="combo-box-mes"
-              options={[
-                "1",
-                "2",
-                "3",
-                "4",
-                "5",
-                "6",
-                "7",
-                "8",
-                "9",
-                "10",
-                "11",
-                "12",
-              ]} // Opciones de meses como cadenas
+              options={["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]} // Opciones de meses como cadenas
               sx={{ width: 200 }}
               renderInput={(params) => <TextField {...params} label="Mes" />}
-              onChange={(event, value) =>
-                setSelectedMonth(value ? value.toString() : null)
-              } // Convertir el valor a cadena antes de asignarlo
+              onChange={(event, value) => setSelectedMonth(value ? value.toString() : null)} // Convertir el valor a cadena antes de asignarlo
+            />
+
+            <Autocomplete
+              className={styles.autocomplete}
+              disablePortal
+              id="combo-box-estado"
+              options={Array.from(
+                new Set(dataSales.map((sale) => new Date(sale.date).getFullYear()))
+              )}
+              sx={{ width: 200 }}
+              renderInput={(params) => <TextField {...params} label="Año" />}
+              onChange={(event, value) => setStateFilter(value ? value.toString() : null)}
             />
 
             <Autocomplete
@@ -293,13 +265,9 @@ const SalesPage: React.FC = () => {
               className={styles.autocomplete}
               disablePortal
               id="combo-box-creador"
-              options={Array.from(
-                new Set(dataSales.map((sale) => sale.createdBy))
-              )}
+              options={Array.from(new Set(dataSales.map((sale) => sale.createdBy)))}
               sx={{ width: 200 }}
-              renderInput={(params) => (
-                <TextField {...params} label="Creador" />
-              )}
+              renderInput={(params) => <TextField {...params} label="Creador" />}
               onChange={(event, value) => handleChange(value, "createBy")}
               getOptionLabel={(option) => emailToNameMap[option] || option}
             />
@@ -335,14 +303,11 @@ const SalesPage: React.FC = () => {
                       $ {formatNumberWithCommas(sale.priceTotal)}
                     </td>
                     <td>
-                      {sale.dues.payd.filter((state) => state === true).length}{" "}
-                      / {sale.dues.cant}
+                      {sale.dues.payd.filter((state) => state === true).length} / {sale.dues.cant}
                     </td>
                     <td>
                       <PDFDownloadLink
-                        document={
-                          <Pdfinvoice sales={sale} id={index} saleClient={""} />
-                        }
+                        document={<Pdfinvoice sales={sale} id={index} saleClient={""} />}
                         fileName={sale.client.name + "_" + sale.idSale + ".pdf"}
                       >
                         <svg
@@ -408,9 +373,7 @@ const SalesPage: React.FC = () => {
           </div>
 
           <div className={styles.totalsData}>
-            <p className={styles.totalCat}>
-              Total de Ventas: ${formatNumberWithCommas(totalSale)}
-            </p>
+            <p className={styles.totalCat}>Total de Ventas: ${formatNumberWithCommas(totalSale)}</p>
           </div>
           <Pagination
             totalItems={filteredSales.length}
@@ -418,7 +381,7 @@ const SalesPage: React.FC = () => {
             currentPage={currentPage}
             paginate={paginate}
           />
-           
+
           <div className={styles.buttonsFooter}>
             <button className={styles.buttonAdd} onClick={openModal}>
               Cargar nueva venta
