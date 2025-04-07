@@ -20,8 +20,8 @@ const Login: React.FC = () => {
   const handleSubmitLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    Cookies.remove("cookieToken");
     await InstanceOfAxios("/login", "POST", dataLogin).then((data: any) => {
-      Cookies.remove("cookieToken");
       document.cookie =
         encodeURIComponent("cookieToken") +
         "=" +
