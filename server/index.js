@@ -10,6 +10,7 @@ import AdminRoute from "./src/routes/admin.routes.js";
 import productRoute from "./src/routes/product.routes.js";
 import clientRoute from "./src/routes/clients.routes.js";
 import salesRoute from "./src/routes/sales.routes.js";
+import supplierRoute from "./src/routes/supplier.routes.js";
 
 const app = express();
 
@@ -38,6 +39,7 @@ app.use("/admin", AdminRoute);
 app.use("/products", productRoute);
 app.use("/clients", clientRoute);
 app.use("/sales", salesRoute);
+app.use("/supplier", supplierRoute);
 
 const port = process.env.PORT || 3001;
 app.listen(port, () => {

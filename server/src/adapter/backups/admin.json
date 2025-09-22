@@ -1,0 +1,25 @@
+[
+  {
+    "_id": "65fb4f09b985c0aa54c8a8dd",
+    "email": "bisogni45@gmail.com",
+    "password": "$2a$10$VEIJcIhoC4lwXJgEchF6GuPHYDkBSYLdYqotptPr2rDYlYbrHQBgC",
+    "Rol": "ROL_Admin",
+    "__v": 0,
+    "name": "Juan Pablo"
+  },
+  {
+    "_id": "65fb54f798d38c19da7ca752",
+    "email": "soporteguijama@gmail.com",
+    "password": "$2a$10$D9aNm5RR8QyEjG.AKUJVF.pU2yFjnDH1J3HzYrXv9ec/1jMzsxc.C",
+    "Rol": "ROL_Admin",
+    "__v": 0
+  },
+  {
+    "_id": "662d8b28eb9b5dfc8cb14b37",
+    "email": "matee.biso@icloud.com",
+    "password": "$2a$10$cqsBVbWFyOrsKTodbBFk3OYjZ8Dfx7l.sfEfNcbT1EmhKpKetKQcS",
+    "Rol": "ROL_Admin",
+    "__v": 0,
+    "name": "Mateo"
+  }
+]
