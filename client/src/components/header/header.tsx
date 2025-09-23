@@ -8,7 +8,7 @@ import { NavLink } from "react-router-dom";
 import { DecodedToken } from "../../utils/DecodedToken";
 import InstanceOfAxios from "../../utils/intanceAxios";
 import CloseIcon from "@mui/icons-material/Close";
-import { setTimeout } from "timers/promises";
+
 
 const Header: React.FC = () => {
   const [login, setLogin] = useState<boolean>(false);

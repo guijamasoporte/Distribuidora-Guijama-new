@@ -18,6 +18,7 @@ export const ProtectedRoute: React.FC<Props> = ({ children }) => {
     "/admin/products",
     "/admin/clients",
     "/admin/sales",
+    "/admin/supplier",
   ];
 
   const rolRef = useRef<string | null>(null);

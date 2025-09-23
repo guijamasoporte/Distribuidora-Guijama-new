@@ -41,6 +41,16 @@ const NavBar: React.FC = () => {
           Ventas
         </button>
       </Link>
+      <Link to="/admin/supplier">
+        <button
+          className={`${styles.button} ${
+            selectedButton === "supplier" ? styles.selectedButton : ""
+          }`}
+          onClick={() => handleButtonClick("supplier")}
+        >
+          Proveedores
+        </button>
+      </Link>
     </div>
   );
 };

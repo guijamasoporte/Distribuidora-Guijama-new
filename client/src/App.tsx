@@ -10,6 +10,7 @@ import Home from "./pages/Home/home";
 import LoginPage from "./pages/login/login";
 import { ProtectedRoute } from "./pages/ProtectedRoutes/ProtectedRoute";
 import Header from "./components/header/header";
+import SupplierPage from "./pages/supplier/supplier";
 
 const App: React.FC = () => {
   return (
@@ -55,7 +56,16 @@ const App: React.FC = () => {
                       </ProtectedRoute>
                     }
                   />
+                  <Route
+                    path="supplier"
+                    element={
+                      <ProtectedRoute>
+                        <SupplierPage />
+                      </ProtectedRoute>
+                    }
+                  />
                 </Routes>
+                  
               </ProtectedRoute>
             </>
           }
