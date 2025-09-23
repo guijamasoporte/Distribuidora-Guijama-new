@@ -3,7 +3,6 @@ import { Supplier } from "../models/supplier.js";
 
 export const createSupplier = async (req, res) => {
   try {
-    console.log(req.body);
     const { name, lastName, phone, adress, email, contactName, buys } =
       req.body; // extrae name y lastName del body
     const formattedName =
@@ -30,8 +29,8 @@ export const createSupplier = async (req, res) => {
 
 export const getAllSupplier = async (req, res) => {
   try {
-    let Suppliers = await Supplier.find();
-    res.status(200).json({ Suppliers });
+    let suppliers = await Supplier.find();
+    res.status(200).json({ suppliers });
   } catch (error) {
     res.status(400).json(formatError(error.message));
   }
