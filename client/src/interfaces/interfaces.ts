@@ -1,7 +1,18 @@
+export interface Supplier {
+  date: any;
+  _id: any;
+  idSupplier?: string;
+  name: string;
+  lastName: string;
+  phone: string;
+  email: string;
+  adress: string;
+  buys:any;
+}
 export interface Client {
   date: any;
   _id: any;
-  idClient: string;
+  idClient?: string;
   name: string;
   lastName: string;
   phone: string;
@@ -62,7 +73,7 @@ export interface DataLogin {
 export interface propsModals {
   open: boolean;
   onClose: () => void;
-  onCreate: (newClient: Client) => void;
+  onCreate: ((newClient: Client) => void) | ((newSupplier: Supplier) => void);
   handleClose: () => void;
   categories: string[];
   brands: string[];

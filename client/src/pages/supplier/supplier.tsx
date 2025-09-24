@@ -8,20 +8,21 @@ import SearchBar from "../../components/searchBar/searchBar";
 import InstanceOfAxios from "../../utils/intanceAxios";
 import Pagination from "../../components/pagination/pagination";
 import Swal from "sweetalert2";
-import CreateClientModal from "../../components/modals/modalClient/modalAddClient/modalAddClient";
 import EditClientModal from "../../components/modals/modalClient/modalEditClient/modalEditClient";
 import PurchaseModal from "../../components/modals/modalClient/modalBuysClient/modalBuysClient";
 import { GetDecodedCookie } from "../../utils/DecodedCookie";
-import { Client } from "../../interfaces/interfaces";
+import { Supplier } from "../../interfaces/interfaces";
 import { FadeLoader } from "react-spinners";
+import CreateSupplierModal from "../../components/modals/modalClient/modalAddSupplier/modalAddSupplier";
+import EditSupplierModal from "../../components/modals/modalClient/modalEditSupplier/modalEditSupplier";
 
 const SupplierPage: React.FC = () => {
   const [openModal, setOpenModal] = useState(false);
   const [openModalEdit, setOpenModalEdit] = useState(false);
   const [openPurchaseModal, setOpenPurchaseModal] = useState(false);
-  const initialFilters: Record<keyof Client, string | any> = {
+  const initialFilters: Record<keyof Supplier, string | any> = {
     _id: "",
-    idClient: "",
+    idSupplier: "",
     name: "",
     lastName: "",
     phone: "",
@@ -33,11 +34,13 @@ const SupplierPage: React.FC = () => {
 
   const [filters, setFilters] = useState(initialFilters);
   const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState<number>(parseInt(localStorage.getItem('currentPageClients') || '1', 10));
-  const clientsPerPage = 15;
-  const [dataSale, setDataSale] = useState<Client[]>([]);
-  const [filteredClients, setFilteredClients] = useState<Client[]>([]);
-  const [clientSelect, setClientSelect] = useState<Client | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(
+    parseInt(localStorage.getItem("currentPageSupplier") || "1", 10)
+  );
+  const supplierPerPage = 15;
+  const [dataSale, setDataSale] = useState<Supplier[]>([]);
+  const [filteredSupplier, setFilteredSupplier] = useState<Supplier[]>([]);
+  const [supplierSelect, setSupplierSelect] = useState<Supplier | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   // Fetch data
@@ -45,11 +48,15 @@ const SupplierPage: React.FC = () => {
     const fetchClient = async () => {
       try {
         const response: any = await InstanceOfAxios("/supplier", "GET");
+
         if (Array.isArray(response.suppliers)) {
           setDataSale(response.suppliers);
           setLoading(false);
         } else {
-          console.error("La respuesta no contiene un array de proveedores:", response);
+          console.error(
+            "La respuesta no contiene un array de proveedores:",
+            response
+          );
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -61,7 +68,7 @@ const SupplierPage: React.FC = () => {
 
   // Save current page to localStorage
   useEffect(() => {
-    localStorage.setItem('currentPageClients', currentPage.toString());
+    localStorage.setItem("currentPageSupplier", currentPage.toString());
   }, [currentPage]);
 
   // Filter clients
@@ -69,10 +76,10 @@ const SupplierPage: React.FC = () => {
     const filteredData = dataSale.filter((client) => {
       return (
         Object.keys(filters).every((key) =>
-          filters[key as keyof Client]
-            ? String(client[key as keyof Client])
+          filters[key as keyof Supplier]
+            ? String(client[key as keyof Supplier])
                 .toLowerCase()
-                .includes(String(filters[key as keyof Client]).toLowerCase())
+                .includes(String(filters[key as keyof Supplier]).toLowerCase())
             : true
         ) &&
         (searchTerm === "" ||
@@ -83,19 +90,19 @@ const SupplierPage: React.FC = () => {
           ))
       );
     });
-    setFilteredClients(filteredData);
+    setFilteredSupplier(filteredData);
     setCurrentPage(1); // Reset to page 1 when filters or search term change
   }, [dataSale, filters, searchTerm]);
 
   // Handle client creation
-  const handleCreateClient = async (newClient: Client) => {
+  const handleCreateClient = async (newSupplier: Supplier) => {
     try {
-      await InstanceOfAxios("/clients", "POST", newClient);
-      setDataSale([...dataSale, newClient]);
-      Swal.fire("¡Éxito!", "Cliente creado correctamente.", "success");
+      await InstanceOfAxios("/supplier", "POST", newSupplier);
+      setDataSale([...dataSale, newSupplier]);
+      Swal.fire("¡Éxito!", "Proveedor creado correctamente.", "success");
     } catch (error) {
-      console.error("Error creating client:", error);
-      Swal.fire("¡Error!", "Error al crear el cliente.", "error");
+      console.error("Error creating supplier:", error);
+      Swal.fire("¡Error!", "Error al crear el Proveedor.", "error");
     }
   };
 
@@ -103,7 +110,7 @@ const SupplierPage: React.FC = () => {
   const handleFilterChange = (
     event: React.SyntheticEvent<Element, Event>,
     value: string | null,
-    field: keyof Client
+    field: keyof Supplier
   ) => {
     setFilters({
       ...filters,
@@ -130,18 +137,17 @@ const SupplierPage: React.FC = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         const token = GetDecodedCookie("cookieToken");
-        InstanceOfAxios(`/clients/${id}`, "DELETE", undefined, token);
-        Swal.fire("¡Eliminado!", "El cliente ha sido eliminado.", "success");
+        InstanceOfAxios(`/supplier/${id}`, "DELETE", undefined, token);
+        Swal.fire("¡Eliminado!", "El proveedor ha sido eliminado.", "success");
         // Fetch the updated list of clients after deletion
-     
       }
     });
   };
 
   // Paginate clients
-  const indexOfLastClient = currentPage * clientsPerPage;
-  const indexOfFirstClient = indexOfLastClient - clientsPerPage;
-  const currentClients = filteredClients.slice(
+  const indexOfLastClient = currentPage * supplierPerPage;
+  const indexOfFirstClient = indexOfLastClient - supplierPerPage;
+  const currentSupplier = filteredSupplier.slice(
     indexOfFirstClient,
     indexOfLastClient
   );
@@ -169,7 +175,7 @@ const SupplierPage: React.FC = () => {
               disablePortal
               id="combo-box-id"
               options={Array.from(
-                new Set(currentClients.map((client) => client.idClient))
+                new Set(currentSupplier.map((supplier) => supplier.idSupplier))
               )}
               sx={{ width: 200 }}
               renderInput={(params) => <TextField {...params} label="Id" />}
@@ -177,7 +183,7 @@ const SupplierPage: React.FC = () => {
                 handleFilterChange(
                   event,
                   value ? value.toString() : null,
-                  "idClient"
+                  "idSupplier"
                 )
               }
             />
@@ -187,7 +193,7 @@ const SupplierPage: React.FC = () => {
               disablePortal
               id="combo-box-nombre"
               options={Array.from(
-                new Set(currentClients.map((client) => client.name))
+                new Set(currentSupplier.map((supplier) => supplier.name))
               )}
               sx={{ width: 200 }}
               renderInput={(params) => <TextField {...params} label="Nombre" />}
@@ -205,7 +211,7 @@ const SupplierPage: React.FC = () => {
               disablePortal
               id="combo-box-apellido"
               options={Array.from(
-                new Set(currentClients.map((client) => client.lastName))
+                new Set(currentSupplier.map((client) => client.lastName))
               )}
               sx={{ width: 200 }}
               renderInput={(params) => (
@@ -238,9 +244,9 @@ const SupplierPage: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {currentClients.map((client, index) => (
+                {currentSupplier.map((client, index) => (
                   <tr key={index}>
-                    <td>{client.idClient}</td>
+                    <td>{client.idSupplier}</td>
                     <td className={styles.nameTable}>{client.name}</td>
                     <td>{client.lastName}</td>
                     <td>{client.phone}</td>
@@ -251,7 +257,7 @@ const SupplierPage: React.FC = () => {
                         className={styles.buttonSee}
                         onClick={() => {
                           setOpenPurchaseModal(true);
-                          setClientSelect(client);
+                          setSupplierSelect(client);
                         }}
                       >
                         <SearchIcon />
@@ -262,7 +268,7 @@ const SupplierPage: React.FC = () => {
                         className={styles.buttonEdit}
                         onClick={() => {
                           setOpenModalEdit(true);
-                          setClientSelect(client);
+                          setSupplierSelect(client);
                         }}
                       >
                         <EditIcon />
@@ -282,8 +288,8 @@ const SupplierPage: React.FC = () => {
             </table>
           </div>
           <Pagination
-            totalItems={filteredClients.length}
-            itemsPerPage={clientsPerPage}
+            totalItems={filteredSupplier.length}
+            itemsPerPage={supplierPerPage}
             currentPage={currentPage}
             paginate={paginate}
           />
@@ -292,12 +298,12 @@ const SupplierPage: React.FC = () => {
               className={styles.buttonAdd}
               onClick={() => setOpenModal(true)}
             >
-              Agregar nuevo cliente
+              Agregar nuevo proveedor
             </button>
           </div>
         </>
       )}
-      <CreateClientModal
+      <CreateSupplierModal
         open={openModal}
         onClose={() => setOpenModal(false)}
         onCreate={handleCreateClient}
@@ -306,22 +312,22 @@ const SupplierPage: React.FC = () => {
         brands={[]}
         variant={[]}
       />
-      {clientSelect && (
-        <EditClientModal
+      {supplierSelect && (
+        <EditSupplierModal
           open={openModalEdit}
           onClose={() => setOpenModalEdit(false)}
           onCreate={() => {}}
-          client={clientSelect}
-          setClientSelect={setClientSelect}
+          supplier={supplierSelect}
+          setSupplierSelect={setSupplierSelect}
         />
       )}
-      {clientSelect && (
+      {/* {supplierSelect && (
         <PurchaseModal
           open={openPurchaseModal}
           onClose={() => setOpenPurchaseModal(false)}
-          dataSale={clientSelect}
+          dataSale={supplierSelect}
         />
-      )}
+      )} */}
     </div>
   );
 };
