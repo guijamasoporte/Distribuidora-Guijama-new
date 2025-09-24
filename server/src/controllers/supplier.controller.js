@@ -5,12 +5,13 @@ export const createSupplier = async (req, res) => {
   try {
     const { name, lastName, phone, adress, email, contactName, buys } =
       req.body; // extrae name y lastName del body
+      
     const formattedName =
       name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
     const formattedLastName =
       lastName.charAt(0).toUpperCase() + lastName.slice(1).toLowerCase();
 
-    const Supplier = new Supplier({
+    const supplier = new Supplier({
       name: formattedName,
       lastName: formattedLastName,
       phone,
@@ -20,9 +21,11 @@ export const createSupplier = async (req, res) => {
       buys,
     });
 
-    await Supplier.save();
-    return res.status(200).json({ msg: "Suppliere creado" });
+    await supplier.save();
+    return res.status(200).json({ msg: "Supplier creado" });
   } catch (error) {
+    console.log(error);
+    
     res.status(400).json(formatError(error.message));
   }
 };
@@ -51,7 +54,7 @@ export const updateSuppliernById = async (req, res) => {
 
   const { name, lastName } = req.body;
   try {
-    let Supplier = await Supplier.findByIdAndUpdate(
+    let supplier = await Supplier.findByIdAndUpdate(
       id,
       {
         name: name[0].toUpperCase() + name.slice(1),
@@ -60,7 +63,7 @@ export const updateSuppliernById = async (req, res) => {
       },
       { new: true }
     );
-    res.status(200).json({ Supplier });
+    res.status(200).json({ supplier });
   } catch (error) {
     res.status(400).json(formatError(error.message));
   }
