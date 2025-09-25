@@ -1,0 +1,600 @@
+.modal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  margin-inline: 0.8rem;
+  height: 90%;
+  margin: 15px auto;
+  overflow: hidden;
+  overflow-y: auto;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.modal::-webkit-scrollbar {
+  width: 0;
+}
+
+.table {
+  border-radius: 10px;
+  width: 100%;
+  border-collapse: collapse;
+  font-family: "noto sans";
+}
+
+.table th,
+.table td {
+  border: 1px solid #ddd;
+  padding: 5px;
+  max-width: 150px;
+  text-align: center;
+}
+
+.table th {
+  background-color: #603e20;
+  color: white;
+}
+
+.table tr:hover {
+  background-color: #9ec5ca67;
+}
+
+.tablesContainer {
+  width: 95%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.titleContainer {
+  display: flex;
+  align-items: center;
+  width: 80%;
+  margin-top: 1.5rem;
+  justify-content: center;
+}
+
+.titleNewSale {
+  display: flex;
+  justify-content: center;
+  font-family: "questrial";
+  font-size: 1.5rem;
+  color: #000000;
+  width: 90%;
+  padding: 1rem;
+  color: #603e20;
+  background-color: #9ec5ca67;
+  border-radius: 5px;
+}
+
+.cameraIconScann {
+  display: none;
+  position: absolute;
+  top: 50%;
+  right: 50px;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: #603e20;
+  cursor: pointer;
+}
+
+.autocompleteAddSale {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  gap: 1rem; 
+}
+
+.clientSelect {
+  width: 20rem ;
+}
+
+.productTable {
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.productTable th,
+.productTable td {
+  border: 1px solid #dddddd;
+  padding: 8px;
+  text-align: left;
+  text-align: center;
+}
+
+.productTable tr {
+  width: 100%;
+  background-color: #f2f2f2;
+  flex: 1;
+}
+
+.inputContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 1rem;
+  font-family: "questrial";
+  border: none;
+  color: white;
+  background-color: #b69b84;
+  margin-bottom: 1.5rem;
+  height: 4rem;
+  border-radius: 5px;
+}
+
+.input {
+  padding: 8px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  width: 100%;
+  text-align: center;
+}
+
+.inputAddCode {
+  padding: 8px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-family: "noto sans";
+}
+
+.inputAddCode:focus {
+  outline: none;
+  border: 2px solid #1970b8;
+}
+
+.inputEditPriceGeneric {
+  padding: 8px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-family: "noto sans";
+  text-align: center;
+}
+
+.inputTitle {
+  width: 6rem;
+}
+
+.autocompleteMui {
+  width: 13rem;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-family: "noto sans";
+}
+
+
+
+.labelautocompleteContainer {
+  display: flex;
+  justify-content: space-between;
+
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+}
+
+.quantityInputSale {
+  width: 3rem;
+  min-width: 50px;
+}
+
+.labelInputContainer {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.closeButtonTitle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.closeButtonContainer {
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+}
+
+.closeButton {
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  margin-right: 15px;
+  padding: 0.2rem;
+  cursor: pointer;
+  top: 30px;
+  right: 30px;
+}
+
+.closeButton:hover {
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
+    rgba(0, 0, 0, 0.22) 0px 10px 10px;
+}
+
+.IdNameProduct {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  width: 100%;
+  font-family: "questrial";
+  color: white;
+  background-color: #b69b84;
+  border-radius: 5px;
+}
+
+.totalSaleContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 2.5rem;
+  width: 15rem;
+  background-color: #b69b84;
+  border-radius: 5px;
+  color: #ffffff;
+  font-family: "questrial";
+  font-size: 19px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+}
+
+.totalSaleButtonAddContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 95%;
+  margin-bottom: 0;
+}
+
+.buttonAddGeneric {
+  font-family: "questrial";
+  font-size: 18px;
+  width: 15rem;
+  height: 2.5rem;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem 3rem;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  background-color: #b69b84;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+}
+
+.buttonAddGeneric:hover {
+  background-color: #603e20;
+  color: white;
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
+    rgba(0, 0, 0, 0.22) 0px 10px 10px;
+}
+
+.buttonFinishSale {
+  font-family: "noto sans";
+  font-size: 21px;
+  width: 15rem;
+  height: 2.5rem;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem 3rem;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  background-color: #089203;
+  transition: transform 0.3s ease;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+}
+
+.buttonFinishSale:hover {
+  color: white;
+  cursor: pointer;
+  transform: scale(1.1);
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
+    rgba(0, 0, 0, 0.22) 0px 10px 10px;
+}
+
+.buttonFinishSaleDisabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.buttonDelete {
+  border: none;
+  background-color: transparent;
+  transition: transform 0.3s ease;
+  color: #d60303;
+}
+.buttonDelete:hover {
+  cursor: pointer;
+  transform: scale(1.4);
+}
+
+.inputAddGeneric {
+  border: 1px solid #ccc;
+  padding: 8px;
+  margin-top: 5px;
+  font-family: "noto sans";
+}
+
+.modalVariant {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  background-color: #ffffff;
+  border: none;
+  padding: 20px;
+  border-radius: 10px;
+  width: 70%;
+  height: auto;
+  margin: 5rem auto;
+  overflow: hidden;
+  overflow-y: auto;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.titleContainerVariant {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.titleVariantModal {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  width: 60rem;
+  font-family: "questrial";
+  font-size: 22px;
+  color: #ffffff;
+  background-color: #603e20;
+  border-radius: 5px;
+  padding: 1rem;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+}
+
+.titleVariant {
+  font-size: 18px;
+  font-family: "questrial";
+}
+
+.titleCodeTable {
+  min-width: 150px;
+}
+
+.titleTable {
+  min-width: 200px;
+}
+
+.prices {
+  min-width: 100px;
+}
+
+.gridContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 90%;
+  gap: 1rem;
+}
+
+.gridItem {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  border-radius: 5px;
+  cursor: pointer;
+  color: #603e20;
+  border: 2px solid #b69b84;
+  transition: transform 0.3s ease;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+}
+
+.gridItem:hover {
+  background-color: #b69b84;
+  border: 2px solid #b69b84;
+  color: white;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
+    rgba(0, 0, 0, 0.22) 0px 10px 10px;
+}
+
+.scannerCode {
+  display: none;
+  position: absolute;
+  padding-top: 10rem;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  backdrop-filter: blur(3px);
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.openCameraStyle {
+  display: flex;
+  position: absolute;
+  padding-top: 10rem;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  backdrop-filter: blur(3px);
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+@media only screen and (max-width: 1170px) {
+  .modal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    background-color: #ffffff;
+    padding: 10px;
+    border-radius: 10px;
+    height: 90%;
+    overflow: hidden;
+    overflow-y: auto;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .tableContainer {
+    margin-top: 20px;
+    padding-inline: 0.5rem;
+  }
+
+  .title {
+    background-color: #9ec5ca;
+    color: white;
+    padding: 0.5rem 2rem;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "questrial";
+    font-size: 19px;
+  }
+
+  .labelInputContainer {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .autocomplete {
+    width: 100% !important;
+  }
+
+  .cameraIconScann {
+    display: flex;
+    position: absolute;
+    top: 50%;
+    right: 40px;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    padding: 0;
+    color: #603e20;
+    cursor: pointer;
+  }
+
+  .tableWrapper {
+    overflow-x: auto;
+  }
+  .inputContainer {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    gap: 1rem;
+    width: 100%;
+    height: auto;
+  }
+
+  .inputAddCode {
+    padding: 8px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-family: "noto sans";
+    min-width: 180px;
+  }
+
+
+
+  .inputEditPriceGeneric {
+    padding: 8px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-family: "noto sans";
+    text-align: center;
+    width: 100%;
+  }
+
+  .table {
+    border-radius: 10px;
+    width: 100%;
+    border-collapse: collapse;
+    font-family: "noto sans";
+    overflow-x: scroll;
+  }
+
+  .tableWrapper {
+    overflow-x: auto;
+  }
+
+  .labels {
+    min-width: 5rem;
+  }
+
+  .labelInputContainer {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .totalSaleButtonAddContainer {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    gap: 2rem;
+  }
+
+  .closeButton {
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  }
+
+  .autocompleteMui {
+
+    width: 180px;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-family: "noto sans";
+  }
+
+  .labelautocompleteContainer {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 2rem;
+  }
+}

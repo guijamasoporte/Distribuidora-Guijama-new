@@ -15,11 +15,13 @@ import { Supplier } from "../../interfaces/interfaces";
 import { FadeLoader } from "react-spinners";
 import CreateSupplierModal from "../../components/modals/modalClient/modalAddSupplier/modalAddSupplier";
 import EditSupplierModal from "../../components/modals/modalClient/modalEditSupplier/modalEditSupplier";
+import ModalSupplierBuyComponent from "../../components/modals/modalSupplier/modalAddSale/modalAddSale";
 
 const SupplierPage: React.FC = () => {
   const [openModal, setOpenModal] = useState(false);
   const [openModalEdit, setOpenModalEdit] = useState(false);
   const [openPurchaseModal, setOpenPurchaseModal] = useState(false);
+  const [openBuyModal, setOpenBuyModal] = useState(false);
   const initialFilters: Record<keyof Supplier, string | any> = {
     _id: "",
     idSupplier: "",
@@ -300,6 +302,12 @@ const SupplierPage: React.FC = () => {
             >
               Agregar nuevo proveedor
             </button>
+            <button
+              className={styles.buttonAdd}
+              onClick={() => setOpenBuyModal(true)}
+            >
+              Crear Compra
+            </button>
           </div>
         </>
       )}
@@ -321,13 +329,12 @@ const SupplierPage: React.FC = () => {
           setSupplierSelect={setSupplierSelect}
         />
       )}
-      {/* {supplierSelect && (
-        <PurchaseModal
-          open={openPurchaseModal}
-          onClose={() => setOpenPurchaseModal(false)}
-          dataSale={supplierSelect}
+      {openBuyModal && (
+        <ModalSupplierBuyComponent
+          open={openBuyModal}
+          onClose={() => setOpenBuyModal(false)}
         />
-      )} */}
+      )}
     </div>
   );
 };

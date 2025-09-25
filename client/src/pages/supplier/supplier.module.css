@@ -81,6 +81,7 @@
   width: 100%;
   padding-top: 2rem;
   padding-bottom: 3rem;
+  gap: 1rem;
 }
 
 .buttonAdd {
