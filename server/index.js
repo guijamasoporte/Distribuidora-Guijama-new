@@ -11,6 +11,7 @@ import productRoute from "./src/routes/product.routes.js";
 import clientRoute from "./src/routes/clients.routes.js";
 import salesRoute from "./src/routes/sales.routes.js";
 import supplierRoute from "./src/routes/supplier.routes.js";
+import buyRoute from "./src/routes/buy.route.js";
 
 const app = express();
 
@@ -40,6 +41,7 @@ app.use("/products", productRoute);
 app.use("/clients", clientRoute);
 app.use("/sales", salesRoute);
 app.use("/supplier", supplierRoute);
+app.use("/buy", buyRoute);
 
 const port = process.env.PORT || 3001;
 app.listen(port, () => {

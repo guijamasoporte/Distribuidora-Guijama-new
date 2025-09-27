@@ -18,7 +18,7 @@ export const createSupplier = async (req, res) => {
       adress,
       email,
       contactName,
-      buys,
+      buys:[],
     });
 
     await supplier.save();
