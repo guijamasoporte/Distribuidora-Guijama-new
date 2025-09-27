@@ -152,6 +152,26 @@
   border: 2px solid #1970b8;
 }
 
+/* Nuevos estilos para inputs de edición de precios */
+.inputEditPrice {
+  padding: 8px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-family: "noto sans";
+  text-align: center;
+  width: 100%;
+  max-width: 120px;
+  margin: 0 auto;
+  display: block;
+}
+
+.inputEditPrice:focus {
+  outline: none;
+  border: 2px solid #1970b8;
+  background-color: #f9f9f9;
+}
+
 .inputEditPriceGeneric {
   padding: 8px;
   border: 1px solid #cccccc;
@@ -159,6 +179,16 @@
   box-sizing: border-box;
   font-family: "noto sans";
   text-align: center;
+  width: 100%;
+  max-width: 120px;
+  margin: 0 auto;
+  display: block;
+}
+
+.inputEditPriceGeneric:focus {
+  outline: none;
+  border: 2px solid #1970b8;
+  background-color: #f9f9f9;
 }
 
 .inputTitle {
@@ -172,12 +202,9 @@
   font-family: "noto sans";
 }
 
-
-
 .labelautocompleteContainer {
   display: flex;
   justify-content: space-between;
-
   flex-direction: row;
   align-items: center;
   gap: 1rem;
@@ -186,6 +213,11 @@
 .quantityInputSale {
   width: 3rem;
   min-width: 50px;
+}
+
+.quantityInputSale input {
+  width: 100%;
+  text-align: center;
 }
 
 .labelInputContainer {
@@ -337,6 +369,8 @@
   padding: 8px;
   margin-top: 5px;
   font-family: "noto sans";
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .modalVariant {
@@ -533,7 +567,18 @@
     min-width: 180px;
   }
 
-
+  /* Estilos responsivos para inputs de precio */
+  .inputEditPrice {
+    padding: 8px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-family: "noto sans";
+    text-align: center;
+    width: 100%;
+    max-width: 100px;
+    margin: 0 auto;
+  }
 
   .inputEditPriceGeneric {
     padding: 8px;
@@ -543,6 +588,8 @@
     font-family: "noto sans";
     text-align: center;
     width: 100%;
+    max-width: 100px;
+    margin: 0 auto;
   }
 
   .table {
@@ -582,7 +629,6 @@
   }
 
   .autocompleteMui {
-
     width: 180px;
     border-radius: 4px;
     box-sizing: border-box;
@@ -597,4 +643,46 @@
     align-items: center;
     gap: 2rem;
   }
+
+  /* Ajustes para inputs en tabla en móviles */
+  .table td {
+    padding: 3px;
+  }
+
+  .inputEditPrice,
+  .inputEditPriceGeneric {
+    padding: 6px;
+    font-size: 14px;
+  }
+
+  .quantityInputSale input {
+    padding: 6px;
+    font-size: 14px;
+  }
+}
+
+/* Estilos adicionales para mejorar la apariencia de los inputs en la tabla */
+.table input[type="number"],
+.table input[type="text"] {
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  padding: 4px 6px;
+  font-family: "noto sans";
+  font-size: 14px;
+  text-align: center;
+  background-color: white;
+  transition: all 0.2s ease;
+}
+
+.table input[type="number"]:focus,
+.table input[type="text"]:focus {
+  outline: none;
+  border-color: #603e20;
+  box-shadow: 0 0 0 2px rgba(96, 62, 32, 0.2);
+  background-color: #f9f9f9;
+}
+
+.table input[type="number"]:hover,
+.table input[type="text"]:hover {
+  border-color: #b69b84;
 }

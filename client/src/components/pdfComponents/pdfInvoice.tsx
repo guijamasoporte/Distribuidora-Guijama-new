@@ -6,18 +6,17 @@ import {
   Image,
   View,
   Text,
-  Font,
 } from "@react-pdf/renderer";
 
-// import guijama from "../../assets/guijamapdf.png";
 import guijama from "../../assets/guijamaLogo.png";
 import guijamaFondo from "../../assets/fondoInvoice.png";
-import { Client, Sales } from "../../interfaces/interfaces";
+import { Client, Sales, Supplier } from "../../interfaces/interfaces";
 import { formatNumberWithCommas } from "../../utils/formatNumberwithCommas";
 
 interface InvoiceDetail {
   idSale: string;
-  idClient: string;
+  idClient?: string;
+  idSupplier?: string;
   name: string;
   lastName: string;
   address: string;
@@ -29,15 +28,14 @@ interface InvoiceDetail {
 const Pdfinvoice: React.FC<{
   sales: Sales | string;
   id: number;
-  saleClient: Client | string;
+  saleClient: Client | Supplier | string;
 }> = ({ sales, id, saleClient }) => {
   function obtenerFechaSinHora(fechaConHora: string) {
     const fecha = new Date(fechaConHora);
     const dia = fecha.getDate();
-    const mes = fecha.getMonth() + 1; // ¡Recuerda que los meses van de 0 a 11!
+    const mes = fecha.getMonth() + 1;
     const año = fecha.getFullYear();
 
-    // Formatea el día y el mes para que tengan dos dígitos
     const diaFormateado = dia < 10 ? "0" + dia : dia;
     const mesFormateado = mes < 10 ? "0" + mes : mes;
 
@@ -73,7 +71,6 @@ const Pdfinvoice: React.FC<{
       marginHorizontal: 20,
       fontSize: 15,
     },
-
     infoClientContain: {
       display: "flex",
       flexDirection: "row",
@@ -81,7 +78,6 @@ const Pdfinvoice: React.FC<{
       marginBottom: 40,
     },
     productsContain: {},
-
     productsContainTable: {
       display: "flex",
       flexDirection: "row",
@@ -91,16 +87,13 @@ const Pdfinvoice: React.FC<{
     productsContainTitle: {
       padding: 3,
       border: "1px solid black",
-
       borderTop: "2px solid black",
     },
-
     productsContainText: {
       border: "1px solid black",
       fontSize: 10,
       paddingVertical: 5,
     },
-
     productsContainTotal: {
       display: "flex",
       flexDirection: "row",
@@ -108,11 +101,9 @@ const Pdfinvoice: React.FC<{
       textAlign: "center",
       border: "1px solid black",
     },
-
     productsContainTotaltext: {
       padding: 10,
     },
-
     strong: {
       fontSize: 20,
     },
@@ -132,144 +123,143 @@ const Pdfinvoice: React.FC<{
 
   useEffect(() => {
     if (sales !== "" && typeof sales !== "string") {
+      // Caso 1: Datos desde Sales
       setDataInvoice({
         idSale: sales.idSale,
-        idClient: sales.client.idClient,
-        name: sales.client.name,
-        lastName: sales.client.lastName,
-        address: sales.client.adress,
-        products: sales.products,
-        priceTotal: sales.priceTotal,
-        date: sales.date,
+        idClient: sales.client?.idClient || "N/A",
+        idSupplier: sales.client?.idSupplier || sales.supplier?.idSupplier, // Ajusta según tu estructura real
+        name: sales.client?.name || "",
+        lastName: sales.client?.lastName || "",
+        address: sales.client?.adress || "",
+        products: sales.products || [],
+        priceTotal: sales.priceTotal || 0,
+        date: sales.date || "",
       });
-    } else if (saleClient !== "" && typeof saleClient !== "string") {
+    } else if (
+      saleClient !== "" &&
+      typeof saleClient !== "string" &&
+      saleClient.buys &&
+      saleClient.buys[id]
+    ) {
+      // Caso 2: Datos desde Client (historial de compras)
+      const compra = saleClient.buys[id];
       setDataInvoice({
-        idSale: saleClient.buys[id].idSale,
-        idClient: saleClient.idClient,
-        name: saleClient.name,
-        lastName: saleClient.lastName,
-        address: saleClient.adress,
-        products: saleClient.buys[id].products,
-        priceTotal: saleClient.buys[id].priceTotal,
-        date: saleClient.buys[id].date,
+        idSale: compra.idSale,
+        idClient: "idClient" in saleClient ? saleClient.idClient : "N/A",
+        idSupplier:
+          compra.idSupplier ||
+          ("idSupplier" in saleClient ? saleClient.idSupplier : undefined), // Ajusta según tu estructura
+        name: saleClient.name || "",
+        lastName: saleClient.lastName || "",
+        address: saleClient.adress || "",
+        products: compra.products || [],
+        priceTotal: compra.priceTotal || 0,
+        date: compra.date || "",
       });
     } else {
       setDataInvoice(null);
     }
   }, [sales, saleClient, id]);
 
+  // Si no hay datos, no renderizar nada
+  if (!dataInvoice) {
+    return null;
+  }
+
   return (
-    <>
-      {dataInvoice && (
-        <Document>
-          <Page size="A4" style={styles.page}>
-            <View style={styles.Header}>
-              <Image src={guijamaFondo} style={styles.documentImage} />
-              <View style={styles.HeaderPresupuesto}>
-                <Image src={guijama} style={styles.image} />
-                <Text style={{ fontSize: 15 }}>
-                  Tel: 221 591-6564 / 221 673-2423
-                </Text>
-                <Text style={{ fontSize: 15 }}>221 615-5073</Text>
-              </View>
-            </View>
-            <View style={styles.infoClientContain}>
-              <Image src={guijamaFondo} style={styles.documentImage} />
-              <View>
-                <Text>Cliente N°: {dataInvoice.idClient}</Text>
-                <Text>
-                  Nombre: {dataInvoice.name + " " + dataInvoice.lastName}
-                </Text>
+    <Document>
+      <Page size="A4" style={styles.page}>
+        <View style={styles.Header}>
+          <Image src={guijamaFondo} style={styles.documentImage} />
+          <View style={styles.HeaderPresupuesto}>
+            <Image src={guijama} style={styles.image} />
+            <Text style={{ fontSize: 15 }}>
+              Tel: 221 591-6564 / 221 673-2423
+            </Text>
+            <Text style={{ fontSize: 15 }}>221 615-5073</Text>
+          </View>
+        </View>
 
-                <Text>Direccion: {dataInvoice.address}</Text>
+        <View style={styles.infoClientContain}>
+          <Image src={guijamaFondo} style={styles.documentImage} />
+          <View>
+            <Text>Cliente N°: {dataInvoice.idClient}</Text>
+            {dataInvoice.idSupplier && (
+              <Text>Proveedor N°: {dataInvoice.idSupplier}</Text>
+            )}
+            <Text>Nombre: {dataInvoice.name + " " + dataInvoice.lastName}</Text>
+            <Text>Direccion: {dataInvoice.address}</Text>
+            <Text>Fecha: {obtenerFechaSinHora(dataInvoice.date)}</Text>
+          </View>
 
-                <Text>Fecha: {obtenerFechaSinHora(dataInvoice.date)}</Text>
-              </View>
+          <View style={styles.HeaderPresupuesto}>
+            <Text style={styles.strong}>PRESUPUESTO X</Text>
+            <Text>Documento no válido como factura</Text>
+            <Text>N° {dataInvoice.idSale}</Text>
+          </View>
+        </View>
 
-              <View style={styles.HeaderPresupuesto}>
-                <Text style={styles.strong}>PRESUPUESTO X</Text>
-                <Text>Documento no válido como factura</Text>
-                <Text>N° {dataInvoice.idSale}</Text>
-              </View>
-            </View>
+        <View style={styles.productsContain}>
+          <View style={styles.productsContainTable}>
+            <Image src={guijamaFondo} style={styles.documentImage} />
+            <Text style={[styles.productsContainTitle, styles.sizePrices]}>
+              Cantidad
+            </Text>
+            <Text style={[styles.productsContainTitle, styles.containSize]}>
+              Detalle
+            </Text>
+            <Text style={[styles.productsContainTitle, styles.sizePrices]}>
+              Precio U.
+            </Text>
+            <Text style={[styles.productsContainTitle, styles.sizePrices]}>
+              Total
+            </Text>
+          </View>
 
-            <View style={styles.productsContain}>
-              <View style={styles.productsContainTable}>
+          <View>
+            {dataInvoice.products.map((el: any, index: number) => (
+              <View key={index} style={styles.productsContainTable}>
                 <Image src={guijamaFondo} style={styles.documentImage} />
-                <Text style={[styles.productsContainTitle, styles.sizePrices]}>
-                  Cantidad
+                <Text style={[styles.productsContainText, styles.sizePrices]}>
+                  {el.unity}
                 </Text>
-                <Text style={[styles.productsContainTitle, styles.containSize]}>
-                  Detalle
+                <Text style={[styles.productsContainText, styles.containSize]}>
+                  {el.title}
                 </Text>
-                <Text style={[styles.productsContainTitle, styles.sizePrices]}>
-                  Precio U.
+                <Text style={[styles.productsContainText, styles.sizePrices]}>
+                  ${formatNumberWithCommas(el.priceList)}
                 </Text>
-                <Text style={[styles.productsContainTitle, styles.sizePrices]}>
-                  Total
+                <Text style={[styles.productsContainText, styles.sizePrices]}>
+                  ${formatNumberWithCommas(el.priceList * el.unity)}
                 </Text>
               </View>
+            ))}
 
-              <View>
-                {dataInvoice.products.map((el: any) => (
-                  <View style={styles.productsContainTable}>
-                    <Image src={guijamaFondo} style={styles.documentImage} />
-                    <Text
-                      style={[styles.productsContainText, styles.sizePrices]}
-                    >
-                      {el.unity}
-                    </Text>
-                    <Text
-                      style={[styles.productsContainText, styles.containSize]}
-                    >
-                      {el.title}
-                    </Text>
-                    <Text
-                      style={[styles.productsContainText, styles.sizePrices]}
-                    >
-                      ${formatNumberWithCommas(el.priceList)}
-                    </Text>
-                    <Text
-                      style={[styles.productsContainText, styles.sizePrices]}
-                    >
-                      ${formatNumberWithCommas(el.priceList * el.unity)}
-                    </Text>
-                  </View>
-                ))}
-
-                <View style={styles.productsContainTotal}>
-                  <Image src={guijamaFondo} style={styles.documentImage} />
-                  <Text
-                    style={[
-                      styles.productsContainTotaltext,
-                      styles.containSize,
-                    ]}
-                  >
-                    {" "}
-                  </Text>
-                  <Text
-                    style={[
-                      styles.productsContainTotaltext,
-                      styles.containSize,
-                    ]}
-                  >
-                    {" "}
-                  </Text>
-                  <Text
-                    style={[styles.productsContainTotaltext, styles.sizePrices]}
-                  >
-                    Total:
-                  </Text>
-                  <Text style={styles.productsContainTotaltext}>
-                    ${formatNumberWithCommas(dataInvoice.priceTotal)}
-                  </Text>
-                </View>
-              </View>
+            <View style={styles.productsContainTotal}>
+              <Image src={guijamaFondo} style={styles.documentImage} />
+              <Text
+                style={[styles.productsContainTotaltext, styles.containSize]}
+              >
+                {" "}
+              </Text>
+              <Text
+                style={[styles.productsContainTotaltext, styles.containSize]}
+              >
+                {" "}
+              </Text>
+              <Text
+                style={[styles.productsContainTotaltext, styles.sizePrices]}
+              >
+                Total:
+              </Text>
+              <Text style={styles.productsContainTotaltext}>
+                ${formatNumberWithCommas(dataInvoice.priceTotal)}
+              </Text>
             </View>
-          </Page>
-        </Document>
-      )}
-    </>
+          </View>
+        </View>
+      </Page>
+    </Document>
   );
 };
 

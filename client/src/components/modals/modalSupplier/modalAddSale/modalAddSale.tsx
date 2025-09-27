@@ -6,7 +6,11 @@ import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import styles from "./modalAddSale.module.css";
 import Swal from "sweetalert2";
 import InstanceOfAxios from "../../../../utils/intanceAxios";
-import { Client, Filters, Product, Supplier } from "../../../../interfaces/interfaces";
+import {
+  Filters,
+  Product,
+  Supplier,
+} from "../../../../interfaces/interfaces";
 import { GetDecodedCookie } from "../../../../utils/DecodedCookie";
 import BarcodeScanner from "../../../scannerCode/barcodeScanner";
 import { formatNumberWithCommas } from "../../../../utils/formatNumberwithCommas";
@@ -20,7 +24,9 @@ const ModalSupplierBuyComponent: React.FC<ModalProps> = ({ open, onClose }) => {
   const [dataProducts, setDataProducts] = useState<Product[]>([]);
   const [dataSupplier, setDataSupplier] = useState<Supplier[]>([]);
   const [List, setList] = useState<Product[]>([]);
-  const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(null);
+  const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(
+    null
+  );
   const [openModalSelectProduct, setOpenModalSelectProduct] =
     useState<boolean>(false);
 
@@ -63,6 +69,8 @@ const ModalSupplierBuyComponent: React.FC<ModalProps> = ({ open, onClose }) => {
         filteredData = filteredData.map((item) => ({
           ...item,
           unity: filters.cant,
+          // Establecer precio de compra desde el filtro si está disponible
+          priceCost: filters.importe || item.priceCost,
         }));
 
         let productIndex = List.findIndex(
@@ -94,6 +102,8 @@ const ModalSupplierBuyComponent: React.FC<ModalProps> = ({ open, onClose }) => {
         filteredData = filteredData.map((item) => ({
           ...item,
           unity: filters.cant,
+          // Establecer precio de compra desde el filtro si está disponible
+          priceCost: filters.importe || item.priceCost,
         }));
 
         let productIndex = List.findIndex(
@@ -117,7 +127,7 @@ const ModalSupplierBuyComponent: React.FC<ModalProps> = ({ open, onClose }) => {
   const Calculartotal = () => {
     let totalData = List.map((el: any) => ({
       ...el,
-      total: el.priceList * el.unity,
+      total: el.priceCost * el.unity, // Usar priceCost para el total de compra
     }));
 
     let overallTotal = totalData.reduce((acc, curr) => acc + curr.total, 0);
@@ -130,8 +140,8 @@ const ModalSupplierBuyComponent: React.FC<ModalProps> = ({ open, onClose }) => {
       {
         code: "",
         title: "Titulo",
-        priceCost: null,
-        priceList: filters.importe,
+        priceCost: filters.importe, // Usar el importe del filtro
+        priceList: filters.importe * 1.3, // Precio de venta por defecto (30% más)
         unity: filters.cant,
         generic: true,
         stock: 0,
@@ -153,26 +163,35 @@ const ModalSupplierBuyComponent: React.FC<ModalProps> = ({ open, onClose }) => {
     };
   };
 
-  const handlerEditUnity = (elemento: Product, index: number) => {
-    return (event: any) => {
-      const newUnity = event.target.value;
-
-      List[index].unity = Number(newUnity);
-      console.log(List[index]);
-      setList([...List]);
+  const handlerEditUnity = (index: number) => {
+    return (event: React.ChangeEvent<HTMLInputElement>) => {
+      const newUnity = Number(event.target.value);
+      const updatedList = [...List];
+      updatedList[index].unity = newUnity;
+      setList(updatedList);
     };
   };
 
-  const handlerEditPrice = (elemento: Product, index: number) => {
+  const handlerEditPriceCost = (index: number) => {
     return (event: React.ChangeEvent<HTMLInputElement>) => {
-      const newPrice = event.target.value;
-      List[index].priceList = Number(newPrice);
-      setList([...List]);
+      const newPrice = Number(event.target.value);
+      const updatedList = [...List];
+      updatedList[index].priceCost = newPrice;
+      setList(updatedList);
+    };
+  };
+
+  const handlerEditPriceList = (index: number) => {
+    return (event: React.ChangeEvent<HTMLInputElement>) => {
+      const newPrice = Number(event.target.value);
+      const updatedList = [...List];
+      updatedList[index].priceList = newPrice;
+      setList(updatedList);
     };
   };
 
   const handlerSubPrice = (product: any) => {
-    const total = product.priceList * product.unity;
+    const total = product.priceCost * product.unity; // Usar priceCost para sub-total
     return total.toLocaleString().replace(",", ".");
   };
 
@@ -186,7 +205,7 @@ const ModalSupplierBuyComponent: React.FC<ModalProps> = ({ open, onClose }) => {
     const token = GetDecodedCookie("cookieToken");
 
     if (selectedSupplier) {
-      const dataClient = {
+      const dataSupplier = {
         name: selectedSupplier.name,
         lastName: selectedSupplier.lastName,
         id: selectedSupplier._id,
@@ -197,23 +216,23 @@ const ModalSupplierBuyComponent: React.FC<ModalProps> = ({ open, onClose }) => {
 
       try {
         await InstanceOfAxios(
-          "/supplier",
+          `/buy`,
           "POST",
-          { List, client: dataClient, token: token, method },
+          { List, supplier: dataSupplier, token: token, method },
           token
         );
         onClose();
         Swal.fire({
           icon: "success",
-          title: "Venta guardada",
-          text: "La venta se ha guardado exitosamente.",
+          title: "Compra guardada",
+          text: "La compra se ha guardado exitosamente.",
         });
       } catch (error) {
-        console.error("Error saving sale:", error);
+        console.error("Error saving buys:", error);
         Swal.fire({
           icon: "error",
           title: "Error",
-          text: "Ocurrió un error al guardar la venta. Por favor, inténtelo de nuevo.",
+          text: "Ocurrió un error al guardar la compra. Por favor, inténtelo de nuevo.",
         });
       }
     }
@@ -234,9 +253,6 @@ const ModalSupplierBuyComponent: React.FC<ModalProps> = ({ open, onClose }) => {
     filters.code,
     filters.title,
     List,
-    Calculartotal,
-    HandlerAddProduct,
-    HandlerAddProductWithTitle,
   ]);
 
   const closeModal = () => {
@@ -256,13 +272,13 @@ const ModalSupplierBuyComponent: React.FC<ModalProps> = ({ open, onClose }) => {
               </button>
             </div>
             <div className={styles.titleContainer}>
-              <h2 className={styles.titleNewSale}>Nueva Compra a provedor</h2>
+              <h2 className={styles.titleNewSale}>Nueva Compra a proveedor</h2>
             </div>
           </div>
           <div className={styles.autocompleteAddSale}>
             <div>
               <Autocomplete
-              sx={{width: 320}}
+                sx={{ width: 320 }}
                 className={styles.clientSelect}
                 fullWidth={true}
                 options={dataSupplier}
@@ -288,11 +304,11 @@ const ModalSupplierBuyComponent: React.FC<ModalProps> = ({ open, onClose }) => {
               <Autocomplete
                 className={styles.clientSelect}
                 id="combo-box-mes"
-                options={["Transferencia", "Efectivo"]} // Opciones de formas de pago como cadenas
+                options={["Transferencia", "Efectivo"]}
                 renderInput={(params) => (
                   <TextField {...params} label="Forma de pago" />
                 )}
-                onChange={(event, value) => setMethod(value)} // Establecer el valor seleccionado en el estado method
+                onChange={(event, value) => setMethod(value)}
               />
             </div>
           </div>
@@ -305,9 +321,9 @@ const ModalSupplierBuyComponent: React.FC<ModalProps> = ({ open, onClose }) => {
                   sx={{
                     "& .MuiAutocomplete-inputRoot": {
                       backgroundColor: "#fff",
-                      height: '40px',
-                      paddingTop: '0px',
-                      paddingBottom: '10px',
+                      height: "40px",
+                      paddingTop: "0px",
+                      paddingBottom: "10px",
                     },
                     "& .MuiAutocomplete-listbox": {
                       backgroundColor: "#fff",
@@ -329,15 +345,15 @@ const ModalSupplierBuyComponent: React.FC<ModalProps> = ({ open, onClose }) => {
                 </button>
               </div>
               <div className={styles.labelautocompleteContainer}>
-                <label className={styles.labels}>titulo</label>
+                <label className={styles.labels}>Título</label>
                 <Autocomplete
                   className={styles.autocompleteMui}
                   sx={{
                     "& .MuiAutocomplete-inputRoot": {
                       backgroundColor: "#fff",
-                      height: '40px',
-                      paddingTop: '0px',
-                      paddingBottom: '10px',
+                      height: "40px",
+                      paddingTop: "0px",
+                      paddingBottom: "10px",
                     },
                     "& .MuiAutocomplete-listbox": {
                       backgroundColor: "#fff",
@@ -398,7 +414,6 @@ const ModalSupplierBuyComponent: React.FC<ModalProps> = ({ open, onClose }) => {
                         {product.generic ? (
                           <input
                             type="text"
-                            id=""
                             value={product.title}
                             maxLength={20}
                             onChange={handlerEditTitle(index)}
@@ -412,30 +427,28 @@ const ModalSupplierBuyComponent: React.FC<ModalProps> = ({ open, onClose }) => {
                         <input
                           type="number"
                           value={product.unity}
-                          onChange={handlerEditUnity(product, index)}
+                          onChange={handlerEditUnity(index)}
                           className={styles.input}
                           name="cant"
                         />
                       </td>
                       <td className={styles.prices}>
-                        $
-                        {product.priceCost
-                          ? formatNumberWithCommas(product.priceCost)
-                          : "-"}
+                        <input
+                          type="number"
+                          value={product.priceCost || ""}
+                          onChange={handlerEditPriceCost(index)}
+                          className={styles.inputEditPrice}
+                          placeholder="Precio compra"
+                        />
                       </td>
                       <td className={styles.prices}>
-                        {product.generic ? (
-                          <input
-                            type="number"
-                            value={product.priceList}
-                            onChange={handlerEditPrice(product, index)}
-                            className={styles.inputEditPriceGeneric}
-                          />
-                        ) : (
-                          `$ ${product.priceList
-                            .toLocaleString()
-                            .replace(",", ".")}`
-                        )}
+                        <input
+                          type="number"
+                          value={product.priceList || ""}
+                          onChange={handlerEditPriceList(index)}
+                          className={styles.inputEditPrice}
+                          placeholder="Precio venta"
+                        />
                       </td>
                       <td className={styles.prices}>
                         $ {handlerSubPrice(product)}
@@ -474,7 +487,7 @@ const ModalSupplierBuyComponent: React.FC<ModalProps> = ({ open, onClose }) => {
                 disabled={List.length === 0}
                 onClick={handleSubmit}
               >
-                Cargar Venta
+                Cargar
               </button>
             </div>
           </div>
@@ -508,7 +521,7 @@ const ModalSupplierBuyComponent: React.FC<ModalProps> = ({ open, onClose }) => {
                 onClick={() => {
                   let productIndex = List.findIndex(
                     (el: Product) =>
-                      String(el.code) === String(el.code) &&
+                      String(el.code) === String(product.code) &&
                       el.variant === product.variant
                   );
                   if (productIndex >= 0) {
@@ -518,10 +531,13 @@ const ModalSupplierBuyComponent: React.FC<ModalProps> = ({ open, onClose }) => {
                   } else {
                     setList([
                       ...List,
-                      { ...product, unity: Number(filters.cant) },
+                      { 
+                        ...product, 
+                        unity: Number(filters.cant),
+                        priceCost: filters.importe || product.priceCost
+                      },
                     ]);
                   }
-
                   closeModal();
                 }}
               >

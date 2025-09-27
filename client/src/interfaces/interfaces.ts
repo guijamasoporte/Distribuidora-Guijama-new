@@ -10,6 +10,7 @@ export interface Supplier {
   buys:any;
 }
 export interface Client {
+  idSupplier: any;
   date: any;
   _id: any;
   idClient?: string;

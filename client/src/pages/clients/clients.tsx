@@ -29,6 +29,7 @@ const ClientsPage: React.FC = () => {
     adress: "",
     date: "",
     buys: [],
+    idSupplier: undefined
   };
 
   const [filters, setFilters] = useState(initialFilters);

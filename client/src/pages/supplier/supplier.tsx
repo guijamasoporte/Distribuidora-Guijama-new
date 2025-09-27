@@ -8,14 +8,13 @@ import SearchBar from "../../components/searchBar/searchBar";
 import InstanceOfAxios from "../../utils/intanceAxios";
 import Pagination from "../../components/pagination/pagination";
 import Swal from "sweetalert2";
-import EditClientModal from "../../components/modals/modalClient/modalEditClient/modalEditClient";
-import PurchaseModal from "../../components/modals/modalClient/modalBuysClient/modalBuysClient";
 import { GetDecodedCookie } from "../../utils/DecodedCookie";
 import { Supplier } from "../../interfaces/interfaces";
 import { FadeLoader } from "react-spinners";
 import CreateSupplierModal from "../../components/modals/modalClient/modalAddSupplier/modalAddSupplier";
 import EditSupplierModal from "../../components/modals/modalClient/modalEditSupplier/modalEditSupplier";
 import ModalSupplierBuyComponent from "../../components/modals/modalSupplier/modalAddSale/modalAddSale";
+import PurchaseModal from "../../components/modals/modalSupplier/modalBuysSupplier/modalBuysSupplier";
 
 const SupplierPage: React.FC = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -246,20 +245,20 @@ const SupplierPage: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {currentSupplier.map((client, index) => (
+                {currentSupplier.map((supplier, index) => (
                   <tr key={index}>
-                    <td>{client.idSupplier}</td>
-                    <td className={styles.nameTable}>{client.name}</td>
-                    <td>{client.lastName}</td>
-                    <td>{client.phone}</td>
-                    <td>{client.email}</td>
-                    <td className={styles.adressTable}>{client.adress}</td>
+                    <td>{supplier.idSupplier}</td>
+                    <td className={styles.nameTable}>{supplier.name}</td>
+                    <td>{supplier.lastName}</td>
+                    <td>{supplier.phone}</td>
+                    <td>{supplier.email}</td>
+                    <td className={styles.adressTable}>{supplier.adress}</td>
                     <td>
                       <button
                         className={styles.buttonSee}
                         onClick={() => {
                           setOpenPurchaseModal(true);
-                          setSupplierSelect(client);
+                          setSupplierSelect(supplier);
                         }}
                       >
                         <SearchIcon />
@@ -270,7 +269,7 @@ const SupplierPage: React.FC = () => {
                         className={styles.buttonEdit}
                         onClick={() => {
                           setOpenModalEdit(true);
-                          setSupplierSelect(client);
+                          setSupplierSelect(supplier);
                         }}
                       >
                         <EditIcon />
@@ -279,7 +278,7 @@ const SupplierPage: React.FC = () => {
                     <td>
                       <button
                         className={styles.buttonDelete}
-                        onClick={() => handleDelete(`${client._id}`)}
+                        onClick={() => handleDelete(`${supplier._id}`)}
                       >
                         <DeleteIcon />
                       </button>
@@ -333,6 +332,13 @@ const SupplierPage: React.FC = () => {
         <ModalSupplierBuyComponent
           open={openBuyModal}
           onClose={() => setOpenBuyModal(false)}
+        />
+      )}
+      {supplierSelect && supplierSelect.buys.length > 0 && (
+        <PurchaseModal
+          open={openPurchaseModal}
+          onClose={() => setOpenPurchaseModal(false)}
+          dataBuy={supplierSelect}
         />
       )}
     </div>

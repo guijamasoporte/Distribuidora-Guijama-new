@@ -1,7 +1,7 @@
 import React from "react";
 import { Modal } from "@mui/material";
-import { Client } from "../../../../interfaces/interfaces";
-import styles from "./modalbuysClient.module.css";
+import { Supplier } from "../../../../interfaces/interfaces";
+import styles from "./modalbuysSupplier.module.css";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import CloseIcon from "@mui/icons-material/Close";
 import Pdfinvoice from "../../../pdfComponents/pdfInvoice";
@@ -10,13 +10,13 @@ import { formatNumberWithCommas } from "../../../../utils/formatNumberwithCommas
 interface PurchaseModalProps {
   open: boolean;
   onClose: () => void;
-  dataSale: Client;
+  dataBuy: Supplier;
 }
 
 const PurchaseModal: React.FC<PurchaseModalProps> = ({
   open,
   onClose,
-  dataSale,
+  dataBuy: dataSale,
 }) => {
   return (
     <Modal open={open} onClose={onClose}>
@@ -26,11 +26,11 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
             <CloseIcon />
           </button>
         </div>
-        <h2 className={styles.clientBuysTitle}>Compras del cliente</h2>
+        <h2 className={styles.clientBuysTitle}>Compras del Proveedor</h2>
         <>
           <div className={styles.idNameContainer}>
             <p>
-              <strong> Cliente N°:</strong> {dataSale.idClient}
+              <strong> Proveedor N°:</strong> {dataSale.idSupplier}
             </p>
             <p>
               <strong>Nombre: </strong>
