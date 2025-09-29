@@ -15,7 +15,7 @@ import buyRoute from "./src/routes/buy.route.js";
 
 const app = express();
 
-const whiteList = [process.env.DEPLOY_CLIENT_URL, "http://localhost:3001","https://distribuidora-guijama-new.vercel.app","https://distribuidora-guijama-new.vercel.app/"];
+const whiteList = [process.env.DEPLOY_CLIENT_URL, "http://localhost:3001"];
 
 // app.use(
 //   cors({
