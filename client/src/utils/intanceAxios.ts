@@ -47,6 +47,7 @@ async function InstanceOfAxios<T>(
     return response.data;
   } catch (error: any) {
     // Manejar errores
+      console.log(error):
     const apiError: ApiError = {
       message: "Error al procesar la solicitud.",
       errorMsg: error.response?.data.error,
