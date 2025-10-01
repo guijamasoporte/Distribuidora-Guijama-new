@@ -28,7 +28,7 @@ const whiteList = [process.env.DEPLOY_CLIENT_URL, "http://localhost:3001"];
 //   })
 // );
 
-// app.use(cors());
+app.use(cors());
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(bodyParser.json({ limit: "10mb" }));
