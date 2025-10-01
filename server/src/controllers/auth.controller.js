@@ -38,9 +38,9 @@ export const login = async (req, res) => {
   let emaillower = email.toLowerCase();
   try {
     // user = await User.findOne({ email });
-    if (!user) {
+    // if (!user) {
       user = await Admin.findOne({ email: emaillower });
-    }
+    // }
     if (!user) {
       return res.status(404).json({ error: "No existe este usuario" });
     }
