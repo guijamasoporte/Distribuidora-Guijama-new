@@ -35,6 +35,8 @@ const ProductsPage: React.FC = () => {
     stock: "",
     priceCost: "",
     priceList: "",
+    pricex10: "",
+    pricex100: "",
     image: "",
     unity: "",
     generic: "",
@@ -44,7 +46,9 @@ const ProductsPage: React.FC = () => {
 
   const [filters, setFilters] = useState(initialFilters);
   const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState<number>(parseInt(localStorage.getItem('currentPageProducts') || '1', 10));
+  const [currentPage, setCurrentPage] = useState<number>(
+    parseInt(localStorage.getItem("currentPageProducts") || "1", 10)
+  );
   const productsPerPage = 15;
   const [currentProducts, setCurrentProducts] = useState<Product[]>([]);
   const [productSelect, setProductSelect] = useState<Product | null>(null);
@@ -168,13 +172,13 @@ const ProductsPage: React.FC = () => {
 
       // Calcular el total del costo multiplicando priceCost por stock
       const costTotal = filteredProducts.reduce(
-        (acc, product) => acc + (product.priceCost * product.stock),
+        (acc, product) => acc + product.priceCost * product.stock,
         0
       );
-      
+
       // Calcular el total de venta multiplicando priceList por stock
       const saleTotal = filteredProducts.reduce(
-        (acc, product) => acc + (product.priceList * product.stock),
+        (acc, product) => acc + product.priceList * product.stock,
         0
       );
 
@@ -195,7 +199,7 @@ const ProductsPage: React.FC = () => {
   }, [currentProducts, applyFilters, searchTerm]);
 
   useEffect(() => {
-    localStorage.setItem('currentPageProducts', currentPage.toString());
+    localStorage.setItem("currentPageProducts", currentPage.toString());
   }, [currentPage]);
 
   return (
@@ -271,6 +275,8 @@ const ProductsPage: React.FC = () => {
               <th>Marca</th>
               <th>Stock</th>
               <th>Costo</th>
+              <th>x 10 U.</th>
+              <th>x 100 U.</th>
               <th>Venta</th>
               <th>Ventas</th>
               <th>Editar</th>
@@ -288,6 +294,16 @@ const ProductsPage: React.FC = () => {
                 <td>{formatNumberWithCommas(product.stock)}</td>
                 <td>${formatNumberWithCommas(product.priceCost)}</td>
                 <td>${formatNumberWithCommas(product.priceList)}</td>
+                <td>
+                  {product.pricex10
+                    ? `$ ${formatNumberWithCommas(product.pricex10)}`
+                    : "-"}
+                </td>
+                <td>
+                  {product.pricex100
+                    ? `$ ${formatNumberWithCommas(product.pricex100)}`
+                    : "-"}
+                </td>
                 <td>
                   <button
                     className={styles.buttonSee}

@@ -24,6 +24,8 @@ const AddProductModal: React.FC<propsModals> = ({
     stock: 0,
     priceCost: 0,
     priceList: 0,
+    pricex10: 0,
+    pricex100: 0,
     image: [],
     unity: undefined,
     generic: false,
@@ -200,6 +202,26 @@ const AddProductModal: React.FC<propsModals> = ({
           label="Precio de lista"
           value={product.priceList}
           onChange={(e) => handleChange("priceList", Number(e.target.value))}
+          fullWidth
+          inputProps={{ maxLength: 20 }}
+          type="number"
+        />
+        <TextField
+          className={styles.formField}
+          name="pricex10"
+          label="Precio x 10 unidades"
+          value={product.pricex10}
+          onChange={(e) => handleChange("pricex10", Number(e.target.value))}
+          fullWidth
+          inputProps={{ maxLength: 20 }}
+          type="number"
+        />
+        <TextField
+          className={styles.formField}
+          name="pricex100"
+          label="Precio x 100 unidades"
+          value={product.pricex100}
+          onChange={(e) => handleChange("pricex100", Number(e.target.value))}
           fullWidth
           inputProps={{ maxLength: 20 }}
           type="number"

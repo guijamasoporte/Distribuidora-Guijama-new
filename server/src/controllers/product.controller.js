@@ -4,8 +4,18 @@ import { formatError } from "../utils/formatError.js";
 
 export const createProduct = async (req, res) => {
   const { resLink } = req.body;
-  const { title, category, brand, code, priceList, priceCost, stock, variant } =
-    req.body.product;
+  const {
+    title,
+    category,
+    brand,
+    code,
+    priceList,
+    priceCost,
+    pricex10,
+    pricex100,
+    stock,
+    variant,
+  } = req.body.product;
   try {
     let product = new Product({
       code,
@@ -18,6 +28,8 @@ export const createProduct = async (req, res) => {
       stock,
       priceList,
       priceCost,
+      pricex10,
+      pricex100,
       image: resLink,
     });
     await product.save();

@@ -22,6 +22,14 @@ const productSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  pricex10: {
+    type: Number,
+    required: true,
+  },
+  pricex100: {
+    type: Number,
+    required: true,
+  },
   category: {
     type: String,
     required: true,

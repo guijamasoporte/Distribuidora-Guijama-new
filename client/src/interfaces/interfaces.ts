@@ -7,7 +7,7 @@ export interface Supplier {
   phone: string;
   email: string;
   adress: string;
-  buys:any;
+  buys: any;
 }
 export interface Client {
   idSupplier: any;
@@ -19,7 +19,7 @@ export interface Client {
   phone: string;
   email: string;
   adress: string;
-  buys:any;
+  buys: any;
 }
 
 export interface Product {
@@ -31,6 +31,8 @@ export interface Product {
   stock: number;
   priceList: number | null | any;
   priceCost: number | null | any;
+  pricex10: number | null | any;
+  pricex100: number | null | any;
   category: string;
   brand: string;
   image: [];
@@ -52,10 +54,10 @@ export interface Sales {
   date: string;
   products: Product[];
   priceTotal: number;
-  client:Client;
+  client: Client;
   dues: Dues;
   state: boolean;
-  createBy:string
+  createBy: string;
 }
 
 export interface Dues {
@@ -68,8 +70,6 @@ export interface DataLogin {
   email: string;
   password: string;
 }
-
-
 
 export interface propsModals {
   open: boolean;
