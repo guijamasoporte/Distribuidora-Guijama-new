@@ -294,22 +294,19 @@ const SupplierPage: React.FC = () => {
             currentPage={currentPage}
             paginate={paginate}
           />
-          <div className={styles.buttonsFooter}>
-            <button
-              className={styles.buttonAdd}
-              onClick={() => setOpenModal(true)}
-            >
-              Agregar nuevo proveedor
-            </button>
-            <button
-              className={styles.buttonAdd}
-              onClick={() => setOpenBuyModal(true)}
-            >
-              Crear Compra
-            </button>
-          </div>
         </>
       )}
+      <div className={styles.buttonsFooter}>
+        <button className={styles.buttonAdd} onClick={() => setOpenModal(true)}>
+          Agregar nuevo proveedor
+        </button>
+        <button
+          className={styles.buttonAdd}
+          onClick={() => setOpenBuyModal(true)}
+        >
+          Crear Compra
+        </button>
+      </div>
       <CreateSupplierModal
         open={openModal}
         onClose={() => setOpenModal(false)}
